@@ -1,0 +1,274 @@
+---
+title: A New Way to Handle Multivariate Outliers
+author: ~
+date: '2019-01-09'
+slug: test
+categories: ["R"]
+tags: ["R"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Psychologists have a history of
+
+```{r results='hide', warning=FALSE, message=FALSE, error=FALSE}
+library(psych)
+library(tidyverse)
+library(simstudy)
+library(jtools)
+```
+
+##A Hypothetical Case
+
+I'll pretend that I have data on participants' self-reported *affinity for aloneness* (i.e., how much time they like being alone), *time alone* (i.e., number of hours typically spent alone per week), and *loneliness*. We might expect that people who spend more time alone feel more loneliness. However, if you're the kind of person who enjoys being alone, maybe being by yourself isn't so bad. In other words, I'm interested in the *moderating* effect of time alone on the association between affinity for aloneness and loneliness.
+
+##Generating the Data
+
+I'll simulate 600 cases using the *simstudy* package. Because I want the variables correlated, I'll specify a correlation matrix that makes theoretical sense.
+
+```{r}
+c <- matrix(c(1, .43, .28, .43, 1, .12, .28, .12, 1), nrow = 3)
+c
+```
+
+Now, I can use the correlation matrix when I generate the data. In the function *genCorData*, **mu** refers to the sample means and **sigma** refers to their respective standard deviations.
+
+```{r}
+set.seed(206134)
+
+data <- genCorData(600, mu = c(2.65, 3.56, 2.21), sigma = c(.56, 1.12, .70), corMatrix = c)
+
+data <- data %>%
+  select(-id) %>%
+  rename(alone_affinity = V1, time_alone = V2, loneliness = V3)
+
+data
+```
+
+With the data generated, I can take a look at the univariate and multivariate distributions in one fell swoop using the function *pairs.panels* from the *psych* package.
+
+``` {r}
+pairs.panels(data, stars = TRUE)
+```
+
+Everything looks normal and the correlations are pretty close to the ones that I chose.
+
+##Bring in the Outliers!
+
+To make this example more pathological, I'll introduce some multivariate outliers. I won't show the code for this, but all I've done is manually change 20 cases.
+
+```{r outliers, include=FALSE}
+data[9, 1] <- 2.5
+data[9, 2] <- 3.9
+data[9, 3] <- 4.2
+
+data[10, 1] <- 2.4
+data[10, 2] <- 3.7
+data[10, 3] <- 4.1
+
+data[12, 1] <- 2.3
+data[12, 2] <- 3.8
+data[12, 3] <- 4.2
+
+data[26, 1] <- 2.4
+data[26, 2] <- 4.5
+data[26, 3] <- 4.7
+
+data[62, 1] <- 4.9
+data[62, 2] <- 5.2
+data[62, 3] <- 2.2
+
+data[113, 1] <- 4.3
+data[113, 2] <- 3.5
+data[113, 3] <- 1.3
+
+data[222, 1] <- 4.2
+data[222, 2] <- 2.4
+data[222, 3] <- 2.8
+
+data[244, 1] <- 4.5
+data[244, 2] <- 4.3
+data[244, 3] <- 1.3
+
+data[265, 1] <- 3.2
+data[265, 2] <- 4.1
+data[265, 3] <- 1.6
+
+data[313, 1] <- 1.7
+data[313, 2] <- 3.9
+data[313, 3] <- 3.1
+
+data[346, 1] <- 3.9
+data[346, 2] <- 4.3
+data[346, 3] <- 1.8
+
+data[389, 1] <- 1.3
+data[389, 2] <- 4.1
+data[389, 3] <- 3.7
+
+data[444, 1] <- 4.2
+data[444, 2] <- 4.8
+data[444, 3] <- 1.0
+
+data[512, 1] <- 4.4
+data[512, 2] <- 4.9
+data[512, 3] <- 1.2
+
+data[513, 1] <- 4.1
+data[513, 2] <- 4.2
+data[513, 3] <- 1.5
+
+data[522, 1] <- 3.8
+data[522, 2] <- 1.8
+data[522, 3] <- 3.6
+
+data[532, 1] <- 4.6
+data[532, 2] <- 1.4
+data[532, 3] <- 4.2
+
+data[533, 1] <- 4.1
+data[533, 2] <- 1.6
+data[533, 3] <- 3.8
+
+data[534, 1] <- 3.9
+data[534, 2] <- 1.7
+data[534, 3] <- 3.9
+
+data[535, 1] <- 3.9
+data[535, 2] <- 1.6
+data[535, 3] <- 3.7
+
+data_outlier <- data
+```
+
+Looking at the data again, it's clear that the outliers have an effect. The sample correlations are still significant, but quite off the mark.
+
+```{r}
+pairs.panels(data_outlier, stars = TRUE)
+```
+
+###Model 1: All Data - Including Outliers
+
+What if we ran a linear regression on these variables? Here, I'll run a hierarchical linear regression with the first step predicting loneliness from affinity for aloneness and time alone. The second step adds an interaction (this is the moderation I mentioned earlier).
+
+```{r}
+model1 <- lm(loneliness ~ .*time_alone, data = data_outlier)
+summary(model1)
+```
+
+Overall, affinity for aloneness and time alone both uniquely positively predict loneliness. More importantly though, the interaction is statistically significant with a *p*-value at .018. We can visualize this more clearly with simple slopes:
+
+```{r}
+model1_int <- lm(loneliness ~ time_alone * alone_affinity, data = data_outlier)
+
+interact_plot(model1_int, pred = "time_alone", modx = "alone_affinity") +
+  theme_apa()
+```
+
+A pristine looking interaction plot! Our simulated data shows that at higher affinity for aloneness the association between time alone and loneliness becomes more negative. This is what was expected.
+
+If this were real data, these results are potentially publishable. What is not immediately clear though is that outliers have a severe impact on this finding. Let's look at the simple slopes a bit differently: 
+
+```{r}
+interact_plot(model1_int, pred = "time_alone", modx = "alone_affinity", linearity.check = TRUE) +
+  theme_apa()
+```
+
+Oh dear... The assumption of linearity for these subsamples is clearly not met. It looks like some cases are skewing the associations among the high and low affinity groups.
+
+###Model 2 - Mahalanobis Distance
+
+A popular way to identify and deal with multivariate outliers is to use Mahalanobis Distance (MD). MD calculates the distance of each case from the central mean. Larger values indicate that a case is farther from where most of the points cluster. The *psych* package contains a function that quickly calculates and plots MDs:
+
+```{r results='hide'}
+outlier(data_outlier)
+```
+
+Wow, one case is way out there, you can hardly see it! Otherwise, most of the points appear to follow in line. We might prefer a more formal test of outliers by using a cut-off score for MD. Here, I'll recalcuate the MDs using the *mahalanobis* function and identify those that fall above the cut-off score for a chi-square with *k* degrees of freedom (3 for 3 variables, but I'll use *ncol* in case I want to add or remove variables later):
+
+```{r}
+md <- mahalanobis(data, center = colMeans(data_outlier), cov = cov(data_outlier))
+
+alpha <- .001
+
+cutoff <- (qchisq(p = 1 - alpha, df = ncol(data_outlier)))
+
+names_outliers_MH <- which(md > cutoff)
+
+excluded_mh <- names_outliers_MH
+
+data_clean_mh <- data_outlier[-excluded_mh, ]
+
+data[excluded_mh, ]
+```
+
+Using this cut-off, only one outlier was identified. Not surprisingly, it's the case with a huge MD relative to the others. Probing this simulated case closely, we see that this hypothetical individual really likes being alone, spent little time alone, and reported feeling very lonely.
+
+Now we can rerun the model with this outlier omitted:
+
+```{r}
+model2 <- lm(loneliness ~ .*time_alone, data = data_clean_mh)
+summary(model2)
+```
+
+The interaction is still significant, but just barely, with a *p*-value of .049. 
+
+###Model 3 - Minimum Covariance Determinant
+
+Is this enough to conclude that the data supports the model? Many would probably be content to stop here, but we haven't adequately dealt with the outlier infestation. This demonstrates the fallability of MD, which Leys et al. (2018) argue is not a robust way to determine outliers. The problem lies with the fact that MD uses the means and covariances of all the data - including the outliers - and bases the individual difference scores from these values. If we're really interested in identifying cases that stray from the pack, it makes more sense to base the criteria for removal using *a subset of the data that is the most central*. This is the idea behind **Minimum Covariance Determinant**, which calculates the mean and covariance matrix based on the most central subset of the data. 
+
+We'll use this to calculate new distance scores from a 75% subset of the data that is highly central. For this, we need the *MASS* package. The approach for calculating the distance scores is similar, and we can use the same cut-off score as before.
+
+```{r results='hide', warning=FALSE, message=FALSE, error=FALSE}
+library(MASS)
+
+output75 <- cov.mcd(data_outlier, quantile.used = nrow(data_outlier)*.75)
+
+mhmcd75 <- mahalanobis(data_outlier, output75$center, output75$cov)
+
+names_outlier_MCD75 <- which(mhmcd75 > cutoff)
+
+excluded_mcd75 <- names_outlier_MCD75
+
+data_clean_mcd <- data_outlier[-excluded_mcd75, ]
+
+data_outlier[excluded_mcd75, ]
+```
+
+This approach identified 9 outliers, as opposed to the 1 identified with the traditional MD. Let's see whether removing these cases changes the results:
+
+```{r}
+model3 <- lm(loneliness ~ .*time_alone, data = data_clean_mcd)
+summary(model3)
+```
+
+Wow. Removing 9 data points was enough to decimate the significance of the interaction - the *p*-value is now .568. This is clearly demonstrated in the simple slopes:
+
+```{r}
+model3_int <- lm(loneliness ~ time_alone * alone_affinity, data = data_clean_mcd)
+
+interact_plot(model3_int, pred = "time_alone", modx = "alone_affinity") +
+  theme_apa()
+```
+
+Of course, this would be a disappointing realization for any researcher. We do see, however, that the correlations are better estimated now that these outliers are removed:
+
+```{r}
+pairs.panels(data_clean_mcd, stars = TRUE)
+```
+
+##Conclusion
+
+This simulation was a pathological (but realistic) example of how outliers can dramatically skew results, even with reasonably large samples. The Minimum Covariance Determinant version of MD is a more robust method of identifying and removing outliers that would otherwise go unnoticed with traditional MD. 
+
+Many researchers in psychology are uncomfortable with removing outliers because they worry about losing statistical power. Others feel that removing outliers is in some way dissociating their data from reality because "in the real world, there are outliers - people are different!". Although true, the argument shouldn't be about whether outliers exist or not, but how much they impact the conclusions we draw from our data. In this simulation, we saw that a difference of 8 cases out of 600 was enough to turn a non-significant result significant. If our goal is to generalize our findings to a larger population, it would be foolish to do so on the basis of 8 outlying cases.
+
+The article by Leys et al. (2018) offers suggestions about how to approach outliers. Ideally, a researcher should pre-register their plan for handling outliers. In a post-hoc situation, they advise publishing results with and without outliers. At the very least, we should be acknowledging outliers, rather than pretending the don't exist.
+
+As a final note, I highly recommend reading the article by Leys et al. (2018). It provides a better theoeretical grasp of MD and MCD. Some of the code used in this example (specifically, the codes for calculating MD and MCD) was used from their article. See below for the full reference.
+
+**References**
+
+Leys, C., Klein, O., Dominicy, Y., & Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. *Journal of Experimental Social Psychology, 74*, 150-156.
