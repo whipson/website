@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emotion Dynamics on Will Hipson</title>
+    <link>https://willhipson.com/tags/emotion-dynamics/</link>
+    <description>Recent content in Emotion Dynamics on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Wed, 09 Jan 2019 00:00:00 -0500</lastBuildDate>
+    
+	<atom:link href="https://willhipson.com/tags/emotion-dynamics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Emotion Dynamics of Solitude</title>
+      <link>https://willhipson.com/project/emotion-dynamics/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/emotion-dynamics/</guid>
+      <description>We often think of emotions as being there one moment and gone the next. However, we are always experiencing some sort of emotion - whether it&amp;rsquo;s boiling anger or vapid listlessness. The study of emotion dynamics is all about how emotions change over time. Emotions can change from one moment to the next - intensifying or deintensifying. I&amp;rsquo;m interested in exploring what predicts these complex changes. In particular, I&amp;rsquo;m interested in whether solitude impacts our emotional state.</description>
+    </item>
+    
+    <item>
+      <title>Emotion Regulation</title>
+      <link>https://willhipson.com/project/emotion-regulation/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/emotion-regulation/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

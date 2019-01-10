@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Will Hipson on Will Hipson</title>
+    <link>https://willhipson.com/</link>
+    <description>Recent content in Will Hipson on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Emotion Dynamics of Solitude</title>
+      <link>https://willhipson.com/project/emotion-dynamics/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/emotion-dynamics/</guid>
+      <description>&lt;p&gt;We often think of emotions as being there one moment and gone the next. However, we are always experiencing some sort of emotion - whether it&amp;rsquo;s boiling anger or vapid listlessness. The study of emotion dynamics is all about how emotions change over time. Emotions can change from one moment to the next - intensifying or deintensifying. I&amp;rsquo;m interested in exploring what predicts these complex changes. In particular, I&amp;rsquo;m interested in whether solitude impacts our emotional state.&lt;/p&gt;
+
+&lt;p&gt;Extending this further, we can describe change in emotion over &lt;em&gt;developmental&lt;/em&gt; time as well. For instance, we know that adolescents often experience more intense emotions compared to adults. My work attempts to explore emotion dynamics across multiple time scales.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Emotion Regulation</title>
+      <link>https://willhipson.com/project/emotion-regulation/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/emotion-regulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>https://willhipson.com/project/r/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sentiment Analysis</title>
+      <link>https://willhipson.com/project/sentiment-analysis/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/sentiment-analysis/</guid>
+      <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Social Development in Different Cultures</title>
+      <link>https://willhipson.com/project/social-development-in-different-cultures/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/social-development-in-different-cultures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Social Withdrawal and Socio-emotional Development</title>
+      <link>https://willhipson.com/project/social-withdrawal-and-socio-emotional-development/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/social-withdrawal-and-socio-emotional-development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A New Way to Handle Multivariate Outliers</title>
+      <link>https://willhipson.com/post/outliers/test/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.com/post/outliers/test/</guid>
+      <description>
+
+
+&lt;p&gt;Psychologists have a history of&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(psych)
+library(tidyverse)
+library(simstudy)
+library(jtools)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;a-hypothetical-case&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;A Hypothetical Case&lt;/h2&gt;
+&lt;p&gt;I’ll pretend that I have data on participants’ self-reported &lt;em&gt;affinity for aloneness&lt;/em&gt; (i.e., how much time they like being alone), &lt;em&gt;time alone&lt;/em&gt; (i.e., number of hours typically spent alone per week), and &lt;em&gt;loneliness&lt;/em&gt;. We might expect that people who spend more time alone feel more loneliness. However, if you’re the kind of person who enjoys being alone, maybe being by yourself isn’t so bad. In other words, I’m interested in the &lt;em&gt;moderating&lt;/em&gt; effect of time alone on the association between affinity for aloneness and loneliness.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;generating-the-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Generating the Data&lt;/h2&gt;
+&lt;p&gt;I’ll simulate 600 cases using the &lt;em&gt;simstudy&lt;/em&gt; package. Because I want the variables correlated, I’ll specify a correlation matrix that makes theoretical sense.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;c &amp;lt;- matrix(c(1, .43, .28, .43, 1, .12, .28, .12, 1), nrow = 3)
+c&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      [,1] [,2] [,3]
+## [1,] 1.00 0.43 0.28
+## [2,] 0.43 1.00 0.12
+## [3,] 0.28 0.12 1.00&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, I can use the correlation matrix when I generate the data. In the function &lt;em&gt;genCorData&lt;/em&gt;, &lt;strong&gt;mu&lt;/strong&gt; refers to the sample means and &lt;strong&gt;sigma&lt;/strong&gt; refers to their respective standard deviations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(206134)
+
+data &amp;lt;- genCorData(600, mu = c(2.65, 3.56, 2.21), sigma = c(.56, 1.12, .70), corMatrix = c)
+
+data &amp;lt;- data %&amp;gt;%
+  select(-id) %&amp;gt;%
+  rename(alone_affinity = V1, time_alone = V2, loneliness = V3)
+
+data&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      alone_affinity time_alone loneliness
+##   1:       2.053861   2.880370   1.750774
+##   2:       2.782888   5.131749   1.646151
+##   3:       2.429589   1.488717   2.333513
+##   4:       2.289647   3.711900   2.780851
+##   5:       3.177230   3.629568   2.694580
+##  ---                                     
+## 596:       2.660343   4.055748   1.811799
+## 597:       1.564866   2.921037   1.842257
+## 598:       2.742394   4.205703   2.598651
+## 599:       1.439261   2.065413   1.547111
+## 600:       3.137692   4.936879   2.580417&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;With the data generated, I can take a look at the univariate and multivariate distributions in one fell swoop using the function &lt;em&gt;pairs.panels&lt;/em&gt; from the &lt;em&gt;psych&lt;/em&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Everything looks normal and the correlations are pretty close to the ones that I chose.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;bring-in-the-outliers&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Bring in the Outliers!&lt;/h2&gt;
+&lt;p&gt;To make this example more pathological, I’ll introduce some multivariate outliers. I won’t show the code for this, but all I’ve done is manually change 20 cases.&lt;/p&gt;
+&lt;p&gt;Looking at the data again, it’s clear that the outliers have an effect. The sample correlations are still significant, but quite off the mark.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data_outlier, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;model-1-all-data---including-outliers&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Model 1: All Data - Including Outliers&lt;/h3&gt;
+&lt;p&gt;What if we ran a linear regression on these variables? Here, I’ll run a hierarchical linear regression with the first step predicting loneliness from affinity for aloneness and time alone. The second step adds an interaction (this is the moderation I mentioned earlier).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model1 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_outlier)
+summary(model1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_outlier)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.99016 -0.48682  0.01538  0.46143  2.48231 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## (Intercept)                0.66138    0.36935   1.791   0.0739 .  
+## alone_affinity             0.58212    0.13974   4.166 3.56e-05 ***
+## time_alone                 0.24982    0.10581   2.361   0.0185 *  
+## alone_affinity:time_alone -0.08935    0.03772  -2.369   0.0182 *  
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
+## 
+## Residual standard error: 0.718 on 596 degrees of freedom
+## Multiple R-squared:  0.06105,    Adjusted R-squared:  0.05632 
+## F-statistic: 12.92 on 3 and 596 DF,  p-value: 3.478e-08&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Overall, affinity for aloneness and time alone both uniquely positively predict loneliness. More importantly though, the interaction is statistically significant with a &lt;em&gt;p&lt;/em&gt;-value at .018. We can visualize this more clearly with simple slopes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model1_int &amp;lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_outlier)
+
+interact_plot(model1_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;) +
+  theme_apa()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;A pristine looking interaction plot! Our simulated data shows that at higher affinity for aloneness the association between time alone and loneliness becomes more negative. This is what was expected.&lt;/p&gt;
+&lt;p&gt;If this were real data, these results are potentially publishable. What is not immediately clear though is that outliers have a severe impact on this finding. Let’s look at the simple slopes a bit differently:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;interact_plot(model1_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;, linearity.check = TRUE) +
+  theme_apa()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Oh dear… The assumption of linearity for these subsamples is clearly not met. It looks like some cases are skewing the associations among the high and low affinity groups.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-2---mahalanobis-distance&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Model 2 - Mahalanobis Distance&lt;/h3&gt;
+&lt;p&gt;A popular way to identify and deal with multivariate outliers is to use Mahalanobis Distance (MD). MD calculates the distance of each case from the central mean. Larger values indicate that a case is farther from where most of the points cluster. The &lt;em&gt;psych&lt;/em&gt; package contains a function that quickly calculates and plots MDs:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;outlier(data_outlier)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Wow, one case is way out there, you can hardly see it! Otherwise, most of the points appear to follow in line. We might prefer a more formal test of outliers by using a cut-off score for MD. Here, I’ll recalcuate the MDs using the &lt;em&gt;mahalanobis&lt;/em&gt; function and identify those that fall above the cut-off score for a chi-square with &lt;em&gt;k&lt;/em&gt; degrees of freedom (3 for 3 variables, but I’ll use &lt;em&gt;ncol&lt;/em&gt; in case I want to add or remove variables later):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;md &amp;lt;- mahalanobis(data, center = colMeans(data_outlier), cov = cov(data_outlier))
+
+alpha &amp;lt;- .001
+
+cutoff &amp;lt;- (qchisq(p = 1 - alpha, df = ncol(data_outlier)))
+
+names_outliers_MH &amp;lt;- which(md &amp;gt; cutoff)
+
+excluded_mh &amp;lt;- names_outliers_MH
+
+data_clean_mh &amp;lt;- data_outlier[-excluded_mh, ]
+
+data[excluded_mh, ]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    alone_affinity time_alone loneliness
+## 1:            4.6        1.4        4.2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using this cut-off, only one outlier was identified. Not surprisingly, it’s the case with a huge MD relative to the others. Probing this simulated case closely, we see that this hypothetical individual really likes being alone, spent little time alone, and reported feeling very lonely.&lt;/p&gt;
+&lt;p&gt;Now we can rerun the model with this outlier omitted:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model2 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_clean_mh)
+summary(model2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_clean_mh)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.98403 -0.48734  0.01331  0.45859  2.48196 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&amp;gt;|t|)    
+## (Intercept)                0.79882    0.37897   2.108 0.035461 *  
+## alone_affinity             0.52131    0.14476   3.601 0.000343 ***
+## time_alone                 0.21964    0.10738   2.045 0.041259 *  
+## alone_affinity:time_alone -0.07595    0.03861  -1.967 0.049624 *  
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
+## 
+## Residual standard error: 0.7171 on 595 degrees of freedom
+## Multiple R-squared:  0.05384,    Adjusted R-squared:  0.04907 
+## F-statistic: 11.29 on 3 and 595 DF,  p-value: 3.289e-07&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The interaction is still significant, but just barely, with a &lt;em&gt;p&lt;/em&gt;-value of .049.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-3---minimum-covariance-determinant&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Model 3 - Minimum Covariance Determinant&lt;/h3&gt;
+&lt;p&gt;Is this enough to conclude that the data supports the model? Many would probably be content to stop here, but we haven’t adequately dealt with the outlier infestation. This demonstrates the fallability of MD, which Leys et al. (2018) argue is not a robust way to determine outliers. The problem lies with the fact that MD uses the means and covariances of all the data - including the outliers - and bases the individual difference scores from these values. If we’re really interested in identifying cases that stray from the pack, it makes more sense to base the criteria for removal using &lt;em&gt;a subset of the data that is the most central&lt;/em&gt;. This is the idea behind &lt;strong&gt;Minimum Covariance Determinant&lt;/strong&gt;, which calculates the mean and covariance matrix based on the most central subset of the data.&lt;/p&gt;
+&lt;p&gt;We’ll use this to calculate new distance scores from a 75% subset of the data that is highly central. For this, we need the &lt;em&gt;MASS&lt;/em&gt; package. The approach for calculating the distance scores is similar, and we can use the same cut-off score as before.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(MASS)
+
+output75 &amp;lt;- cov.mcd(data_outlier, quantile.used = nrow(data_outlier)*.75)
+
+mhmcd75 &amp;lt;- mahalanobis(data_outlier, output75$center, output75$cov)
+
+names_outlier_MCD75 &amp;lt;- which(mhmcd75 &amp;gt; cutoff)
+
+excluded_mcd75 &amp;lt;- names_outlier_MCD75
+
+data_clean_mcd &amp;lt;- data_outlier[-excluded_mcd75, ]
+
+data_outlier[excluded_mcd75, ]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This approach identified 9 outliers, as opposed to the 1 identified with the traditional MD. Let’s see whether removing these cases changes the results:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model3 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_clean_mcd)
+summary(model3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_clean_mcd)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.9695 -0.4725  0.0168  0.4519  2.5129 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&amp;gt;|t|)   
+## (Intercept)                1.18154    0.39213   3.013   0.0027 **
+## alone_affinity             0.36392    0.15217   2.391   0.0171 * 
+## time_alone                 0.08494    0.11128   0.763   0.4456   
+## alone_affinity:time_alone -0.02316    0.04057  -0.571   0.5683   
+## ---
+## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
+## 
+## Residual standard error: 0.7064 on 587 degrees of freedom
+## Multiple R-squared:  0.05802,    Adjusted R-squared:  0.0532 
+## F-statistic: 12.05 on 3 and 587 DF,  p-value: 1.153e-07&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Wow. Removing 9 data points was enough to decimate the significance of the interaction - the &lt;em&gt;p&lt;/em&gt;-value is now .568. This is clearly demonstrated in the simple slopes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model3_int &amp;lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_clean_mcd)
+
+interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;) +
+  theme_apa()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Of course, this would be a disappointing realization for any researcher. We do see, however, that the correlations are better estimated now that these outliers are removed:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data_clean_mcd, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://willhipson.com/post/outliers/index_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This simulation was a pathological (but realistic) example of how outliers can dramatically skew results, even with reasonably large samples. The Minimum Covariance Determinant version of MD is a more robust method of identifying and removing outliers that would otherwise go unnoticed with traditional MD.&lt;/p&gt;
+&lt;p&gt;Many researchers in psychology are uncomfortable with removing outliers because they worry about losing statistical power. Others feel that removing outliers is in some way dissociating their data from reality because “in the real world, there are outliers - people are different!”. Although true, the argument shouldn’t be about whether outliers exist or not, but how much they impact the conclusions we draw from our data. In this simulation, we saw that a difference of 8 cases out of 600 was enough to turn a non-significant result significant. If our goal is to generalize our findings to a larger population, it would be foolish to do so on the basis of 8 outlying cases.&lt;/p&gt;
+&lt;p&gt;The article by Leys et al. (2018) offers suggestions about how to approach outliers. Ideally, a researcher should pre-register their plan for handling outliers. In a post-hoc situation, they advise publishing results with and without outliers. At the very least, we should be acknowledging outliers, rather than pretending the don’t exist.&lt;/p&gt;
+&lt;p&gt;As a final note, I highly recommend reading the article by Leys et al. (2018). It provides a better theoeretical grasp of MD and MCD. Some of the code used in this example (specifically, the codes for calculating MD and MCD) was used from their article. See below for the full reference.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Leys, C., Klein, O., Dominicy, Y., &amp;amp; Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. &lt;em&gt;Journal of Experimental Social Psychology, 74&lt;/em&gt;, 150-156.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Self-regulation, learning problems, and maternal authoritarian parenting in Chinese children: A developmental cascades model</title>
+      <link>https://willhipson.com/publication/liu-et-al.-2018/</link>
+      <pubDate>Sat, 01 Sep 2018 00:00:00 -0400</pubDate>
+      
+      <guid>https://willhipson.com/publication/liu-et-al.-2018/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linking shyness with social and school adjustment in early childhood: The moderating role of inhibitory control</title>
+      <link>https://willhipson.com/publication/sette-et-al.-2018/</link>
+      <pubDate>Mon, 08 Jan 2018 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/publication/sette-et-al.-2018/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Self-control, peer preference, and loneliness in Chinese children: A three-year longitudinal study</title>
+      <link>https://willhipson.com/publication/liu-et-al.-2016/</link>
+      <pubDate>Wed, 01 Nov 2017 00:00:00 -0400</pubDate>
+      
+      <guid>https://willhipson.com/publication/liu-et-al.-2016/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Maternal agreeableness moderates associations between young children’s emotion dysregulation and socio-emotional functioning at school</title>
+      <link>https://willhipson.com/publication/hipson-et-al.-2017/</link>
+      <pubDate>Wed, 22 Feb 2017 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/publication/hipson-et-al.-2017/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Example Talk</title>
+      <link>https://willhipson.com/talk/example/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/talk/example/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;p&gt;Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s &lt;em&gt;Slides&lt;/em&gt; feature and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Slides</title>
+      <link>https://willhipson.com/slides/example-slides/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.com/slides/example-slides/</guid>
+      <description>
+
+&lt;h1 id=&#34;welcome-to-slides&#34;&gt;Welcome to Slides&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/&#34; target=&#34;_blank&#34;&gt;Academic&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;features&#34;&gt;Features&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Efficiently write slides in Markdown&lt;/li&gt;
+&lt;li&gt;3-in-1: Create, Present, and Publish your slides&lt;/li&gt;
+&lt;li&gt;Supports speaker notes&lt;/li&gt;
+&lt;li&gt;Mobile friendly slides&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;controls&#34;&gt;Controls&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Next: &lt;code&gt;Right Arrow&lt;/code&gt; or &lt;code&gt;Space&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Previous: &lt;code&gt;Left Arrow&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start: &lt;code&gt;Home&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Finish: &lt;code&gt;End&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Overview: &lt;code&gt;Esc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Speaker notes: &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fullscreen: &lt;code&gt;F&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Zoom: &lt;code&gt;Alt + Click&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakimel/reveal.js#pdf-export&#34; target=&#34;_blank&#34;&gt;PDF Export&lt;/a&gt;: &lt;code&gt;E&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;code-highlighting&#34;&gt;Code Highlighting&lt;/h2&gt;
+
+&lt;p&gt;Inline code: &lt;code&gt;variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Code block:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;porridge = &amp;quot;blueberry&amp;quot;
+if porridge == &amp;quot;blueberry&amp;quot;:
+    print(&amp;quot;Eating...&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;math&#34;&gt;Math&lt;/h2&gt;
+
+&lt;p&gt;In-line math: $x + y = z$&lt;/p&gt;
+
+&lt;p&gt;Block math:&lt;/p&gt;
+
+&lt;p&gt;$$
+f\left( x \right) = \;\frac{{2\left( {x + 4} \right)\left( {x - 4} \right)}}{{\left( {x + 4} \right)\left( {x + 1} \right)}}
+$$&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;fragments&#34;&gt;Fragments&lt;/h2&gt;
+
+&lt;p&gt;Make content appear incrementally&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{% fragment %}} One {{% /fragment %}}
+{{% fragment %}} **Two** {{% /fragment %}}
+{{% fragment %}} Three {{% /fragment %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press &lt;code&gt;Space&lt;/code&gt; to play!&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;fragment &#34; &gt;
+  One
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+  &lt;strong&gt;Two&lt;/strong&gt;
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+  Three
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;A fragment can accept two optional parameters:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;class&lt;/code&gt;: use a custom style (requires definition in custom CSS)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;weight&lt;/code&gt;: sets the order in which a fragment appears&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;speaker-notes&#34;&gt;Speaker Notes&lt;/h2&gt;
+
+&lt;p&gt;Add speaker notes to your presentation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{% speaker_note %}}
+- Only the speaker can read these notes
+- Press `S` key to view
+{{% /speaker_note %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press the &lt;code&gt;S&lt;/code&gt; key to view the speaker notes!&lt;/p&gt;
+
+&lt;aside class=&#34;notes&#34;&gt;
+  &lt;ul&gt;
+&lt;li&gt;Only the speaker can read these notes&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;S&lt;/code&gt; key to view&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/aside&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black: Black background, white text, blue links (default)&lt;/li&gt;
+&lt;li&gt;white: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;league: Gray background, white text, blue links&lt;/li&gt;
+&lt;li&gt;beige: Beige background, dark text, brown links&lt;/li&gt;
+&lt;li&gt;sky: Blue background, thin dark text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;night: Black background, thick white text, orange links&lt;/li&gt;
+&lt;li&gt;serif: Cappuccino background, gray text, brown links&lt;/li&gt;
+&lt;li&gt;simple: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;solarized: Cream-colored background, dark green text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+
+&lt;section data-noprocess data-shortcode-slide
+  
+      
+      data-background-image=&#34;/img/boards.jpg&#34;
+  &gt;
+
+
+&lt;h2 id=&#34;custom-slide&#34;&gt;Custom Slide&lt;/h2&gt;
+
+&lt;p&gt;Customize the slide style and background&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{&amp;lt; slide background-image=&amp;quot;/img/boards.jpg&amp;quot; &amp;gt;}}
+{{&amp;lt; slide background-color=&amp;quot;#0000FF&amp;quot; &amp;gt;}}
+{{&amp;lt; slide class=&amp;quot;my-style&amp;quot; &amp;gt;}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;custom-css-example&#34;&gt;Custom CSS Example&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make headers navy colored.&lt;/p&gt;
+
+&lt;p&gt;Create &lt;code&gt;assets/css/reveal_custom.css&lt;/code&gt; with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.reveal section h1,
+.reveal section h2,
+.reveal section h3 {
+  color: navy;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;questions&#34;&gt;Questions?&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34;&gt;Ask&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

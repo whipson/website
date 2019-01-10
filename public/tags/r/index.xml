@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Will Hipson</title>
+    <link>https://willhipson.com/tags/r/</link>
+    <description>Recent content in R on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Wed, 09 Jan 2019 00:00:00 -0500</lastBuildDate>
+    
+	<atom:link href="https://willhipson.com/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>R</title>
+      <link>https://willhipson.com/project/r/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>https://willhipson.com/project/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A New Way to Handle Multivariate Outliers</title>
+      <link>https://willhipson.com/post/outliers/test/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.com/post/outliers/test/</guid>
+      <description>Psychologists have a history of
+library(psych)library(tidyverse)library(simstudy)library(jtools)A Hypothetical CaseI’ll pretend that I have data on participants’ self-reported affinity for aloneness (i.e., how much time they like being alone), time alone (i.e., number of hours typically spent alone per week), and loneliness. We might expect that people who spend more time alone feel more loneliness. However, if you’re the kind of person who enjoys being alone, maybe being by yourself isn’t so bad.</description>
+    </item>
+    
+  </channel>
+</rss>
