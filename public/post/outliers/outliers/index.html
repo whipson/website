@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 3.3.0">
+  <meta name="generator" content="Hugo 0.52" />
+  <meta name="author" content="Will Hipson">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to cleanse datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/outliers/outliers/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/outliers/outliers/">
+
+  
+  
+  
+  
+    
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Will Hipson">
+  <meta property="og:url" content="/post/outliers/outliers/">
+  <meta property="og:title" content="A New Way to Handle Multivariate Outliers | Will Hipson">
+  <meta property="og:description" content="Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to cleanse datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses."><meta property="og:image" content="/post/outliers/outliers/featured.jpg">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-01-10T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-01-10T00:00:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>A New Way to Handle Multivariate Outliers | Will Hipson</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Will Hipson</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/files/Academic%20CV.pdf">
+            
+            <span>CV</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="article-header d-xl-none">
+  <div class="featured-image" style="background-image: url('/post/outliers/outliers/featured_hub62afdf0e35078ced9f73c66ce35baad_33755_800x0_resize_q75_box.jpg');"></div>
+  
+</div>
+
+
+<div class="container-fluid split-header d-none d-xl-block">
+  <div class="row">
+    <div class="col-6">
+      <div class="split-header-content">
+        <h1 itemprop="name">A New Way to Handle Multivariate Outliers</h1>
+
+        
+
+        
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2019-01-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+    <time datetime="2019-01-10 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+      Jan 10, 2019
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/r/">R</a>
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+
+        
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers&amp;url=%2fpost%2foutliers%2foutliers%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2foutliers%2foutliers%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2foutliers%2foutliers%2f&amp;title=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2foutliers%2foutliers%2f&amp;title=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers&amp;body=%2fpost%2foutliers%2foutliers%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="split-header-image">
+        <img src="/post/outliers/outliers/featured_hub62afdf0e35078ced9f73c66ce35baad_33755_680x500_fill_q90_box_smart1.jpg" itemprop="image" alt="">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article-container d-xl-none">
+  <h1 itemprop="name">A New Way to Handle Multivariate Outliers</h1>
+
+  
+
+  
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2019-01-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+    <time datetime="2019-01-10 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+      Jan 10, 2019
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/r/">R</a>
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers&amp;url=%2fpost%2foutliers%2foutliers%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2foutliers%2foutliers%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2foutliers%2foutliers%2f&amp;title=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2foutliers%2foutliers%2f&amp;title=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=A%20New%20Way%20to%20Handle%20Multivariate%20Outliers&amp;body=%2fpost%2foutliers%2foutliers%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p>Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to <em>cleanse</em> datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.</p>
+<pre class="r"><code>library(psych)
+library(tidyverse)
+library(simstudy)
+library(jtools)</code></pre>
+<div id="a-hypothetical-case" class="section level2">
+<h2>A Hypothetical Case</h2>
+<p>I’ll pretend that I have data on participants’ self-reported <em>affinity for aloneness</em> (i.e., how much time they like being alone), <em>time alone</em> (i.e., number of hours typically spent alone per week), and <em>loneliness</em>. We might expect that people who spend more time alone feel more loneliness. However, if you’re the kind of person who enjoys being alone, maybe being by yourself isn’t so bad. In other words, I’m interested in the <em>moderating</em> effect of time alone on the association between affinity for aloneness and loneliness.</p>
+</div>
+<div id="generating-the-data" class="section level2">
+<h2>Generating the Data</h2>
+<p>I’ll simulate 600 cases using the <em>simstudy</em> package. Because I want the variables correlated, I’ll specify a correlation matrix that makes theoretical sense.</p>
+<pre class="r"><code>c &lt;- matrix(c(1, .43, .28, .43, 1, .12, .28, .12, 1), nrow = 3)
+c</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,] 1.00 0.43 0.28
+## [2,] 0.43 1.00 0.12
+## [3,] 0.28 0.12 1.00</code></pre>
+<p>Now, I can use the correlation matrix when I generate the data. In the function <em>genCorData</em>, <strong>mu</strong> refers to the sample means and <strong>sigma</strong> refers to their respective standard deviations.</p>
+<pre class="r"><code>set.seed(206134)
+
+data &lt;- genCorData(600, mu = c(2.65, 3.56, 2.21), sigma = c(.56, 1.12, .70), corMatrix = c)
+
+data &lt;- data %&gt;%
+  select(-id) %&gt;%
+  rename(alone_affinity = V1, time_alone = V2, loneliness = V3)
+
+data</code></pre>
+<pre><code>##      alone_affinity time_alone loneliness
+##   1:       2.053861   2.880370   1.750774
+##   2:       2.782888   5.131749   1.646151
+##   3:       2.429589   1.488717   2.333513
+##   4:       2.289647   3.711900   2.780851
+##   5:       3.177230   3.629568   2.694580
+##  ---                                     
+## 596:       2.660343   4.055748   1.811799
+## 597:       1.564866   2.921037   1.842257
+## 598:       2.742394   4.205703   2.598651
+## 599:       1.439261   2.065413   1.547111
+## 600:       3.137692   4.936879   2.580417</code></pre>
+<p>With the data generated, I can take a look at the univariate and multivariate distributions in one fell swoop using the function <em>pairs.panels</em> from the <em>psych</em> package.</p>
+<pre class="r"><code>pairs.panels(data, stars = TRUE)</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Everything looks normal and the correlations are pretty close to the ones that I chose.</p>
+</div>
+<div id="bring-in-the-outliers" class="section level2">
+<h2>Bring in the Outliers!</h2>
+<p>To make this example more pathological, I’ll introduce some multivariate outliers. I won’t show the code for this, but all I’ve done is manually change 20 cases.</p>
+<p>Looking at the data again, it’s clear that the outliers have an effect. The sample correlations are still significant, but quite off the mark.</p>
+<pre class="r"><code>pairs.panels(data_outlier, stars = TRUE)</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div id="model-1-all-data---including-outliers" class="section level3">
+<h3>Model 1: All Data - Including Outliers</h3>
+<p>What if we ran a linear regression on these variables? Here, I’ll run a hierarchical linear regression with the first step predicting loneliness from affinity for aloneness and time alone. The second step adds an interaction (this is the moderation I mentioned earlier).</p>
+<pre class="r"><code>model1 &lt;- lm(loneliness ~ .*time_alone, data = data_outlier)
+summary(model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_outlier)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.99016 -0.48682  0.01538  0.46143  2.48231 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                0.66138    0.36935   1.791   0.0739 .  
+## alone_affinity             0.58212    0.13974   4.166 3.56e-05 ***
+## time_alone                 0.24982    0.10581   2.361   0.0185 *  
+## alone_affinity:time_alone -0.08935    0.03772  -2.369   0.0182 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.718 on 596 degrees of freedom
+## Multiple R-squared:  0.06105,    Adjusted R-squared:  0.05632 
+## F-statistic: 12.92 on 3 and 596 DF,  p-value: 3.478e-08</code></pre>
+<p>Overall, affinity for aloneness and time alone both uniquely positively predict loneliness. More importantly though, the interaction is statistically significant with a <em>p</em>-value at .018. We can visualize this more clearly with simple slopes:</p>
+<pre class="r"><code>model1_int &lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_outlier)
+
+interact_plot(model1_int, pred = &quot;time_alone&quot;, modx = &quot;alone_affinity&quot;) +
+  theme_apa()</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>A pristine looking interaction plot! Our simulated data shows that at higher affinity for aloneness the association between time alone and loneliness becomes more negative. This is what was expected.</p>
+<p>If this were real data, these results are potentially publishable. What is not immediately clear though is that outliers have a severe impact on this finding. Let’s look at the simple slopes a bit differently:</p>
+<pre class="r"><code>interact_plot(model1_int, pred = &quot;time_alone&quot;, modx = &quot;alone_affinity&quot;, linearity.check = TRUE) +
+  theme_apa()</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Oh dear… The assumption of linearity for these subsamples is clearly not met. It looks like some cases are skewing the associations among the high and low affinity groups.</p>
+</div>
+<div id="model-2---mahalanobis-distance" class="section level3">
+<h3>Model 2 - Mahalanobis Distance</h3>
+<p>A popular way to identify and deal with multivariate outliers is to use Mahalanobis Distance (MD). MD calculates the distance of each case from the central mean. Larger values indicate that a case is farther from where most of the points cluster. The <em>psych</em> package contains a function that quickly calculates and plots MDs:</p>
+<pre class="r"><code>outlier(data_outlier)</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Wow, one case is way out there, you can hardly see it! Otherwise, most of the points appear to follow in line. We might prefer a more formal test of outliers by using a cut-off score for MD. Here, I’ll recalcuate the MDs using the <em>mahalanobis</em> function and identify those that fall above the cut-off score for a chi-square with <em>k</em> degrees of freedom (3 for 3 variables, but I’ll use <em>ncol</em> in case I want to add or remove variables later):</p>
+<pre class="r"><code>md &lt;- mahalanobis(data, center = colMeans(data_outlier), cov = cov(data_outlier))
+
+alpha &lt;- .001
+
+cutoff &lt;- (qchisq(p = 1 - alpha, df = ncol(data_outlier)))
+
+names_outliers_MH &lt;- which(md &gt; cutoff)
+
+excluded_mh &lt;- names_outliers_MH
+
+data_clean_mh &lt;- data_outlier[-excluded_mh, ]
+
+data[excluded_mh, ]</code></pre>
+<pre><code>##    alone_affinity time_alone loneliness
+## 1:            4.6        1.4        4.2</code></pre>
+<p>Using this cut-off, only one outlier was identified. Not surprisingly, it’s the case with a huge MD relative to the others. Probing this simulated case closely, we see that this hypothetical individual really likes being alone, spent little time alone, and reported feeling very lonely.</p>
+<p>Now we can rerun the model with this outlier omitted:</p>
+<pre class="r"><code>model2 &lt;- lm(loneliness ~ .*time_alone, data = data_clean_mh)
+summary(model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_clean_mh)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.98403 -0.48734  0.01331  0.45859  2.48196 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                0.79882    0.37897   2.108 0.035461 *  
+## alone_affinity             0.52131    0.14476   3.601 0.000343 ***
+## time_alone                 0.21964    0.10738   2.045 0.041259 *  
+## alone_affinity:time_alone -0.07595    0.03861  -1.967 0.049624 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7171 on 595 degrees of freedom
+## Multiple R-squared:  0.05384,    Adjusted R-squared:  0.04907 
+## F-statistic: 11.29 on 3 and 595 DF,  p-value: 3.289e-07</code></pre>
+<p>The interaction is still significant, but just barely, with a <em>p</em>-value of .049.</p>
+</div>
+<div id="model-3---minimum-covariance-determinant" class="section level3">
+<h3>Model 3 - Minimum Covariance Determinant</h3>
+<p>Is this enough to conclude that the data supports the model? Many would probably be content to stop here, but we haven’t adequately dealt with the outlier infestation. This demonstrates the fallability of MD, which Leys et al. (2018) argue is not a robust way to determine outliers. The problem lies with the fact that MD uses the means and covariances of all the data - including the outliers - and bases the individual difference scores from these values. If we’re really interested in identifying cases that stray from the pack, it makes more sense to base the criteria for removal using <em>a subset of the data that is the most central</em>. This is the idea behind <strong>Minimum Covariance Determinant</strong>, which calculates the mean and covariance matrix based on the most central subset of the data.</p>
+<p>We’ll use this to calculate new distance scores from a 75% subset of the data that is highly central. For this, we need the <em>MASS</em> package. The approach for calculating the distance scores is similar, and we can use the same cut-off score as before.</p>
+<pre class="r"><code>library(MASS)
+
+output75 &lt;- cov.mcd(data_outlier, quantile.used = nrow(data_outlier)*.75)
+
+mhmcd75 &lt;- mahalanobis(data_outlier, output75$center, output75$cov)
+
+names_outlier_MCD75 &lt;- which(mhmcd75 &gt; cutoff)
+
+excluded_mcd75 &lt;- names_outlier_MCD75
+
+data_clean_mcd &lt;- data_outlier[-excluded_mcd75, ]
+
+data_outlier[excluded_mcd75, ]</code></pre>
+<p>This approach identified 9 outliers, as opposed to the 1 identified with the traditional MD. Let’s see whether removing these cases changes the results:</p>
+<pre class="r"><code>model3 &lt;- lm(loneliness ~ .*time_alone, data = data_clean_mcd)
+summary(model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = loneliness ~ . * time_alone, data = data_clean_mcd)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.9695 -0.4725  0.0168  0.4519  2.5129 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)                1.18154    0.39213   3.013   0.0027 **
+## alone_affinity             0.36392    0.15217   2.391   0.0171 * 
+## time_alone                 0.08494    0.11128   0.763   0.4456   
+## alone_affinity:time_alone -0.02316    0.04057  -0.571   0.5683   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7064 on 587 degrees of freedom
+## Multiple R-squared:  0.05802,    Adjusted R-squared:  0.0532 
+## F-statistic: 12.05 on 3 and 587 DF,  p-value: 1.153e-07</code></pre>
+<p>Wow. Removing 9 data points was enough to decimate the significance of the interaction - the <em>p</em>-value is now .568. This is clearly demonstrated in the simple slopes:</p>
+<pre class="r"><code>model3_int &lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_clean_mcd)
+
+interact_plot(model3_int, pred = &quot;time_alone&quot;, modx = &quot;alone_affinity&quot;) +
+  theme_apa()</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Of course, this would be a disappointing realization for any researcher. We do see, however, that the correlations are better estimated now that these outliers are removed:</p>
+<pre class="r"><code>pairs.panels(data_clean_mcd, stars = TRUE)</code></pre>
+<p><img src="/post/outliers/index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>This simulation was a pathological (but realistic) example of how outliers can dramatically skew results, even with reasonably large samples. The Minimum Covariance Determinant version of MD is a more robust method of identifying and removing outliers that would otherwise go unnoticed with traditional MD.</p>
+<p>Many researchers in psychology are uncomfortable with removing outliers because they worry about losing statistical power. Others feel that removing outliers is in some way dissociating their data from reality because “in the real world, there are outliers - people are different!”. Although true, the argument shouldn’t be about whether outliers exist or not, but how much they impact the conclusions we draw from our data. In this simulation, we saw that a difference of 8 cases out of 600 was enough to turn a non-significant result significant. If our goal is to generalize our findings to a larger population, it would be foolish to do so on the basis of 8 outlying cases.</p>
+<p>The article by Leys et al. (2018) offers suggestions about how to approach outliers. Ideally, a researcher should pre-register their plan for handling outliers. In a post-hoc situation, they advise publishing results with and without outliers. At the very least, we should be acknowledging outliers, rather than pretending the don’t exist.</p>
+<p>As a final note, I highly recommend reading the article by Leys et al. (2018). It provides a better theoeretical grasp of MD and MCD. Some of the code used in this example (specifically, the codes for calculating MD and MCD) was used from their article. See below for the full reference.</p>
+<p><strong>References</strong></p>
+<p>Leys, C., Klein, O., Dominicy, Y., &amp; Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. <em>Journal of Experimental Social Psychology, 74</em>, 150-156.</p>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/r/">R</a>
+  
+</div>
+
+
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="/img/portrait.jpg" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Will Hipson</a></h5>
+    <h6 class="card-subtitle">PhD Candidate, Psychology</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.com/citations?user=NjVAwkcAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.researchgate.net/profile/Will_Hipson" target="_blank" rel="noopener">
+          <i class="ai ai-researchgate"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.mendeley.com/profiles/will-hipson/" target="_blank" rel="noopener">
+          <i class="ai ai-mendeley"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+    <div class="article-widget">
+      <div class="hr-light"></div>
+      <h3>Related</h3>
+      <ul>
+        
+        <li><a href="/project/r/">R</a></li>
+        
+      </ul>
+    </div>
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  
+
+  <p class="powered-by">
+    &copy; 2018 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academic.min.70f0041f5a24c6a675ac218c98d7ef71.js"></script>
+
+    
+
+  </body>
+</html>
+

@@ -1,15 +1,15 @@
 ---
 title: A New Way to Handle Multivariate Outliers
 author: ~
-date: '2019-01-09'
-slug: test
+date: '2019-01-10'
+slug: outliers
 categories: ["R"]
 tags: ["R"]
 ---
 
 
 
-<p>Psychologists have a history of</p>
+<p>Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to <em>cleanse</em> datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.</p>
 <pre class="r"><code>library(psych)
 library(tidyverse)
 library(simstudy)
