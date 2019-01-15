@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Sat, 01 Sep 2018 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="/publication_types/2/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
+      <link>/publication/hipson-2019/</link>
+      <pubDate>Tue, 15 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>/publication/hipson-2019/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Self-regulation, learning problems, and maternal authoritarian parenting in Chinese children: A developmental cascades model</title>

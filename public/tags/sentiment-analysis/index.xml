@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Wed, 09 Jan 2019 00:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="/tags/sentiment-analysis/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
+      <link>/publication/hipson-2019/</link>
+      <pubDate>Tue, 15 Jan 2019 00:00:00 -0500</pubDate>
+      
+      <guid>/publication/hipson-2019/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Sentiment Analysis</title>

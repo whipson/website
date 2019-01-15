@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Thu, 10 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jan 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Plotting the Affect Circumplex in R</title>
+      <link>/post/circumplex/circumplex/</link>
+      <pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/circumplex/circumplex/</guid>
+      <description>I’m a strong adherent to the circumplex model of emotions introduced by James Russell in the late 1980s. Russell argued that all emotional experience can be boiled down to two dimensions: valence and arousal, with valence being how positive or negative you feel and arousal being how sluggish or emotionally activated you feel. The emotions we commonly label as anger, sadness, joy, etc. can be mapped within this affective two-dimensional space, such that joy is a high valence, high arousal emotion, whereas boredom is a moderately low valence and low arousal emotion.</description>
+    </item>
     
     <item>
       <title>A New Way to Handle Multivariate Outliers</title>

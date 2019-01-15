@@ -4,6 +4,22 @@
     
     <url>
     
+      <loc>/publication/hipson-2019/</loc>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/post/circumplex/circumplex/</loc>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/outliers/outliers/</loc>
       <lastmod>2019-01-10T00:00:00+00:00</lastmod>
     </url>
@@ -133,7 +149,7 @@
     <url>
     
       <loc>/publication_types/2/</loc>
-      <lastmod>2018-09-01T00:00:00-04:00</lastmod>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -150,7 +166,16 @@
     <url>
     
       <loc>/tags/emotion-dynamics/</loc>
-      <lastmod>2019-01-09T00:00:00-05:00</lastmod>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/emotion-dynamics/</loc>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -168,7 +193,7 @@
     <url>
     
       <loc>/publication_types/</loc>
-      <lastmod>2018-09-01T00:00:00-04:00</lastmod>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -177,7 +202,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2019-01-10T00:00:00+00:00</lastmod>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -186,7 +211,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2019-01-10T00:00:00+00:00</lastmod>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -195,7 +220,7 @@
     <url>
     
       <loc>/tags/sentiment-analysis/</loc>
-      <lastmod>2019-01-09T00:00:00-05:00</lastmod>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -228,7 +253,7 @@
     <url>
     
       <loc>/tags/</loc>
-      <lastmod>2019-01-09T00:00:00-05:00</lastmod>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

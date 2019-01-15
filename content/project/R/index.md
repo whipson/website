@@ -44,4 +44,4 @@ url_custom = []
   focal_point = "Smart"
 +++
 
-
+R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I'm interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.
