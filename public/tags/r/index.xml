@@ -9,7 +9,7 @@
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
     
-        <atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -27,78 +27,7 @@
       <pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/circumplex/circumplex/</guid>
-      <description>
-
-
-&lt;p&gt;I’m a strong adherent to the &lt;em&gt;circumplex&lt;/em&gt; model of emotions introduced by James Russell in the late 1980s. Russell argued that all emotional experience can be boiled down to two dimensions: valence and arousal, with valence being how positive or negative you feel and arousal being how sluggish or emotionally activated you feel. The emotions we commonly label as anger, sadness, joy, etc. can be mapped within this &lt;em&gt;affective&lt;/em&gt; two-dimensional space, such that joy is a high valence, high arousal emotion, whereas boredom is a moderately low valence and low arousal emotion.&lt;/p&gt;
-&lt;p&gt;This kind of model is great in the field of emotion dynamics, where we are interested in how emotions change over time. It’s great because we don’t have to get bogged down in philosophical debates about whether someone is in a state of sadness or not, but can instead focus on quantifying and mapping changes in valence and arousal. For my doctoral dissertation, I’m using the circumplex model of emotions to explore how emotions change over time in instances when people are alone or with others. Briefly, I’m interested in whether being alone reduces arousal (i.e., makes you more calm). Some evidence in support of this is offered in a recent paper by Nguyen, Ryan, &amp;amp; Deci (2018), although they didn’t use a circumplex approach to emotions.&lt;/p&gt;
-&lt;p&gt;The circumplex model shines in another way: because it models emotional states in two dimensions, it can be presented visually. This is what I’m attempting to do for my own research. So for now, I’ll simulate some data akin to what I’ll be analyzing in my dissertation, starting simply with just two time points and one condition. The data will represent participants’ valence and arousal (Likert scale of 1-7) at baseline and the same measurements one hour later. I’ll use the &lt;em&gt;simstudy&lt;/em&gt; package to generate the data.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(simstudy)
-library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Here’s the code for simulating the data and binding it all together. I’m using the function &lt;em&gt;genCorGen&lt;/em&gt; to simulate and generate correlated data for valence and arousal, respectively. In this call, the params refer to the mean and standard deviations, while rho is the correlation coefficient.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(190113)
-
-dx &amp;lt;- genCorGen(600, nvars = 2, params1 = c(4.79, 4.02), params2 = c(1.3, .9), dist = &amp;quot;normal&amp;quot;,
-                rho = .67, corstr = &amp;quot;cs&amp;quot;, wide = TRUE,
-                cnames = c(&amp;quot;valence1&amp;quot;, &amp;quot;valence2&amp;quot;))
-
-dv &amp;lt;- genCorGen(600, nvars = 2, params1 = c(4.12, 3.97), params2 = c(.80, 1.2), dist = &amp;quot;normal&amp;quot;,
-                rho = .43, corstr = &amp;quot;cs&amp;quot;, wide = TRUE,
-                cnames = c(&amp;quot;arousal1&amp;quot;, &amp;quot;arousal2&amp;quot;))
-
-core &amp;lt;- data.frame(round(dx), round(dv[, c(2, 3)]))
-
-core$valence1[core$valence1 &amp;gt; 7] &amp;lt;- 7&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;After generating the data for valence and arousal, I binded the two variables, rounded them to the nearest integer, and trimmed cases that exceeded the 7-point cut-off.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(psych)
-
-describe(core)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##          vars   n   mean     sd median trimmed    mad min max range  skew
-## id          1 600 300.50 173.35  300.5  300.50 222.39   1 600   599  0.00
-## valence1    2 600   4.81   1.10    5.0    4.84   1.48   1   7     6 -0.16
-## valence2    3 600   4.06   0.94    4.0    4.05   1.48   1   7     6 -0.01
-## arousal1    4 600   4.14   0.92    4.0    4.15   1.48   2   7     5 -0.10
-## arousal2    5 600   4.08   1.14    4.0    4.09   1.48   1   7     6 -0.05
-##          kurtosis   se
-## id          -1.21 7.08
-## valence1    -0.12 0.04
-## valence2     0.17 0.04
-## arousal1    -0.26 0.04
-## arousal2    -0.05 0.05&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The summary statistics check out. So now it’s time to plot the data. The function I’m quaintly calling &lt;em&gt;circumplexi&lt;/em&gt; takes four vectors as inputs (time 1 valence, time 2 valence, time 1 arousal, time 2 arousal) and returns a circumplex plot. As it stands, it’s not the most intuitive function, but it produces a decent looking plot.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;circumplexi &amp;lt;- function(valence_time1, valence_time2, arousal_time1, arousal_time2) {
-  v1 &amp;lt;- valence_time1
-  v2 &amp;lt;- valence_time2
-  a1 &amp;lt;- arousal_time1
-  a2 &amp;lt;- arousal_time2
-  
-  v1mean &amp;lt;- mean(valence_time1, na.rm = TRUE)
-  v2mean &amp;lt;- mean(valence_time2, na.rm = TRUE)
-  a1mean &amp;lt;- mean(arousal_time1, na.rm = TRUE)
-  a2mean &amp;lt;- mean(arousal_time2, na.rm = TRUE)
-  
-  ggplot() +
-    geom_segment(aes(x = (min(v1) + max(v1))/2, y = min(v1), xend = (min(v1) + max(v1))/2, yend = max(v1)), color = &amp;quot;gray60&amp;quot;, size = 1) +
-    geom_segment(aes(x = min(v1), y = (min(v1) + max(v1))/2, xend = max(v1), yend = (min(v1) + max(v1))/2), color = &amp;quot;gray60&amp;quot;, size = 1) +
-    geom_point(aes(x = a1mean, y = v1mean, size = 5, color = &amp;quot;Time 1&amp;quot;)) +
-    geom_point(aes(x = a2mean, y = v2mean, size = 5, color = &amp;quot;Time 2&amp;quot;)) +
-    scale_x_discrete(name = &amp;quot;arousal&amp;quot;, limits = c(min(v1):max(v1)), expand = c(0, 0)) +
-    scale_y_discrete(name = &amp;quot;valence&amp;quot;, limits = c(min(v1):max(v1)), expand = c(0, 0)) +
-    geom_segment(aes(x = a1mean,
-                     y = v1mean, 
-                     xend = a2mean,
-                     yend = v2mean),
-                 arrow = arrow(type = &amp;quot;closed&amp;quot;, length = unit(.125, &amp;quot;inches&amp;quot;))) +
-    coord_fixed() + 
-    theme_light() +
-    labs(title = &amp;quot;Change in Affect from Time 1 to Time 2&amp;quot;,
-         subtitle = &amp;quot;Red dot is affect at Time 1. Blue dot is affect at Time 2&amp;quot;) +
-    theme(legend.position = &amp;quot;none&amp;quot;)
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;circumplexi(core$valence1, core$valence2, core$arousal1, core$arousal2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/circumplex/Affect_Circumplex_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;In this example, the plot shows that affect becomes more neutral (i.e, returns to baseline) following Time 1. In my own research, I’ll be using circumplex plots to depict this change between multiple groups as well. For now, this is a good start.&lt;/p&gt;
-</description>
+      <description>I’m a strong adherent to the circumplex model of emotions introduced by James Russell in the late 1980s. Russell argued that all emotional experience can be boiled down to two dimensions: valence and arousal, with valence being how positive or negative you feel and arousal being how sluggish or emotionally activated you feel. The emotions we commonly label as anger, sadness, joy, etc. can be mapped within this affective two-dimensional space, such that joy is a high valence, high arousal emotion, whereas boredom is a moderately low valence and low arousal emotion.</description>
     </item>
     
     <item>
@@ -107,206 +36,7 @@ describe(core)&lt;/code&gt;&lt;/pre&gt;
       <pubDate>Thu, 10 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/outliers/outliers/</guid>
-      <description>
-
-
-&lt;p&gt;Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to &lt;em&gt;cleanse&lt;/em&gt; datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(psych)
-library(tidyverse)
-library(simstudy)
-library(jtools)&lt;/code&gt;&lt;/pre&gt;
-&lt;div id=&#34;a-hypothetical-case&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;A Hypothetical Case&lt;/h2&gt;
-&lt;p&gt;I’ll pretend that I have data on participants’ self-reported &lt;em&gt;affinity for aloneness&lt;/em&gt; (i.e., how much time they like being alone), &lt;em&gt;time alone&lt;/em&gt; (i.e., number of hours typically spent alone per week), and &lt;em&gt;loneliness&lt;/em&gt;. We might expect that people who spend more time alone feel more loneliness. However, if you’re the kind of person who enjoys being alone, maybe being by yourself isn’t so bad. In other words, I’m interested in the &lt;em&gt;moderating&lt;/em&gt; effect of time alone on the association between affinity for aloneness and loneliness.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;generating-the-data&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Generating the Data&lt;/h2&gt;
-&lt;p&gt;I’ll simulate 600 cases using the &lt;em&gt;simstudy&lt;/em&gt; package. Because I want the variables correlated, I’ll specify a correlation matrix that makes theoretical sense.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;c &amp;lt;- matrix(c(1, .43, .28, .43, 1, .12, .28, .12, 1), nrow = 3)
-c&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##      [,1] [,2] [,3]
-## [1,] 1.00 0.43 0.28
-## [2,] 0.43 1.00 0.12
-## [3,] 0.28 0.12 1.00&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now, I can use the correlation matrix when I generate the data. In the function &lt;em&gt;genCorData&lt;/em&gt;, &lt;strong&gt;mu&lt;/strong&gt; refers to the sample means and &lt;strong&gt;sigma&lt;/strong&gt; refers to their respective standard deviations.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(206134)
-
-data &amp;lt;- genCorData(600, mu = c(2.65, 3.56, 2.21), sigma = c(.56, 1.12, .70), corMatrix = c)
-
-data &amp;lt;- data %&amp;gt;%
-  select(-id) %&amp;gt;%
-  rename(alone_affinity = V1, time_alone = V2, loneliness = V3)
-
-data&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##      alone_affinity time_alone loneliness
-##   1:       2.053861   2.880370   1.750774
-##   2:       2.782888   5.131749   1.646151
-##   3:       2.429589   1.488717   2.333513
-##   4:       2.289647   3.711900   2.780851
-##   5:       3.177230   3.629568   2.694580
-##  ---                                     
-## 596:       2.660343   4.055748   1.811799
-## 597:       1.564866   2.921037   1.842257
-## 598:       2.742394   4.205703   2.598651
-## 599:       1.439261   2.065413   1.547111
-## 600:       3.137692   4.936879   2.580417&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;With the data generated, I can take a look at the univariate and multivariate distributions in one fell swoop using the function &lt;em&gt;pairs.panels&lt;/em&gt; from the &lt;em&gt;psych&lt;/em&gt; package.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Everything looks normal and the correlations are pretty close to the ones that I chose.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;bring-in-the-outliers&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Bring in the Outliers!&lt;/h2&gt;
-&lt;p&gt;To make this example more pathological, I’ll introduce some multivariate outliers. I won’t show the code for this, but all I’ve done is manually change 20 cases.&lt;/p&gt;
-&lt;p&gt;Looking at the data again, it’s clear that the outliers have an effect. The sample correlations are still significant, but quite off the mark.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data_outlier, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;div id=&#34;model-1-all-data---including-outliers&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Model 1: All Data - Including Outliers&lt;/h3&gt;
-&lt;p&gt;What if we ran a linear regression on these variables? Here, I’ll run a hierarchical linear regression with the first step predicting loneliness from affinity for aloneness and time alone. The second step adds an interaction (this is the moderation I mentioned earlier).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model1 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_outlier)
-summary(model1)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## 
-## Call:
-## lm(formula = loneliness ~ . * time_alone, data = data_outlier)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.99016 -0.48682  0.01538  0.46143  2.48231 
-## 
-## Coefficients:
-##                           Estimate Std. Error t value Pr(&amp;gt;|t|)    
-## (Intercept)                0.66138    0.36935   1.791   0.0739 .  
-## alone_affinity             0.58212    0.13974   4.166 3.56e-05 ***
-## time_alone                 0.24982    0.10581   2.361   0.0185 *  
-## alone_affinity:time_alone -0.08935    0.03772  -2.369   0.0182 *  
-## ---
-## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-## 
-## Residual standard error: 0.718 on 596 degrees of freedom
-## Multiple R-squared:  0.06105,    Adjusted R-squared:  0.05632 
-## F-statistic: 12.92 on 3 and 596 DF,  p-value: 3.478e-08&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Overall, affinity for aloneness and time alone both uniquely positively predict loneliness. More importantly though, the interaction is statistically significant with a &lt;em&gt;p&lt;/em&gt;-value at .018. We can visualize this more clearly with simple slopes:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model1_int &amp;lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_outlier)
-
-interact_plot(model1_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;) +
-  theme_apa()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;A pristine looking interaction plot! Our simulated data shows that at higher affinity for aloneness the association between time alone and loneliness becomes more negative. This is what was expected.&lt;/p&gt;
-&lt;p&gt;If this were real data, these results are potentially publishable. What is not immediately clear though is that outliers have a severe impact on this finding. Let’s look at the simple slopes a bit differently:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;interact_plot(model1_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;, linearity.check = TRUE) +
-  theme_apa()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Oh dear… The assumption of linearity for these subsamples is clearly not met. It looks like some cases are skewing the associations among the high and low affinity groups.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;model-2---mahalanobis-distance&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Model 2 - Mahalanobis Distance&lt;/h3&gt;
-&lt;p&gt;A popular way to identify and deal with multivariate outliers is to use Mahalanobis Distance (MD). MD calculates the distance of each case from the central mean. Larger values indicate that a case is farther from where most of the points cluster. The &lt;em&gt;psych&lt;/em&gt; package contains a function that quickly calculates and plots MDs:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;outlier(data_outlier)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Wow, one case is way out there, you can hardly see it! Otherwise, most of the points appear to follow in line. We might prefer a more formal test of outliers by using a cut-off score for MD. Here, I’ll recalcuate the MDs using the &lt;em&gt;mahalanobis&lt;/em&gt; function and identify those that fall above the cut-off score for a chi-square with &lt;em&gt;k&lt;/em&gt; degrees of freedom (3 for 3 variables, but I’ll use &lt;em&gt;ncol&lt;/em&gt; in case I want to add or remove variables later):&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;md &amp;lt;- mahalanobis(data, center = colMeans(data_outlier), cov = cov(data_outlier))
-
-alpha &amp;lt;- .001
-
-cutoff &amp;lt;- (qchisq(p = 1 - alpha, df = ncol(data_outlier)))
-
-names_outliers_MH &amp;lt;- which(md &amp;gt; cutoff)
-
-excluded_mh &amp;lt;- names_outliers_MH
-
-data_clean_mh &amp;lt;- data_outlier[-excluded_mh, ]
-
-data[excluded_mh, ]&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##    alone_affinity time_alone loneliness
-## 1:            4.6        1.4        4.2&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Using this cut-off, only one outlier was identified. Not surprisingly, it’s the case with a huge MD relative to the others. Probing this simulated case closely, we see that this hypothetical individual really likes being alone, spent little time alone, and reported feeling very lonely.&lt;/p&gt;
-&lt;p&gt;Now we can rerun the model with this outlier omitted:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model2 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_clean_mh)
-summary(model2)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## 
-## Call:
-## lm(formula = loneliness ~ . * time_alone, data = data_clean_mh)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.98403 -0.48734  0.01331  0.45859  2.48196 
-## 
-## Coefficients:
-##                           Estimate Std. Error t value Pr(&amp;gt;|t|)    
-## (Intercept)                0.79882    0.37897   2.108 0.035461 *  
-## alone_affinity             0.52131    0.14476   3.601 0.000343 ***
-## time_alone                 0.21964    0.10738   2.045 0.041259 *  
-## alone_affinity:time_alone -0.07595    0.03861  -1.967 0.049624 *  
-## ---
-## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-## 
-## Residual standard error: 0.7171 on 595 degrees of freedom
-## Multiple R-squared:  0.05384,    Adjusted R-squared:  0.04907 
-## F-statistic: 11.29 on 3 and 595 DF,  p-value: 3.289e-07&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The interaction is still significant, but just barely, with a &lt;em&gt;p&lt;/em&gt;-value of .049.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;model-3---minimum-covariance-determinant&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Model 3 - Minimum Covariance Determinant&lt;/h3&gt;
-&lt;p&gt;Is this enough to conclude that the data supports the model? Many would probably be content to stop here, but we haven’t adequately dealt with the outlier infestation. This demonstrates the fallability of MD, which Leys et al. (2018) argue is not a robust way to determine outliers. The problem lies with the fact that MD uses the means and covariances of all the data - including the outliers - and bases the individual difference scores from these values. If we’re really interested in identifying cases that stray from the pack, it makes more sense to base the criteria for removal using &lt;em&gt;a subset of the data that is the most central&lt;/em&gt;. This is the idea behind &lt;strong&gt;Minimum Covariance Determinant&lt;/strong&gt;, which calculates the mean and covariance matrix based on the most central subset of the data.&lt;/p&gt;
-&lt;p&gt;We’ll use this to calculate new distance scores from a 75% subset of the data that is highly central. For this, we need the &lt;em&gt;MASS&lt;/em&gt; package. The approach for calculating the distance scores is similar, and we can use the same cut-off score as before.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(MASS)
-
-output75 &amp;lt;- cov.mcd(data_outlier, quantile.used = nrow(data_outlier)*.75)
-
-mhmcd75 &amp;lt;- mahalanobis(data_outlier, output75$center, output75$cov)
-
-names_outlier_MCD75 &amp;lt;- which(mhmcd75 &amp;gt; cutoff)
-
-excluded_mcd75 &amp;lt;- names_outlier_MCD75
-
-data_clean_mcd &amp;lt;- data_outlier[-excluded_mcd75, ]
-
-data_outlier[excluded_mcd75, ]&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This approach identified 9 outliers, as opposed to the 1 identified with the traditional MD. Let’s see whether removing these cases changes the results:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model3 &amp;lt;- lm(loneliness ~ .*time_alone, data = data_clean_mcd)
-summary(model3)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## 
-## Call:
-## lm(formula = loneliness ~ . * time_alone, data = data_clean_mcd)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.9695 -0.4725  0.0168  0.4519  2.5129 
-## 
-## Coefficients:
-##                           Estimate Std. Error t value Pr(&amp;gt;|t|)   
-## (Intercept)                1.18154    0.39213   3.013   0.0027 **
-## alone_affinity             0.36392    0.15217   2.391   0.0171 * 
-## time_alone                 0.08494    0.11128   0.763   0.4456   
-## alone_affinity:time_alone -0.02316    0.04057  -0.571   0.5683   
-## ---
-## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-## 
-## Residual standard error: 0.7064 on 587 degrees of freedom
-## Multiple R-squared:  0.05802,    Adjusted R-squared:  0.0532 
-## F-statistic: 12.05 on 3 and 587 DF,  p-value: 1.153e-07&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Wow. Removing 9 data points was enough to decimate the significance of the interaction - the &lt;em&gt;p&lt;/em&gt;-value is now .568. This is clearly demonstrated in the simple slopes:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model3_int &amp;lt;- lm(loneliness ~ time_alone * alone_affinity, data = data_clean_mcd)
-
-interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quot;alone_affinity&amp;quot;) +
-  theme_apa()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Of course, this would be a disappointing realization for any researcher. We do see, however, that the correlations are better estimated now that these outliers are removed:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pairs.panels(data_clean_mcd, stars = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/outliers/index_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;This simulation was a pathological (but realistic) example of how outliers can dramatically skew results, even with reasonably large samples. The Minimum Covariance Determinant version of MD is a more robust method of identifying and removing outliers that would otherwise go unnoticed with traditional MD.&lt;/p&gt;
-&lt;p&gt;Many researchers in psychology are uncomfortable with removing outliers because they worry about losing statistical power. Others feel that removing outliers is in some way dissociating their data from reality because “in the real world, there are outliers - people are different!”. Although true, the argument shouldn’t be about whether outliers exist or not, but how much they impact the conclusions we draw from our data. In this simulation, we saw that a difference of 8 cases out of 600 was enough to turn a non-significant result significant. If our goal is to generalize our findings to a larger population, it would be foolish to do so on the basis of 8 outlying cases.&lt;/p&gt;
-&lt;p&gt;The article by Leys et al. (2018) offers suggestions about how to approach outliers. Ideally, a researcher should pre-register their plan for handling outliers. In a post-hoc situation, they advise publishing results with and without outliers. At the very least, we should be acknowledging outliers, rather than pretending the don’t exist.&lt;/p&gt;
-&lt;p&gt;As a final note, I highly recommend reading the article by Leys et al. (2018). It provides a better theoeretical grasp of MD and MCD. Some of the code used in this example (specifically, the codes for calculating MD and MCD) was used from their article. See below for the full reference.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Leys, C., Klein, O., Dominicy, Y., &amp;amp; Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. &lt;em&gt;Journal of Experimental Social Psychology, 74&lt;/em&gt;, 150-156.&lt;/p&gt;
-&lt;/div&gt;
-</description>
+      <description>Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to cleanse datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.</description>
     </item>
     
     <item>
@@ -315,8 +45,7 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/r/</guid>
-      <description>&lt;p&gt;R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.&lt;/p&gt;
-</description>
+      <description>R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.</description>
     </item>
     
   </channel>
