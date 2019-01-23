@@ -90,6 +90,16 @@ describe(core)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/circumplex/Affect_Circumplex_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;In this example, the plot shows that affect becomes more neutral (i.e, returns to baseline) following Time 1. In my own research, I’ll be using circumplex plots to depict this change between multiple groups as well. For now, this is a good start.&lt;/p&gt;
 </description>
+      
+            <category>R</category>
+      
+            <category>Emotion Dynamics</category>
+      
+      
+            <category>R</category>
+      
+            <category>Emotion Dynamics</category>
+      
     </item>
     
     <item>
@@ -298,6 +308,12 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
 &lt;p&gt;Leys, C., Klein, O., Dominicy, Y., &amp;amp; Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. &lt;em&gt;Journal of Experimental Social Psychology, 74&lt;/em&gt;, 150-156.&lt;/p&gt;
 &lt;/div&gt;
 </description>
+      
+            <category>R</category>
+      
+      
+            <category>R</category>
+      
     </item>
     
   </channel>

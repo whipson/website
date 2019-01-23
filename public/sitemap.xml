@@ -165,7 +165,7 @@
     
     <url>
     
-      <loc>/tags/emotion-dynamics/</loc>
+      <loc>/categories/emotion-dynamics/</loc>
       <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -174,7 +174,7 @@
     
     <url>
     
-      <loc>/categories/emotion-dynamics/</loc>
+      <loc>/tags/emotion-dynamics/</loc>
       <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -201,8 +201,8 @@
     
     <url>
     
-      <loc>/tags/r/</loc>
-      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
+      <loc>/categories/r/</loc>
+      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -210,8 +210,8 @@
     
     <url>
     
-      <loc>/categories/r/</loc>
-      <lastmod>2019-01-15T00:00:00+00:00</lastmod>
+      <loc>/tags/r/</loc>
+      <lastmod>2019-01-15T00:00:00-05:00</lastmod>
       <priority>0</priority>
     </url>
     
