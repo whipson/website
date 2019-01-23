@@ -9,7 +9,7 @@
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
     
-	<atom:link href="/home/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/home/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -27,7 +27,17 @@
       <pubDate>Sun, 15 Oct 2017 00:00:00 -0400</pubDate>
       
       <guid>/home/hero/</guid>
-      <description>The highly flexible website framework for Hugo with an extensible plugin mechanism. Create a beautifully simple site in under 10 minutes 🚀 Latest release   Star</description>
+      <description>&lt;p&gt;The highly flexible website framework for Hugo with an extensible plugin mechanism. Create a beautifully simple site in under 10 minutes 🚀
+&lt;div style=&#34;margin-top: -0.5rem;&#34;&gt;
+  &lt;a id=&#34;academic-release&#34; href=&#34;https://sourcethemes.com/academic/updates&#34; data-repo=&#34;gcushen/hugo-academic&#34;&gt;
+  Latest release &lt;!-- V --&gt;
+  &lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&#34;mt-3&#34;&gt;
+  &lt;a class=&#34;github-button&#34; href=&#34;https://github.com/gcushen/hugo-academic&#34; data-icon=&#34;octicon-star&#34; data-size=&#34;large&#34; data-show-count=&#34;true&#34; aria-label=&#34;Star this on GitHub&#34;&gt;Star&lt;/a&gt;
+&lt;/div&gt;
+&lt;script async defer src=&#34;https://buttons.github.io/buttons.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -36,7 +46,12 @@
       <pubDate>Wed, 20 Apr 2016 00:00:00 -0400</pubDate>
       
       <guid>/home/about/</guid>
-      <description>Biography I&amp;rsquo;m a graduate student at Carleton University, where I conduct research on emotions. I&amp;rsquo;m interested in how emotions change over time - both from moment-to-moment and over the course of human development. My current projects are focused on children&amp;rsquo;s and adolescents&amp;rsquo; emotion regulation and its links with social behaviors. I&amp;rsquo;m also interested in quantitative methodology, and applying new statistical approaches.</description>
+      <description>
+
+&lt;h1 id=&#34;biography&#34;&gt;Biography&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;m a graduate student at Carleton University, where I conduct research on emotions. I&amp;rsquo;m interested in how emotions change over time - both from moment-to-moment and over the course of human development. My current projects are focused on children&amp;rsquo;s and adolescents&amp;rsquo; emotion regulation and its links with social behaviors. I&amp;rsquo;m also interested in quantitative methodology, and applying new statistical approaches.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -135,9 +150,20 @@
       <pubDate>Wed, 20 Apr 2016 00:00:00 -0400</pubDate>
       
       <guid>/home/teaching/</guid>
-      <description>This is an example of using the custom widget to create your own homepage section.
-I am a teaching instructor for the following courses at University X:
- CS101: An intro to computer science CS102: An intro to computer science CS103: An intro to computer science CS104: An intro to computer science CS105: An intro to computer science CS106: An intro to computer science CS107: An intro to computer science  </description>
+      <description>&lt;p&gt;This is an example of using the &lt;em&gt;custom&lt;/em&gt; widget to create your own homepage section.&lt;/p&gt;
+
+&lt;p&gt;I am a teaching instructor for the following courses at University X:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CS101: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS102: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS103: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS104: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS105: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS106: An intro to computer science&lt;/li&gt;
+&lt;li&gt;CS107: An intro to computer science&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>

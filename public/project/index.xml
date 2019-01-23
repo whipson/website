@@ -9,7 +9,7 @@
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Wed, 09 Jan 2019 00:00:00 -0500</lastBuildDate>
     
-	<atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,7 +18,10 @@
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/emotion-dynamics/</guid>
-      <description>We often think of emotions as being there one moment and gone the next. However, we are always experiencing some sort of emotion - whether it&amp;rsquo;s boiling anger or vapid listlessness. The study of emotion dynamics is all about how emotions change over time. Emotions can change from one moment to the next - intensifying or deintensifying. I&amp;rsquo;m interested in exploring what predicts these complex changes. In particular, I&amp;rsquo;m interested in whether solitude impacts our emotional state.</description>
+      <description>&lt;p&gt;We often think of emotions as being there one moment and gone the next. However, we are always experiencing some sort of emotion - whether it&amp;rsquo;s boiling anger or vapid listlessness. The study of emotion dynamics is all about how emotions change over time. Emotions can change from one moment to the next - intensifying or deintensifying. I&amp;rsquo;m interested in exploring what predicts these complex changes. In particular, I&amp;rsquo;m interested in whether solitude impacts our emotional state.&lt;/p&gt;
+
+&lt;p&gt;Extending this further, we can describe change in emotion over &lt;em&gt;developmental&lt;/em&gt; time as well. For instance, we know that adolescents often experience more intense emotions compared to adults. My work attempts to explore emotion dynamics across multiple time scales.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -36,7 +39,8 @@
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/r/</guid>
-      <description>R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.</description>
+      <description>&lt;p&gt;R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -45,7 +49,8 @@
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/sentiment-analysis/</guid>
-      <description>In the era of Big Data, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over developmental time.</description>
+      <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time.&lt;/p&gt;
+</description>
     </item>
     
     <item>

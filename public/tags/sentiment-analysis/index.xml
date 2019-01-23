@@ -9,7 +9,7 @@
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
     
-	<atom:link href="/tags/sentiment-analysis/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/sentiment-analysis/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -27,7 +27,8 @@
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/sentiment-analysis/</guid>
-      <description>In the era of Big Data, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over developmental time.</description>
+      <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time.&lt;/p&gt;
+</description>
     </item>
     
   </channel>
