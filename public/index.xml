@@ -19,8 +19,6 @@
       
       <guid>/home/hero_carousel/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -40,8 +38,6 @@
 &lt;/div&gt;
 &lt;script async defer src=&#34;https://buttons.github.io/buttons.js&#34;&gt;&lt;/script&gt;&lt;/p&gt;
 </description>
-      
-      
     </item>
     
     <item>
@@ -56,8 +52,6 @@
 
 &lt;p&gt;I&amp;rsquo;m a graduate student at Carleton University, where I conduct research on emotions. I&amp;rsquo;m interested in how emotions change over time - both from moment-to-moment and over the course of human development. My current projects are focused on children&amp;rsquo;s and adolescents&amp;rsquo; emotion regulation and its links with social behaviors. I&amp;rsquo;m also interested in quantitative methodology, and applying new statistical approaches.&lt;/p&gt;
 </description>
-      
-      
     </item>
     
     <item>
@@ -67,8 +61,6 @@
       
       <guid>/home/skills/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -78,8 +70,6 @@
       
       <guid>/home/experience/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -89,8 +79,6 @@
       
       <guid>/home/projects/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -100,8 +88,6 @@
       
       <guid>/home/accomplishments/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -111,8 +97,6 @@
       
       <guid>/home/posts/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -122,8 +106,6 @@
       
       <guid>/home/publications/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -133,8 +115,6 @@
       
       <guid>/home/talks_selected/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -144,8 +124,6 @@
       
       <guid>/home/talks/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -155,8 +133,6 @@
       
       <guid>/home/publications_selected/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -166,8 +142,6 @@
       
       <guid>/home/contact/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -190,8 +164,6 @@
 &lt;li&gt;CS107: An intro to computer science&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-      
-      
     </item>
     
     <item>
@@ -201,8 +173,6 @@
       
       <guid>/home/tags/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -212,12 +182,6 @@
       
       <guid>/publication/hipson-2019/</guid>
       <description></description>
-      
-            <category>Sentiment Analysis</category>
-      
-            <category>R</category>
-      
-      
     </item>
     
     <item>
@@ -298,16 +262,6 @@ describe(core)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/circumplex/Affect_Circumplex_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;In this example, the plot shows that affect becomes more neutral (i.e, returns to baseline) following Time 1. In my own research, I’ll be using circumplex plots to depict this change between multiple groups as well. For now, this is a good start.&lt;/p&gt;
 </description>
-      
-            <category>R</category>
-      
-            <category>Emotion Dynamics</category>
-      
-      
-            <category>R</category>
-      
-            <category>Emotion Dynamics</category>
-      
     </item>
     
     <item>
@@ -516,12 +470,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
 &lt;p&gt;Leys, C., Klein, O., Dominicy, Y., &amp;amp; Ley, C. (2018). Detecting multivariate outliers: Use a robust variant of Mahalanobis distance. &lt;em&gt;Journal of Experimental Social Psychology, 74&lt;/em&gt;, 150-156.&lt;/p&gt;
 &lt;/div&gt;
 </description>
-      
-            <category>R</category>
-      
-      
-            <category>R</category>
-      
     </item>
     
     <item>
@@ -534,10 +482,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
 
 &lt;p&gt;Extending this further, we can describe change in emotion over &lt;em&gt;developmental&lt;/em&gt; time as well. For instance, we know that adolescents often experience more intense emotions compared to adults. My work attempts to explore emotion dynamics across multiple time scales.&lt;/p&gt;
 </description>
-      
-            <category>Emotion Dynamics</category>
-      
-      
     </item>
     
     <item>
@@ -547,12 +491,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/project/emotion-regulation/</guid>
       <description></description>
-      
-            <category>Social Development</category>
-      
-            <category>Emotion Dynamics</category>
-      
-      
     </item>
     
     <item>
@@ -563,10 +501,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <guid>/project/r/</guid>
       <description>&lt;p&gt;R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.&lt;/p&gt;
 </description>
-      
-            <category>R</category>
-      
-      
     </item>
     
     <item>
@@ -577,10 +511,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <guid>/project/sentiment-analysis/</guid>
       <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time.&lt;/p&gt;
 </description>
-      
-            <category>Sentiment Analysis</category>
-      
-      
     </item>
     
     <item>
@@ -590,10 +520,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/project/social-development-in-different-cultures/</guid>
       <description></description>
-      
-            <category>Social Development</category>
-      
-      
     </item>
     
     <item>
@@ -603,10 +529,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/project/social-withdrawal-and-socio-emotional-development/</guid>
       <description></description>
-      
-            <category>Social Development</category>
-      
-      
     </item>
     
     <item>
@@ -616,8 +538,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/publication/liu-et-al.-2018/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -628,8 +548,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <guid>/privacy/</guid>
       <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
 </description>
-      
-      
     </item>
     
     <item>
@@ -639,8 +557,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/publication/sette-et-al.-2018/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -650,8 +566,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/publication/liu-et-al.-2016/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -661,8 +575,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       
       <guid>/publication/hipson-et-al.-2017/</guid>
       <description></description>
-      
-      
     </item>
     
     <item>
@@ -687,8 +599,6 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
 
 &lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
 </description>
-      
-      
     </item>
     
     <item>
@@ -872,8 +782,6 @@ $$&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;Documentation&lt;/a&gt;&lt;/p&gt;
 </description>
-      
-      
     </item>
     
   </channel>
