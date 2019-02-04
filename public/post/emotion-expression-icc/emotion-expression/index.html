@@ -16,7 +16,7 @@
   
     
   
-  <meta name="description" content="I was recently introduced to Google Dataset Search, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs.">
+  <meta name="description" content="I was recently introduced to Google Dataset Search, an extension that searches for open access datasets. There I stumbled upon this dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs.">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/emotion-expression-icc/emotion-expression/">
@@ -121,7 +121,7 @@
   <meta property="og:site_name" content="Will Hipson">
   <meta property="og:url" content="/post/emotion-expression-icc/emotion-expression/">
   <meta property="og:title" content="The Face of (Dis)Agreement - Intraclass Correlations | Will Hipson">
-  <meta property="og:description" content="I was recently introduced to Google Dataset Search, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs."><meta property="og:image" content="/img/portrait.jpg">
+  <meta property="og:description" content="I was recently introduced to Google Dataset Search, an extension that searches for open access datasets. There I stumbled upon this dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs."><meta property="og:image" content="/img/portrait.jpg">
   <meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2019-02-04T00:00:00&#43;00:00">
@@ -468,7 +468,7 @@
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
-<p>I was recently introduced to <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by <a href="https://www.tandfonline.com/doi/full/10.1080/17405629.2017.1287073">Vesker et al. (2018)</a>. Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs. deactivated) (see my previous <a href="https://willhipson.netlify.com/post/circumplex/circumplex/">post</a> for more info on valence and arousal). The authors made some interesting observations about differences in childrens’ and adult’s ratings of these facial expressions.</p>
+<p>I was recently introduced to <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>, an extension that searches for open access datasets. There I stumbled upon this dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by <a href="https://www.tandfonline.com/doi/full/10.1080/17405629.2017.1287073">Vesker et al. (2018)</a>. Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs. deactivated) (see my previous <a href="https://willhipson.netlify.com/post/circumplex/circumplex/">post</a> for more info on valence and arousal). The authors made some interesting observations about differences in childrens’ and adult’s ratings of these facial expressions.</p>
 <p>However, absent from the writeup was a discussion about how reliable these ratings are. We might wonder about the extent to which people agree on the valence or arousal of a face and whether this varies between children and adults. Here, I tackle the issue of intraclass correlation (ICC) using the dataset published by Vesker et al. (2018). The data itself is openly accessible <a href="https://zenodo.org/record/293008#.XFXlr1xKhPZ">here</a>.</p>
 <p>First, I’ll load up the <em>tidyverse</em> and <em>readxl</em> packages, which will help with the data cleaning.</p>
 <pre class="r"><code>library(readxl)
@@ -897,9 +897,9 @@ Child
         
         <li><a href="/post/outliers/outliers/">A New Way to Handle Multivariate Outliers</a></li>
         
-        <li><a href="/project/emotion-regulation/">Emotion Regulation</a></li>
-        
         <li><a href="/project/r/">R</a></li>
+        
+        <li><a href="/project/emotion-regulation/">Emotion Regulation</a></li>
         
       </ul>
     </div>
