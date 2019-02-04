@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 3.3.0">
+  <meta name="generator" content="Hugo 0.52" />
+  <meta name="author" content="Will Hipson">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="I was recently introduced to Google Dataset Search, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/emotion-expression-icc/face-recognition/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-132275491-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/emotion-expression-icc/face-recognition/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Will Hipson">
+  <meta property="og:url" content="/post/emotion-expression-icc/face-recognition/">
+  <meta property="og:title" content="Is there Consensus in Emotional Expressions? Demonstrating ICCs in R | Will Hipson">
+  <meta property="og:description" content="I was recently introduced to Google Dataset Search, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs."><meta property="og:image" content="/img/portrait.jpg">
+  <meta property="og:locale" content="en-us">
+  
+  
+  
+  
+
+  
+
+  
+
+  <title>Is there Consensus in Emotional Expressions? Demonstrating ICCs in R | Will Hipson</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Will Hipson</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/files/Academic%20CV.pdf">
+            
+            <span>CV</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.r-bloggers.com/" target="_blank" rel="noopener">
+            
+            <span>R-bloggers</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Is there Consensus in Emotional Expressions? Demonstrating ICCs in R</h1>
+
+  
+
+  
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="" itemprop="datePublished">
+    <time datetime="" itemprop="dateModified">
+      Jan 1, 0001
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Is%20there%20Consensus%20in%20Emotional%20Expressions%3f%20Demonstrating%20ICCs%20in%20R&amp;url=%2fpost%2femotion-expression-icc%2fface-recognition%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2femotion-expression-icc%2fface-recognition%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2femotion-expression-icc%2fface-recognition%2f&amp;title=Is%20there%20Consensus%20in%20Emotional%20Expressions%3f%20Demonstrating%20ICCs%20in%20R"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2femotion-expression-icc%2fface-recognition%2f&amp;title=Is%20there%20Consensus%20in%20Emotional%20Expressions%3f%20Demonstrating%20ICCs%20in%20R"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Is%20there%20Consensus%20in%20Emotional%20Expressions%3f%20Demonstrating%20ICCs%20in%20R&amp;body=%2fpost%2femotion-expression-icc%2fface-recognition%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p>I was recently introduced to <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by <a href="https://www.tandfonline.com/doi/full/10.1080/17405629.2017.1287073">Vesker et al. (2018)</a>. Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs. deactivated) (see my previous <a href="https://willhipson.netlify.com/post/circumplex/circumplex/">post</a> for more info on valence and arousal). The authors made some interesting observations about differences in childrens’ and adult’s ratings of these facial expressions.</p>
+<p>However, one thing absent from the writeup was a discussion about how reliable these ratings are. We might wonder about the extent to which people agree on the valence or arousal of a face and whether this varies between children and adults. Here, I tackle the issue of intraclass correlation (ICC) using the dataset published by Vesker et al. (2018). The data itself is openly accessible <a href="https://zenodo.org/record/293008#.XFXlr1xKhPZ">here</a>.</p>
+<p>First, I’ll load up the <em>tidyverse</em> and <em>readxl</em> packages, which will help with the data cleaning.</p>
+<pre class="r"><code>library(readxl)
+library(tidyverse)
+
+options(digits = 3, scipen = -2)</code></pre>
+<p>Upon downloading the data, we’re immediately presented with an issue: it’s an xlsx document (Excel) containing multiple sheets, with each sheet representing a “condition” (Child vs. Adult) and (Valence vs. Arousal). On Stack Overflow, I found a useful function for reading in multiple sheets (<a href="https://stackoverflow.com/questions/12945687/read-all-worksheets-in-an-excel-workbook-into-an-r-list-with-data-frames">see here for original post</a>).</p>
+<pre class="r"><code>read_excel_allsheets &lt;- function(filename, tibble = TRUE) {
+  sheets &lt;- readxl::excel_sheets(filename)
+  x &lt;- lapply(sheets, function(x) readxl::read_excel(filename, sheet = x))
+  if(!tibble) x &lt;- lapply(x, as.data.frame)
+  names(x) &lt;- sheets
+  x
+}</code></pre>
+<p>Now, I’ll read in the data and extract each sheet. I’m using VA to refer to valence and AR for arousal.</p>
+<pre class="r"><code>faces &lt;- read_excel_allsheets(&quot;C:/Users/wille/Downloads/adults and 9yo all AR and VAL face ratings zenodo.xlsx&quot;)
+
+VA_adult_raw &lt;- faces$`VAL adult faces`
+VA_child_raw &lt;- faces$`Val 9yo faces`
+AR_adult_raw &lt;- faces$`AR adult faces`
+AR_child_raw &lt;- faces$`AR 9yo faces`</code></pre>
+<p>Let’s get a look at one of these datasets.</p>
+<pre class="r"><code>head(VA_adult_raw[, 1:20]) #Limiting preview to n = 20</code></pre>
+<pre><code>## # A tibble: 6 x 20
+##   ..1       ..2   ..3   ..4   ..5   ..6   ..7   ..8   ..9  ..10  ..11  ..12
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 dl sa ~     4     4     3     4     2     3     4     3     3     5     3
+## 2 dl sa ~     4     4     3     3     2     3     3     3     3     4     4
+## 3 lp sa ~     2     3     4     3     3     3     2     3     3     3     2
+## 4 lp sa ~     4     3     2     3     3     3     4     2     2     4     2
+## 5 ma sa ~     1     1     1     2     1     2     1     1     2     3     2
+## 6 md sa ~     2     1     1     2     2     3     1     1     2     3     2
+## # ... with 8 more variables: ..13 &lt;dbl&gt;, ..14 &lt;dbl&gt;, ..15 &lt;dbl&gt;,
+## #   ..16 &lt;dbl&gt;, ..17 &lt;dbl&gt;, ..18 &lt;dbl&gt;, ..19 &lt;dbl&gt;, ..20 &lt;dbl&gt;</code></pre>
+<p>It’s not immediately apparent what is being displayed here because the columns aren’t labeled. The article tells us that participants rated 48 faces, so based on the dimensions we can assume that each row is a face and each column is a participant who rated that face. Admittedly, it’s a less intuitive way of representing the data, but its actually ideal for computing ICCs.</p>
+<p>Still, there’s a lot of data cleaning and wrangling to be done here. First, we have some rows and columns that aren’t relevant, so we’ll get rid of those. Of note, <em>dplyr</em>’s lesser known <em>slice</em> function is helpful for identifying which rows we want to keep.</p>
+<pre class="r"><code>VA_adult &lt;- VA_adult_raw %&gt;%
+  slice(1:48) %&gt;%
+  select(-1, -mean, -SD, -`M mean`, -`F mean`, -`dist from 4`, -`0`, -aa, -Valence) %&gt;%
+  mutate(face = row_number()) %&gt;%
+  select(face, everything())</code></pre>
+<p>Now, to make the columns more intuitive, we’ll label them properly.</p>
+<pre class="r"><code>colnames(VA_adult)[2:161] &lt;- paste(&quot;rater&quot;, 1:160)</code></pre>
+<div id="plotting-the-scores" class="section level2">
+<h2>Plotting the Scores</h2>
+<p>We may want to plot the data to get a sense of the variability around raters’ labeling of valence across the 48 faces. Our data is currently in wide form, but we need to set it up such that all of the ratings are in one column. This is where <em>reshape2</em> comes into action.</p>
+<pre class="r"><code>library(reshape2)</code></pre>
+<p>The function <em>melt</em> will take our wide dataset and make it long. We supply it with an <em>id.vars</em> which tells it which of our original columns we want to stay as a column. Then it takes all of the other columns and condenses them into one variable.</p>
+<pre class="r"><code>VA_adult_melt &lt;- VA_adult %&gt;%
+  melt(id.vars = &quot;face&quot;, value.name = &quot;valence&quot;, variable.name = &quot;rater&quot;)
+
+head(VA_adult_melt)</code></pre>
+<pre><code>##   face   rater valence
+## 1    1 rater 1       4
+## 2    2 rater 1       4
+## 3    3 rater 1       2
+## 4    4 rater 1       4
+## 5    5 rater 1       1
+## 6    6 rater 1       2</code></pre>
+<p>Now we’ll turn this into a line graph with each line representing an individual rater’s valence ratings for each of the 48 faces. It will be crowded, but that’s OK. We just want to see if the lines cluster around each other or not.</p>
+<pre class="r"><code>VA_adult_melt %&gt;%
+  ggplot(aes(face, valence, group = rater, color = rater)) +
+  geom_line(size = .8, alpha = .5) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, size = 1.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Valence (higher = more positive)&quot;,
+       title = &quot;Adult Valence Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>There’s a clear division between the positive and negative faces. It seems that there’s strong agreement among adults as to what constitutes a positive or negative face.</p>
+<p>What if we looked at the distributions of the ratings for each face?</p>
+<pre class="r"><code>VA_adult_melt %&gt;%
+  group_by(face) %&gt;%
+  summarize(mean = mean(valence),
+            sd = sd(valence)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(face, mean)) +
+  geom_errorbar(aes(ymin = mean - 1.96*(sd/sqrt(ncol(VA_adult))),
+                    ymax = mean + 1.96*(sd/sqrt(ncol(VA_adult))))) +
+  geom_point(size = 2) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Valence (higher = more positive)&quot;,
+       title = &quot;Adult - Average Valence Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive; error bars = 95% CI&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>It tells the same story, but it’s a more polished figure. Notice how the error bars for the 95% confidence interval around the mean are quite small.</p>
+<div id="cleaning-the-remaining-datasets" class="section level3">
+<h3>Cleaning the Remaining Datasets</h3>
+<p>First, we’ll look at the dataset for 9-year-olds’ ratings of valence. Note that there are a few modifications to the script due to idiosyncracies with the original datasets.</p>
+<pre class="r"><code>VA_child &lt;- VA_child_raw %&gt;%
+  slice(2:49) %&gt;%
+  select(-1, -`average child ratings`, -33, -code,
+         -`pic name`, -emotion, -`Child M`, -`Child F`, -sex, -Valence) %&gt;%
+  mutate(face = row_number()) %&gt;%
+  select(face, everything())
+
+colnames(VA_child)[2:31] &lt;- paste(&quot;rater&quot;, 1:30)
+
+VA_child &lt;- tbl_df(lapply(VA_child, function(x){ #Need to use a function to convert to numeric
+  as.numeric(as.character(x)) 
+}))
+
+VA_child_melt &lt;- VA_child %&gt;%
+  melt(id.vars = &quot;face&quot;, value.name = &quot;valence&quot;, variable.name = &quot;rater&quot;)</code></pre>
+<pre class="r"><code>VA_child_melt %&gt;%
+  ggplot(aes(face, valence, group = rater, color = rater)) +
+  geom_line(size = .8, alpha = .5) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, size = 1.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Valence (higher = more positive)&quot;,
+       title = &quot;Child Valence Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>VA_child_melt %&gt;%
+  group_by(face) %&gt;%
+  summarize(mean = mean(valence, na.rm = TRUE),
+            sd = sd(valence, na.rm = TRUE)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(face, mean)) +
+  geom_errorbar(aes(ymin = mean - 1.96*(sd/sqrt(ncol(VA_child))),
+                    ymax = mean + 1.96*(sd/sqrt(ncol(VA_child))))) +
+  geom_point(size = 2) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Valence (higher = more positive)&quot;,
+       title = &quot;Child - Average Valence Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive; error bars = 95% CI&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>The results are similar to those from the adults. We can’t trust the wider confidence intervals to tell us about reliability though, because there are far fewer child raters than adult raters.</p>
+</div>
+<div id="repeating-the-procedure-for-ratings-of-arousal" class="section level3">
+<h3>Repeating the Procedure for Ratings of Arousal</h3>
+<p>Finally, we repeat the analysis for measures of arousal, starting with adults then with children.</p>
+<pre class="r"><code>AR_adult &lt;- AR_adult_raw %&gt;%
+  slice(1:48) %&gt;%
+  select(-1, -43, -SD, -`M mean`, -`F mean`, -mean, -`0`, -Valence) %&gt;%
+  mutate(face = row_number()) %&gt;%
+  select(face, everything())
+
+colnames(AR_adult)[2:42] &lt;- paste(&quot;rater&quot;, 1:41)
+
+AR_adult_melt &lt;- AR_adult %&gt;%
+  melt(id.vars = &quot;face&quot;, value.name = &quot;arousal&quot;, variable.name = &quot;rater&quot;)
+
+AR_adult_melt %&gt;%
+  ggplot(aes(face, arousal, group = rater, color = rater)) +
+  geom_line(size = .8, alpha = .5) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, size = 1.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Arousal (higher = more activated)&quot;,
+       title = &quot;Adult Arousal Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>There seems to be much less consensus for ratings of arousal. We do notice that there is no differentiation between positive and negative faces - this is good because the theory suggests that arousal is independent of valence. Someone can be positively aroused (e.g., excited) or negatively aroused (e.g., stressed). However, if there was high consensus we would still see the lines converging. Instead, they’re all over the place.</p>
+<pre class="r"><code>AR_adult_melt %&gt;%
+  group_by(face) %&gt;%
+  summarize(mean = mean(arousal),
+            sd = sd(arousal)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(face, mean)) +
+  geom_errorbar(aes(ymin = mean - 1.96*(sd/sqrt(ncol(AR_adult))),
+                    ymax = mean + 1.96*(sd/sqrt(ncol(AR_adult))))) +
+  geom_point(size = 2) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Arousal (higher = more activated)&quot;,
+       title = &quot;Adult - Average Arousal Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive; error bars = 95% CI&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Confidence intervals are much wider too, but again, we have a smaller sample size so that adds some uncertainty. Still, it seems like adults have difficulty agreeing on ratings of arousal compared to ratings of valence. Let’s go back to 9-year-olds.</p>
+<pre class="r"><code>AR_child &lt;- AR_child_raw %&gt;%
+  slice(2:49) %&gt;%
+  select(-`photo ID`, -child, -`adult ratings PELL`, -`Photo ID`,
+         -30, -image, -emotion, -`m child`, -`f child`, -Valence) %&gt;%
+  mutate(face = row_number()) %&gt;%
+  select(face, everything())
+
+colnames(AR_child)[2:31] &lt;- paste(&quot;rater&quot;, 1:30)
+
+AR_child &lt;- tbl_df(lapply(AR_child, function(x){ #Need to use a function to convert to numeric
+  as.numeric(as.character(x)) #Note: There is one missing value from original dataset
+}))</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): NAs introduced by coercion</code></pre>
+<pre class="r"><code>AR_child_melt &lt;- AR_child %&gt;%
+  melt(id.vars = &quot;face&quot;, value.name = &quot;arousal&quot;, variable.name = &quot;rater&quot;)
+
+AR_child_melt %&gt;%
+  ggplot(aes(face, arousal, group = rater, color = rater)) +
+  geom_line(size = .8, alpha = .5) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, size = 1.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Arousal (higher = more activated)&quot;,
+       title = &quot;Child Arousal Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<pre><code>## Warning: Removed 48 rows containing missing values (geom_path).</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre class="r"><code>AR_child_melt %&gt;%
+  group_by(face) %&gt;%
+  summarize(mean = mean(arousal, na.rm = TRUE),
+            sd = sd(arousal, na.rm = TRUE)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(face, mean)) +
+  geom_errorbar(aes(ymin = mean - 1.96*(sd/sqrt(ncol(AR_child))),
+                    ymax = mean + 1.96*(sd/sqrt(ncol(AR_child))))) +
+  geom_point(size = 2) +
+  scale_x_discrete(limits = 1:48) +
+  geom_vline(xintercept = 24.5, color = &quot;red&quot;) +
+  labs(x = &quot;Face&quot;, y = &quot;Arousal (higher = more activated)&quot;,
+       title = &quot;Child - Average Arousal Ratings for 48 Faces&quot;,
+       subtitle = &quot;Red line indicates where faces become positive; error bars = 95% CI&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/emotion-expression-icc/Face-Recognition_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Results look similar for children. I won’t spend much time discussing mean differences in valence and arousal between children and adults - the original article expands on this. However, I am interested in the variability in ratings of arousal vs. valence.</p>
+</div>
+</div>
+<div id="quantifying-interrater-agreement" class="section level2">
+<h2>Quantifying Interrater Agreement</h2>
+<p>So far, we’ve created a series of plots showing the variability in childrens’ and adults ratings of emotional facial expressions. We get a sense that both children and adults reliably label faces as positive or negative, but they struggle to agree on arousal. Although this is apparent from the plots, we may want to test this more formally. This is actually very important because our estimates of variability (e.g., 95% CI) are sensitive to sample size, which varies by adults and children in this dataset.</p>
+<div id="intra-correlation-coefficient-icc" class="section level3">
+<h3>Intra-correlation coefficient (ICC)</h3>
+<p>The ICC is an index of reliability or agreement ranging from 0 (no agreement) to 1 (perfect agreement). We will use ICC to quantify agreement on ratings of emotional facial expressions, but ICC is applicable to other situations, such as quantifying heritability or assessing items in a test bank. Here, we will calculate four ICCs: (1) Adult ratings of Valence, (2) Child ratings of Valence, (3) Adults ratings of Arousal, and (4) Child ratings of Arousal.</p>
+<p>Shrout and Fleiss (1979), and later McGraw and Wong (1996), describe several different calculations for ICC that depend on the characteristics of the sample. In our case, we will use a two-way random model for single measurements to quantify absolute agreement, also known as ICC2.</p>
+<p>Two way random, single measures, absolute (ICC2):</p>
+<p><span class="math display">\[\rho = \frac{\sigma^2_r}{\sigma^2_r + \sigma^2_c + \sigma^2_e}\]</span></p>
+<p>Where <span class="math inline">\(\rho\)</span> is the population parameter for the ICC, <span class="math inline">\(\sigma^2_r\)</span> is the row variability (variability between raters), <span class="math inline">\(\sigma^2_c\)</span> is the column variability (variability between faces), and <span class="math inline">\(\sigma^2_e\)</span> is the error.</p>
+<p>We’re using a two way random model because we expect variability between subjects, but also within (faces have different underlying valence and arousal). Also note that the ‘single measures’ part is referring to the fact that each rating is a single score, not an average of scores.</p>
+<p>We’ll use the <em>ICC</em> function from the <em>psych</em> package to compute the ICCs.</p>
+<pre class="r"><code>library(psych)
+
+VA_adult_icc &lt;- VA_adult %&gt;%
+  select(-face) %&gt;%
+  ICC()</code></pre>
+<pre class="r"><code>VA_child_icc &lt;- VA_child %&gt;%
+  select(-face) %&gt;%
+  ICC()</code></pre>
+<pre class="r"><code>AR_adult_icc &lt;- AR_adult %&gt;%
+  select(-face) %&gt;%
+  ICC()</code></pre>
+<pre class="r"><code>AR_child_icc &lt;- AR_child %&gt;%
+  select(-face) %&gt;%
+  ICC()</code></pre>
+<p>Now, we’ll use the <em>kableExtra</em> package to generate a table of the results. Note that I’m extracting the 2nd value for the ICC results because it is the ICC2. If we expected no column variability then we might use ICC1.</p>
+<pre class="r"><code>library(kableExtra)
+
+kable(data.frame(matrix(c(VA_adult_icc$results$ICC[2], VA_child_icc$results$ICC[2],
+                          AR_adult_icc$results$ICC[2], AR_child_icc$results$ICC[2]),
+                   nrow = 2, ncol = 2),
+                   row.names = c(&quot;Adult&quot;, &quot;Child&quot;)),
+      col.names = c(&quot;ICC Valence&quot;, &quot;ICC Arousal&quot;)) %&gt;%
+  kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+ICC Valence
+</th>
+<th style="text-align:right;">
+ICC Arousal
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Adult
+</td>
+<td style="text-align:right;">
+0.806
+</td>
+<td style="text-align:right;">
+0.194
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Child
+</td>
+<td style="text-align:right;">
+0.795
+</td>
+<td style="text-align:right;">
+0.220
+</td>
+</tr>
+</tbody>
+</table>
+<p>Clearly and not surprisingly, the ICCs for arousal (~.20) are much lower than those for valence (~.80). Using Cicchetti’s (1994) guidelines, we would interpret the valence ICCs as indicating excellent agreement and the arousal ICCs as poor agreement. It is also worth noting that adults and children seem equally (un)reliable in their reporting.</p>
+</div>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>The findings suggest that we should give pause before attempting to interpret differences between children and adults in their overall ratings of arousal in facial expressions. Such disagreement is actually expected according to dimensional theories of emotion (Russell, 2003) because emotions are not viewed as prototypical things, and there can be wide variability in facial expressions even across similar situations. In other words, there’s no universal facial expression for high arousal (in fact, there’s little reason to believe in universality for any emotional expression).</p>
+<div id="references" class="section level3">
+<h3>References</h3>
+<p>Cicchetti, D. V. (1994). Guidelines, criteria, and rules of thumb for evaluating normed and standardized assessment instruments in psychology. <em>Psychological Assessment, 6</em>, 284-290.</p>
+<p>McGraw, K. O., &amp; Wong, S. P. (1996). Forming inferences about some intraclass correlation coefficients. <em>Psychological Methods, 1</em>, 30-46.</p>
+<p>Russell, J. A. (2003). Core affect and the psychological construction of emotion. <em>Psychological Review, 110</em>, 145-172.</p>
+<p>Shrout, P. E., &amp; Fleiss, J. L. (1979). Intraclass correlations: Uses in assessing reliability. <em>Psychological Bulletin, 86</em>, 420-428.</p>
+<p>Vesker, M., Bahn, D., Dege, F., Kauschke, C., &amp; Gudrun, S. (2018). Perceiving arousal and valence in facial expressions: Differences between children and adults. <em>European Journal of Developmental Psychology, 15</em>, 411-425.</p>
+</div>
+</div>
+
+    </div>
+
+    
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="/img/portrait.jpg" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Will Hipson</a></h5>
+    <h6 class="card-subtitle">PhD Candidate, Psychology</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.com/citations?user=NjVAwkcAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.researchgate.net/profile/Will_Hipson" target="_blank" rel="noopener">
+          <i class="ai ai-researchgate"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.mendeley.com/profiles/will-hipson/" target="_blank" rel="noopener">
+          <i class="ai ai-mendeley"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  
+
+  <p class="powered-by">
+    &copy; 2018 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academic.min.70f0041f5a24c6a675ac218c98d7ef71.js"></script>
+
+    
+
+  </body>
+</html>
+

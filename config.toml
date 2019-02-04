@@ -13,7 +13,7 @@ title = "Will Hipson"
 
 # Your copyright notice - appears in site footer.
 # To display a copyright symbol, type `&copy;`.
-copyright = "&copy; 2018"
+copyright = "&copy; 2019"
 
 theme = "hugo-academic"
 enableEmoji = true
@@ -141,7 +141,7 @@ enableGitInfo = false
 
   # Enable global LaTeX math rendering?
   #   If false, you can enable it locally on a per page basis.
-  math = false
+  math = true
 
   # Highlight.js options
   #   highlight
@@ -258,7 +258,7 @@ enableGitInfo = false
   [[params.social]]
     icon = "envelope"
     icon_pack = "fas"
-    link = "#contact"  # For a direct email link, use "mailto:test@example.org".
+    link = "mailto:william.hipson@carleton.ca"  # For a direct email link, use "mailto:test@example.org".
 
   [[params.social]]
     icon = "google-scholar"
@@ -310,20 +310,15 @@ enableGitInfo = false
   url = "#publications_selected"
   weight = 4
 
-[[menu.main]]
-  name = "Contact"
-  url = "#contact"
-  weight = 5
-
  [[menu.main]]
     name = "CV"
     url = "files/Academic CV.pdf"
-    weight = 6
+    weight = 5
     
   [[menu.main]]
     name = "R-bloggers"
     url = "https://www.r-bloggers.com/"
-    weight = 7
+    weight = 6
 
 # Search.
 [params.search]

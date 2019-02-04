@@ -6,11 +6,20 @@
     <description>Recent content in R on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
+    <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Mon, 04 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The Face of (Dis)Agreement - Intraclass Correlations</title>
+      <link>/post/emotion-expression-icc/emotion-expression/</link>
+      <pubDate>Mon, 04 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/emotion-expression-icc/emotion-expression/</guid>
+      <description>I was recently introduced to Google Dataset Search, an extension that lets you search for open access datasets. After perusing around for a while, I stumbled upon a dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs.</description>
+    </item>
     
     <item>
       <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
