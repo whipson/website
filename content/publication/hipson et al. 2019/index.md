@@ -33,7 +33,7 @@ selected = true
 #   E.g. `projects = ["Social Development"]` references 
 #   `content/project/Social Development/index.md`.
 #   Otherwise, set `projects = []`.
-projects = ["Emotion Regulation", "Social Development"]
+projects = ["Emotion Regulation", "Social Development", "Social Withdrawal and Socio-emotional Development"]
 
 # Tags (optional).
 #   Set `tags = []` for no tags, or use the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
