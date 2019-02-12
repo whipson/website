@@ -1,6 +1,6 @@
 +++
 title = "Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)"
-date = 2019-01-15
+date = 2019-02-12
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
