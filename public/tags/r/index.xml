@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Mon, 04 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 23 Feb 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry</title>
+      <link>/publication/hipson-2019/</link>
+      <pubDate>Sat, 23 Feb 2019 00:00:00 -0500</pubDate>
+      
+      <guid>/publication/hipson-2019/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>The Face of (Dis)Agreement - Intraclass Correlations</title>
@@ -19,15 +28,6 @@
       
       <guid>/post/emotion-expression-icc/emotion-expression/</guid>
       <description>I was recently introduced to Google Dataset Search, an extension that searches for open access datasets. There I stumbled upon this dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs.</description>
-    </item>
-    
-    <item>
-      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
-      <link>/publication/hipson-2019/</link>
-      <pubDate>Tue, 15 Jan 2019 00:00:00 -0500</pubDate>
-      
-      <guid>/publication/hipson-2019/</guid>
-      <description></description>
     </item>
     
     <item>

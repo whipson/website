@@ -1,6 +1,6 @@
 +++
-title = "Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)"
-date = 2019-02-12
+title = "Using sentiment analysis to detect affect in children’s and adolescents’ poetry"
+date = 2019-02-23
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
@@ -48,14 +48,14 @@ url_project = ""
 url_slides = ""
 url_video = ""
 url_poster = ""
-url_source = ""
+url_source = "https://journals.sagepub.com/doi/full/10.1177/0165025419830248"
 
 # Custom links (optional).
 #   Uncomment line below to enable. For multiple links, use the form `[{...}, {...}, {...}]`.
 url_custom = []
 
 # Digital Object Identifier (DOI)
-doi = ""
+doi = "10.1177/0165025419830248"
 
 # Does this page contain LaTeX math? (true/false)
 math = false

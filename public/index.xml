@@ -176,6 +176,24 @@
     </item>
     
     <item>
+      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry</title>
+      <link>/publication/hipson-2019/</link>
+      <pubDate>Sat, 23 Feb 2019 00:00:00 -0500</pubDate>
+      
+      <guid>/publication/hipson-2019/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Active emotion regulation mediates links between shyness and social adjustment in preschool</title>
+      <link>/publication/hipson-et-al.-2019/</link>
+      <pubDate>Mon, 11 Feb 2019 00:00:00 -0500</pubDate>
+      
+      <guid>/publication/hipson-et-al.-2019/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>The Face of (Dis)Agreement - Intraclass Correlations</title>
       <link>/post/emotion-expression-icc/emotion-expression/</link>
       <pubDate>Mon, 04 Feb 2019 00:00:00 +0000</pubDate>
@@ -505,15 +523,6 @@ Child
     </item>
     
     <item>
-      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
-      <link>/publication/hipson-2019/</link>
-      <pubDate>Tue, 15 Jan 2019 00:00:00 -0500</pubDate>
-      
-      <guid>/publication/hipson-2019/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Plotting the Affect Circumplex in R</title>
       <link>/post/circumplex/circumplex/</link>
       <pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate>
@@ -838,7 +847,7 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/sentiment-analysis/</guid>
-      <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time.&lt;/p&gt;
+      <description>&lt;p&gt;In the era of &lt;em&gt;Big Data&lt;/em&gt;, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with &lt;a href=&#34;http://saifmohammad.com/&#34; target=&#34;_blank&#34;&gt;Dr. Saif Mohammad&lt;/a&gt; of the National Research Council Canada, I&amp;rsquo;m exploring developmental trends in emotions from thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over &lt;em&gt;developmental&lt;/em&gt; time. The &lt;em&gt;Children&amp;rsquo;s Poems&lt;/em&gt; (Hipson &amp;amp; Mohammad, 2019) corpus is freely available on my &lt;a href=&#34;https://github.com/whipson?tab=repositories&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

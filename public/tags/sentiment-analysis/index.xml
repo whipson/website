@@ -7,15 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Tue, 15 Jan 2019 00:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Sat, 23 Feb 2019 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="/tags/sentiment-analysis/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry (*in press*)</title>
+      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry</title>
       <link>/publication/hipson-2019/</link>
-      <pubDate>Tue, 15 Jan 2019 00:00:00 -0500</pubDate>
+      <pubDate>Sat, 23 Feb 2019 00:00:00 -0500</pubDate>
       
       <guid>/publication/hipson-2019/</guid>
       <description></description>
@@ -27,7 +27,7 @@
       <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
       
       <guid>/project/sentiment-analysis/</guid>
-      <description>In the era of Big Data, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m using sentiment analysis on thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over developmental time.</description>
+      <description>In the era of Big Data, we are awash in online textual data, such as Tweets, Google Books, and countless blogs. These sources represent a wealth of data. Sentiment analysis is a technique that automatically assesses the emotional content of text. In partnership with Dr. Saif Mohammad of the National Research Council Canada, I&amp;rsquo;m exploring developmental trends in emotions from thousands of online poetry submitted by children and adolescents. The goal of this project is to provide insight into how emotions change over developmental time.</description>
     </item>
     
   </channel>
