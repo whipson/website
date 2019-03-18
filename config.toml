@@ -319,16 +319,21 @@ enableGitInfo = false
   name = "Publications"
   url = "#publications_selected"
   weight = 4
+  
+[[menu.main]]
+  name = "Talks & Posters"
+  url = "#talks"
+  weight = 4
 
- [[menu.main]]
-    name = "CV"
-    url = "files/Academic CV.pdf"
-    weight = 5
+[[menu.main]]
+  name = "CV"
+  url = "files/Academic CV.pdf"
+  weight = 6
     
-  [[menu.main]]
-    name = "R-bloggers"
-    url = "https://www.r-bloggers.com/"
-    weight = 6
+[[menu.main]]
+  name = "R-bloggers"
+  url = "https://www.r-bloggers.com/"
+  weight = 7
 
 # Search.
 [params.search]

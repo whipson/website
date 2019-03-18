@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talks on Will Hipson</title>
+    <link>/talks/</link>
+    <description>Recent content in Talks on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Mon, 18 Mar 2019 11:17:01 -0400</lastBuildDate>
+    
+	<atom:link href="/talks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Talks</title>
+      <link>/talks/srcd-2019/talks/</link>
+      <pubDate>Mon, 18 Mar 2019 11:17:01 -0400</pubDate>
+      
+      <guid>/talks/srcd-2019/talks/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
