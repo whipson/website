@@ -1,0 +1,214 @@
+---
+title: Network Analysis of Emotions
+author: ~
+date: '2019-03-18'
+slug: emotion-network
+categories: ["R", "Emotion Dynamics"]
+tags: ["R", "Emotion Dynamics"]
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/rmarkdown-libs/forceNetwork-binding/forceNetwork.js"></script>
+
+
+<p>In this month’s post, I set out to create a visual network of emotions. Emotion Dynamics tells us that different emotions are highly interconnected, such that one emotion morphs into another and so on. I’ll be using a large dataset from an original study published in PLOS ONE by <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0145450">Trampe, Quoidbach, and Taquet (2015)</a>. Thanks to <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>, I was able to locate this data. The data is collected from 11,000 participants who completed daily questionnaires on the emotions they felt at a given moment. The original paper is fascinating and I highly encourage checking it out - not to mention that the author’s analysis is the inspiration for this post. The raw data can be freely accessed from the author’s OSF page (link in online article) - props to them for publishing the data!</p>
+<p>What is a network? In a sentence, a network is a complex set of interrelations between variables. Some terminology: <em>nodes</em> are the variables (in this case, emotions), and <em>edges</em> are the relationships between the variables. Networks can be <em>directed</em>, which means that variables are linked in a sequence (e.g, from emotion A to emotion B), or <em>undirected</em>, which just shows the relationships. Trampe et al. (2015) created an undirected network in their paper, but the data also allows for a directed network - and this is what I’m going to make for this post.</p>
+<p>First, I’ll read in the data and fix up a few spelling errors from the original dataset.</p>
+<pre class="r"><code>library(tidyverse)
+
+emotion_raw &lt;- read_csv(&quot;https://osf.io/e7uab/download&quot;) %&gt;%
+  rename(Offense = Ofense,
+         Embarrassment = Embarassment)
+
+emotion_raw</code></pre>
+<pre><code>## # A tibble: 69,544 x 21
+##       id Hours   Day Pride  Love  Hope Gratitude   Joy Satisfaction   Awe
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1     1     1     3     0     0     0         0     0            0     0
+##  2     1    14     1     0     0     0         0     0            0     0
+##  3     1    14     2     0     0     0         0     0            0     0
+##  4     1    14     4     0     0     0         0     0            0     0
+##  5     1    15     3     0     0     0         0     0            0     0
+##  6     1    15     3     0     0     0         0     0            0     0
+##  7     1    19     1     0     0     0         0     0            0     0
+##  8     8     8     5     0     0     0         0     1            0     0
+##  9     8     9     2     0     0     0         0     1            0     0
+## 10     8    10     7     0     0     0         0     0            0     0
+## # ... with 69,534 more rows, and 11 more variables: Amusement &lt;dbl&gt;,
+## #   Alertness &lt;dbl&gt;, Anxiety &lt;dbl&gt;, Disdain &lt;dbl&gt;, Offense &lt;dbl&gt;,
+## #   Guilt &lt;dbl&gt;, Disgust &lt;dbl&gt;, Fear &lt;dbl&gt;, Embarrassment &lt;dbl&gt;,
+## #   Sadness &lt;dbl&gt;, Anger &lt;dbl&gt;</code></pre>
+<p>The data is formatted as a sparse matrix (lots of zeros). We have participant id, Day, and Hour that the emotion was reported. To make this data network compatible, I need to wrangle it into a dataframe of <em>edges</em> - that is a <em>from</em> column and a <em>to</em> column. This will become more apparent shortly.</p>
+<p>I can use the function <em>gather</em> to turn the data into long format. By filtering for values of 1, I remove all the zeros from the sparse matrix and I’m left with a column that includes the emotion that was experienced at the time of reporting.</p>
+<pre class="r"><code>emotion_long &lt;- emotion_raw %&gt;%
+  gather(emotion_type, value, Pride:Anger) %&gt;%
+  arrange(id, Day) %&gt;%
+  filter(value == 1) %&gt;%
+  select(-value)
+
+emotion_long</code></pre>
+<pre><code>## # A tibble: 187,426 x 4
+##       id Hours   Day emotion_type 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        
+##  1     1    19     1 Offense      
+##  2     1    19     1 Sadness      
+##  3     1    14     2 Disgust      
+##  4     1    15     3 Alertness    
+##  5     1    15     3 Anxiety      
+##  6     1    15     3 Embarrassment
+##  7     1    15     3 Sadness      
+##  8     1    14     4 Alertness    
+##  9     1    14     4 Embarrassment
+## 10     8     9     2 Joy          
+## # ... with 187,416 more rows</code></pre>
+<p>Still, there are no edges here - no link between one emotion and the next. Because the data is arranged so that each subsequent row is the next emotion, I can create a new variable, second_emotion, that is the <em>lead</em> of the emotion in that row. Then, I make sure to remove the last row from each participant id (otherwise there would be a relationship between Participant #1’s last emotion and Participant #2’s first emotion).</p>
+<pre class="r"><code>emotion_edges &lt;- emotion_long %&gt;%
+  mutate(second_emotion = lead(emotion_type)) %&gt;%
+  rename(first_emotion = emotion_type) %&gt;%
+  select(id, Day, Hours, first_emotion, second_emotion) %&gt;%
+  group_by(id) %&gt;%
+  slice(-length(id))
+
+emotion_edges</code></pre>
+<pre><code>## # A tibble: 175,480 x 5
+## # Groups:   id [11,332]
+##       id   Day Hours first_emotion second_emotion
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;         
+##  1     1     1    19 Offense       Sadness       
+##  2     1     1    19 Sadness       Disgust       
+##  3     1     2    14 Disgust       Alertness     
+##  4     1     3    15 Alertness     Anxiety       
+##  5     1     3    15 Anxiety       Embarrassment 
+##  6     1     3    15 Embarrassment Sadness       
+##  7     1     3    15 Sadness       Alertness     
+##  8     1     4    14 Alertness     Embarrassment 
+##  9     8     2     9 Joy           Alertness     
+## 10     8     2     9 Alertness     Alertness     
+## # ... with 175,470 more rows</code></pre>
+<p>Notice how first and second emotion form a sort of chain - Offense to Sadness, Sadness to Disgust, Disgust to Alertness, etc.</p>
+<p>We’re ignoring the fact that people are experiencing multiple emotions at once and in those instances we don’t know which emotion was experienced first.</p>
+<p>Now that we have our edges, we need to create an object containing the nodes. This is pretty simple, but I’ll add some information indicating the valence and frequency (n) of each emotion, which will help with the visualizations that follow.</p>
+<pre class="r"><code>emotion_nodes &lt;- emotion_long %&gt;%
+  count(emotion_type) %&gt;%
+  rowid_to_column(&quot;id&quot;) %&gt;%
+  rename(label = emotion_type) %&gt;%
+  mutate(valence = ifelse(label %in% c(&quot;Awe&quot;, &quot;Amusement&quot;, &quot;Joy&quot;, &quot;Alertness&quot;,
+                                              &quot;Hope&quot;, &quot;Love&quot;, &quot;Gratitude&quot;, &quot;Pride&quot;,
+                                              &quot;Satisfaction&quot;), &quot;positive&quot;, &quot;negative&quot;))
+
+emotion_nodes</code></pre>
+<pre><code>## # A tibble: 18 x 4
+##       id label             n valence 
+##    &lt;int&gt; &lt;chr&gt;         &lt;int&gt; &lt;chr&gt;   
+##  1     1 Alertness     17932 positive
+##  2     2 Amusement     11136 positive
+##  3     3 Anger          6394 negative
+##  4     4 Anxiety       19115 negative
+##  5     5 Awe            3830 positive
+##  6     6 Disdain         682 negative
+##  7     7 Disgust        7412 negative
+##  8     8 Embarrassment  3000 negative
+##  9     9 Fear           3457 negative
+## 10    10 Gratitude      7379 positive
+## 11    11 Guilt          3500 negative
+## 12    12 Hope          16665 positive
+## 13    13 Joy           23465 positive
+## 14    14 Love          18625 positive
+## 15    15 Offense        3160 negative
+## 16    16 Pride          9214 positive
+## 17    17 Sadness       13460 negative
+## 18    18 Satisfaction  19000 positive</code></pre>
+<p>We now have an object containing our nodes and an object containing our edges. Now it’s a matter of weighting (counting) the relationships between the emotions.</p>
+<pre class="r"><code>emotion_network &lt;- emotion_edges %&gt;%
+  group_by(first_emotion, second_emotion) %&gt;%
+  summarize(weight = n()) %&gt;%
+  ungroup() %&gt;%
+  select(first_emotion, second_emotion, weight)
+
+emotion_network</code></pre>
+<pre><code>## # A tibble: 315 x 3
+##    first_emotion second_emotion weight
+##    &lt;chr&gt;         &lt;chr&gt;           &lt;int&gt;
+##  1 Alertness     Alertness        6191
+##  2 Alertness     Amusement          97
+##  3 Alertness     Anger             214
+##  4 Alertness     Anxiety          4784
+##  5 Alertness     Awe                14
+##  6 Alertness     Disdain            82
+##  7 Alertness     Disgust           544
+##  8 Alertness     Embarrassment     208
+##  9 Alertness     Fear              109
+## 10 Alertness     Gratitude          70
+## # ... with 305 more rows</code></pre>
+<p>A few more modifications are needed to make it ready for visualization. I’m trimming some of the really high values using <em>ifelse</em>, just so that they don’t overwhelm the plotting screen.</p>
+<pre class="r"><code>edges &lt;- emotion_network %&gt;%
+  left_join(emotion_nodes, by = c(&quot;first_emotion&quot; = &quot;label&quot;)) %&gt;%
+  rename(from = id)
+
+edges &lt;- edges %&gt;%
+  left_join(emotion_nodes, by = c(&quot;second_emotion&quot; = &quot;label&quot;)) %&gt;%
+  rename(to = id) %&gt;%
+  select(from, to, weight) %&gt;%
+  mutate(weight = ifelse(weight &gt; 4500, 4500, weight))
+
+edges</code></pre>
+<pre><code>## # A tibble: 315 x 3
+##     from    to weight
+##    &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;
+##  1     1     1   4500
+##  2     1     2     97
+##  3     1     3    214
+##  4     1     4   4500
+##  5     1     5     14
+##  6     1     6     82
+##  7     1     7    544
+##  8     1     8    208
+##  9     1     9    109
+## 10     1    10     70
+## # ... with 305 more rows</code></pre>
+<p>We need the <em>tidygraph</em> and <em>ggraph</em> packages for the visualization. I’ll note that there are a number of packages for visualizing networks, but <em>ggraph</em> seems to be preferred because it is compatible with ggplot terminology. The function <em>tbl_graph</em> will take the nodes and edges and make them ggraph ready.</p>
+<pre class="r"><code>library(tidygraph)
+library(ggraph)
+
+network &lt;- tbl_graph(emotion_nodes, edges, directed = TRUE)
+
+set.seed(190318)
+
+ggraph(network, layout = &quot;graphopt&quot;) +
+  geom_edge_link(aes(width = weight, color = scale(weight), alpha = weight), check_overlap = TRUE) +
+  scale_edge_color_gradient2(low = &quot;darkgrey&quot;, mid = &quot;#00BFFF&quot;, midpoint = 1.5, high = &quot;dodgerblue2&quot;) +
+  scale_edge_width(range = c(.2, 1.75)) +
+  geom_node_label(aes(label = label, fill = valence), size = 4) +
+  scale_fill_manual(values = c(&quot;#FF6A6A&quot;, &quot;#43CD80&quot;)) +
+  theme_graph() +
+  theme(legend.position = &quot;none&quot;, plot.background = element_rect(fill = &quot;black&quot;))</code></pre>
+<p><img src="/post/emotion-network/Emotion_Network_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Stronger relationships show up as thicker lines. Positive emotions seem to be more pronounced and interconnected, which is what was found in the original article. Unfortunately, we don’t get a good sense of temporality (adding directional arrows creates more of a mess than anything). An interactive plot might be more informative, so let’s try that using <em>networkD3</em>.</p>
+<pre class="r"><code>library(networkD3)
+
+nodes_d3 &lt;- emotion_nodes %&gt;%
+  mutate(id = id - 1,
+         n = (scale(n) + 3)^3)
+
+edges_d3 &lt;- edges %&gt;%
+  mutate(from = from - 1, to = to - 1,
+         weight = ifelse(weight &lt; 600, 0, log(weight)))</code></pre>
+<p>It’s VERY important to transform the values to base 0, which is why I’m using mutate -1. networkD3 won’t work on base 1 values.</p>
+<p>Again, I’ve made a few adjustments for visualization purposes. Namely, I’m removing relationships that occur less than 600 times and scaling the values somewhat arbitrarily. Of course, this is exploratory analysis, but caution should be taken when interpreting these results. The function <em>forceNetwork</em> takes the nodes and edges specified above and turns them into something beautiful.</p>
+<pre class="r"><code>forceNetwork(Links = edges_d3, Nodes = nodes_d3, Source = &quot;from&quot;, Nodesize = &quot;n&quot;,
+             Target = &quot;to&quot;, NodeID = &quot;label&quot;, Group = &quot;valence&quot;, Value = &quot;weight&quot;, fontFamily = &quot;sans-serif&quot;,
+             colourScale = JS(&#39;d3.scaleOrdinal().domain([&quot;negative&quot;, &quot;positive&quot;]).range([&quot;#FF6A6A&quot;, &quot;#43CD80&quot;])&#39;),
+             opacity = 1, fontSize = 24, linkDistance = 300, linkColour = c(&quot;#8DB6CD&quot;),
+             arrows = TRUE, zoom = TRUE, bounded = TRUE, legend = TRUE)</code></pre>
+<pre><code>## Links is a tbl_df. Converting to a plain data frame.</code></pre>
+<pre><code>## Nodes is a tbl_df. Converting to a plain data frame.</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="forceNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"links":{"source":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17],"target":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,6,7,9,10,11,12,13,14,15,16,17,0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"value":[8.41183267575841,0,0,8.41183267575841,0,0,0,0,0,0,0,0,0,6.55393340402581,0,6.78219205600679,6.52795791762255,0,8.33591109419694,7.97108575350561,0,7.26262860097424,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7.13169851046691,0,0,0,0,0,0,0,0,0,0,6.80903930604298,0,6.60934924316738,0,0,0,0,0,8.41183267575841,0,0,7.38770923908104,0,6.77308037565554,0,7.16317239084664,0,0,6.68959926917897,7.24921505711439,6.44571981938558,7.46336304552002,0,6.4425401664682,7.38523092306657,0,0,6.89365635460264,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7.46508273639955,0,6.99209642741589,0,0,0,0,0,0,0,7.78030308790837,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7.11151211649616,0,0,0,0,0,0,0,6.49978704065585,6.61606518513282,0,0,0,0,0,0,0,7.06561336359772,0,0,0,0,0,0,0,0,7.93092537248339,0,0,8.15679704667565,0,0,0,0,0,0,0,0,0,0,7.03790596344718,0,0,0,6.54821910276237,0,0,0,0,0,0,0,6.4377516497364,0,0,6.58063913728495,0,0,0,0,0,8.02092771898158,0,8.41183267575841,8.3513747067213,0,0,0,0,6.63463335786169,7.13009851012558,7.40488757561612,0,6.82219739062049,0,0,0,0,0,0,0,0,8.41183267575841,0,0,0,0,8.41183267575841,0,0,0,6.69456205852109,0,0,0,0,0,0,0,8.41183267575841,7.99361999482774,8.41183267575841,0,0,0,0,0,0,0,0,6.94119005506837,0,0,0,6.50876913697168,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7.27309259599952,6.55393340402581,8.17723488551019,0,7.92334821193015,0,0,0,0,8.10379671298179,0,0,0,0,0,0,0,0,0,0,6.96129604591017,0,6.60123011872888,8.33471162182092,0,7.87853419614036,8.12058871174027,0,7.23128700432762,7.57250298502038,0,0,0,0,0,0,0,0,0,0,0,0,8.41183267575841],"colour":["#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD","#8DB6CD"]},"nodes":{"name":["Alertness","Amusement","Anger","Anxiety","Awe","Disdain","Disgust","Embarrassment","Fear","Gratitude","Guilt","Hope","Joy","Love","Offense","Pride","Sadness","Satisfaction"],"group":["positive","positive","negative","negative","positive","negative","negative","negative","negative","positive","negative","positive","positive","positive","negative","positive","negative","positive"],"nodesize":[66.4777260049541,29.823109822341,14.4971585620182,74.9545346567671,8.99863483398379,4.41089086229159,17.1859473592041,7.57540966372343,8.33882236853888,17.0939636079722,8.41318408245376,58.1352372636087,112.27983133578,71.3610761571251,7.83713818129178,22.7248729842467,40.2101604728943,74.1005872923404]},"options":{"NodeID":"label","Group":"valence","colourScale":"d3.scaleOrdinal().domain([\"negative\", \"positive\"]).range([\"#FF6A6A\", \"#43CD80\"])","fontSize":24,"fontFamily":"sans-serif","clickTextSize":60,"linkDistance":300,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":1,"zoom":true,"legend":true,"arrows":true,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":true,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script>
+<p>Hovering over the nodes shows the emotion label and its relationships with other emotions. The arrows indicate directionality in time. It’s a good enough graph, although I would like for the labels to show up at all times. I still have lots to learn about network analysis.</p>
+<p>As a final note, I’ll mention that I neglected to adjust for the nested structure of the data - emotions nested within hours, days, and participants. This is crucial when conducting formal statistical tests, but should also be accounted for in visualizations.</p>
+<div id="references-resources" class="section level3">
+<h3>References &amp; Resources</h3>
+<p>This <a href="https://www.jessesadler.com/post/network-analysis-with-r/">blog post</a> by Jesse Sadler really helped in the initial stages of my learning on network analysis.</p>
+<p>Trampe, D., Quoidbach, J., Taquet, M. (2015). Emotions in everyday life. <em>PLOS ONE</em>. <a href="https://doi.org/10.1371/journal.pone.0145450" class="uri">https://doi.org/10.1371/journal.pone.0145450</a></p>
+</div>
