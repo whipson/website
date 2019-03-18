@@ -1144,33 +1144,5 @@ interact_plot(model3_int, pred = &amp;quot;time_alone&amp;quot;, modx = &amp;quo
       <description></description>
     </item>
     
-    <item>
-      <title>Slides</title>
-      <link>/slides/srcd2019/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/slides/srcd2019/</guid>
-      <description>
-
-
-  
-
-&lt;figure&gt;
-
-&lt;img src=&#34;/img/srcd2019.jpg&#34; /&gt;
-
-
-
-&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
-  &lt;h4&gt;SRCD 2019, Baltimore, Maryland&lt;/h4&gt;
-  
-&lt;/figcaption&gt;
-
-&lt;/figure&gt;
-
-&lt;hr /&gt;
-</description>
-    </item>
-    
   </channel>
 </rss>
