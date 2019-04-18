@@ -18,7 +18,7 @@ weight = 5
 
 # List your qualifications (such as academic degrees).
 [[education.courses]]
-  course = "PhD in Psychology"
+  course = "PhD in Psychology (Quantitative Concentration)"
   institution = "Carleton University"
   year = "2017 to present"
 
