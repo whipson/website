@@ -260,6 +260,13 @@
     
     <url>
     
+      <loc>/shiny/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/tags/social-development/</loc>
       <lastmod>2019-01-09T00:00:00-05:00</lastmod>
       <priority>0</priority>

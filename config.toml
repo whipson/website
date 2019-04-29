@@ -324,11 +324,16 @@ enableGitInfo = false
   name = "CV"
   url = "files/Academic CV.pdf"
   weight = 5
+  
+[[menu.main]]
+  name = "Apps"
+  url = "/shiny/"
+  weight = 6
     
 [[menu.main]]
   name = "R-bloggers"
   url = "https://www.r-bloggers.com/"
-  weight = 6
+  weight = 7
 
 # Search.
 [params.search]
