@@ -1,6 +1,6 @@
 +++
 title = "Seeking more solitude: Conceptualization, assessment, and implications of aloneliness"
-date = 2019-10-01
+date = 2019-05-26
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
