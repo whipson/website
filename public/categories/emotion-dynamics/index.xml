@@ -7,10 +7,257 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Wed, 05 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 25 Jun 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/categories/emotion-dynamics/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A Model and Simulation of Emotion Dynamics</title>
+      <link>/post/emotion-simulation1/emotion_sim/</link>
+      <pubDate>Tue, 25 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/emotion-simulation1/emotion_sim/</guid>
+      <description>
+
+
+&lt;p&gt;Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment. These discoveries would revolutionize our understanding of our everyday feelings and when our emotions can go awry.&lt;/p&gt;
+&lt;p&gt;This series of blog posts, which I kicked off earlier this month with a &lt;a href=&#34;https://willhipson.netlify.com/post/basketball_sim/basketball_sim/&#34;&gt;simulation of emotions during basketball games&lt;/a&gt;, is inspired by researchers like &lt;a href=&#34;https://ppw.kuleuven.be/okp/people/Peter_Kuppens/&#34;&gt;Peter Kuppens&lt;/a&gt; and &lt;a href=&#34;https://www.queensu.ca/psychology/people/faculty/tom-hollenstein&#34;&gt;Tom Hollenstein&lt;/a&gt; (to name a few) who have collected and analyzed reams of intensive self-reports on people’s feelings from one moment to the next. My approach is to reverse engineer these insights and generate models that &lt;em&gt;simulate&lt;/em&gt; emotions evolving over time - like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-1-1.gif&#34; /&gt;&lt;!-- --&gt;&lt;/p&gt;
+&lt;div id=&#34;affective-state-space&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Affective State Space&lt;/h2&gt;
+&lt;p&gt;We start with the affective state space - the theoretical landscape on which our conscious feelings roam free. This space is represented as &lt;em&gt;two-dimensional&lt;/em&gt;, although we acknowledge that this fails to capture all aspects of conscious feeling. The first dimension, represented along the x-axis, is &lt;em&gt;valence&lt;/em&gt; and this refers to how unpleasant vs. pleasant we feel. The second dimension, represented along the y-axis, is &lt;em&gt;arousal&lt;/em&gt;. Somewhat less intuitive, arousal refers to how deactivated/sluggish/sleepy vs. activated/energized/awake we feel. At any time, our emotional state can be defined in terms of valence and arousal. So if you’re feeling stressed you would be low in valence and high in arousal. Let’s say you’re serene and calm, then you would be high in valence and low in arousal. Most of the time, we feel moderately high valence and moderate arousal (i.e., content), but if you’re the type of person who is chronically stressed, this would be different.&lt;/p&gt;
+&lt;p&gt;This is all well and good when we think about how we’re feeling right now, but it’s also worth considering how our emotions are changing. On a regular day, our emotions undergo minor fluctuations - sometimes in response to minor hassles or victories, and sometimes for no discernible reason. In this small paragraph, I’ve laid out a number of parameters, all of which vary between different people:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Attractor&lt;/strong&gt;: Our typical emotional state. At any given moment, our feelings are pulled toward this state. Some people tend to be happier, whereas others are less happy.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Stability&lt;/strong&gt;: How emotionally stable one is. Some people are more emotionally stable than others. Even in the face of adversity, an emotionally stable person keeps their cool.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dispersion&lt;/strong&gt;: The range of our emotional landscape. Some people experience intense highs and lows, whereas others persist somewhere in the middle.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We’ll keep all of this in mind for the simulation. We’ll start with a fairly simple simulation with 100 hypothetical people. We’ll need the following packages.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(psych)
+library(tidyverse)
+library(sn)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And then we’ll create a function that performs the simulation. Note that each person &lt;em&gt;i&lt;/em&gt; has their own attractor, recovery rate, stability, and dispersion. For now we’ll just model random fluctuations in emotions, a sort of Brownian motion. You can imagine our little &lt;strong&gt;simulatons&lt;/strong&gt; (fun name for the hypothetical people in the simulation) sitting around on an average day doing nothing in particular.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;simulate_affect &amp;lt;- function(n = 2, time = 250, negative_event_time = NULL) {
+  dt &amp;lt;- data.frame(matrix(nrow = time, ncol = 1))
+  colnames(dt) &amp;lt;- &amp;quot;time&amp;quot;
+  dt$time &amp;lt;- 1:time
+  
+  valence &amp;lt;- data.frame(matrix(nrow = time, ncol = 0))
+  arousal &amp;lt;- data.frame(matrix(nrow = time, ncol = 0))
+  
+  for(i in 1:n) {
+    attractor_v &amp;lt;- rnorm(1, mean = 3.35, sd = .75)
+    instability_v &amp;lt;- sample(3:12, 1, replace = TRUE, prob = c(.18, .22, .18, .15, .8, .6, .5, .4, .2, .1))
+    dispersion_v &amp;lt;- abs(rsn(1, xi = .15, omega = .02, alpha = -6) * instability_v) #rsn simulates a skewed distribution.
+    if(!is.null(negative_event_time)) {
+      recovery_rate &amp;lt;- sample(1:50, 1, replace = TRUE) + negative_event_time
+      negative_event &amp;lt;- (dt$time %in% negative_event_time:recovery_rate) * seq.int(50, 1, -1)
+    }
+    else {
+      negative_event &amp;lt;- 0
+    }
+    valence[[i]] &amp;lt;- ksmooth(x = dt$time,
+                            y = (negative_event * -.10) + arima.sim(list(order = c(1, 0, 0),
+                                               ar = .50),
+                                          n = time),
+                            bandwidth = time/instability_v, kernel = &amp;quot;normal&amp;quot;)$y * dispersion_v + attractor_v 
+
+#instability is modelled in the bandwidth term of ksmooth, such that higher instability results in higher bandwidth (greater fluctuation). 
+#dispersion scales the white noise (arima) parameter, such that there are higher peaks and troughs at higher dispersion.
+    
+    attractor_a &amp;lt;- rnorm(1, mean = .50, sd = .75) + sqrt(instability_v) #arousal attractor is dependent on instability. This is because high instability is associated with higher arousal states.
+    instability_a &amp;lt;- instability_v + sample(-1:1, 1, replace = TRUE)
+    dispersion_a &amp;lt;- abs(rsn(1, xi = .15, omega = .02, alpha = -6) * instability_a)
+    arousal[[i]] &amp;lt;- ksmooth(x = dt$time,
+                            y = (negative_event * .075) + arima.sim(list(order = c(1, 0, 0),
+                                               ar = .50),
+                                          n = time),
+                            bandwidth = time/instability_a, kernel = &amp;quot;normal&amp;quot;)$y * dispersion_a + attractor_a
+  }
+  
+  valence[valence &amp;gt; 6] &amp;lt;- 6
+  valence[valence &amp;lt; 0] &amp;lt;- 0
+  arousal[arousal &amp;gt; 6] &amp;lt;- 6
+  arousal[arousal &amp;lt; 0] &amp;lt;- 0
+  
+  colnames(valence) &amp;lt;- paste0(&amp;quot;valence_&amp;quot;, 1:n)
+  colnames(arousal) &amp;lt;- paste0(&amp;quot;arousal_&amp;quot;, 1:n)
+  
+  dt &amp;lt;- cbind(dt, valence, arousal)
+  
+  return(dt)
+}
+
+set.seed(190625)
+
+emotions &amp;lt;- simulate_affect(n = 100, time = 300)
+
+emotions %&amp;gt;%
+  select(valence_1, arousal_1) %&amp;gt;%
+  head()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   valence_1 arousal_1
+## 1  1.328024  5.380643
+## 2  1.365657  5.385633
+## 3  1.401849  5.390470
+## 4  1.436284  5.395051
+## 5  1.468765  5.399162
+## 6  1.499062  5.402752&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So we see the first six rows for participant 1’s valence and arousal. But if we want to plot these across multiple simulatons, we need to wrangle the data into long form. We’ll also compute some measures of within-person deviation. The Root Mean Square Successive Difference (RMSSD) takes into account gradual shifts in the mean. Those who are more emotionally unstable will have a higher RMSSD. For two dimensions (valence and arousal) we’ll just compute the mean RMSSD.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_long &amp;lt;- emotions %&amp;gt;%
+  gather(key, value, -time) %&amp;gt;%
+  separate(key, into = c(&amp;quot;dimension&amp;quot;, &amp;quot;person&amp;quot;), sep = &amp;quot;_&amp;quot;) %&amp;gt;%
+  spread(dimension, value) %&amp;gt;%
+  group_by(person) %&amp;gt;%
+  mutate(rmssd_v = rmssd(valence),
+         rmssd_a = rmssd(arousal),
+         rmssd_total = mean(rmssd_v + rmssd_a)) %&amp;gt;%
+  ungroup()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s see what this looks like for valence and arousal individually.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_long %&amp;gt;%
+  ggplot(aes(x = time, y = valence, group = person, color = rmssd_v)) +
+  geom_line(size = .75, alpha = .75) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_long$rmssd_v)) +
+  labs(x = &amp;quot;Time&amp;quot;,
+       y = &amp;quot;Valence&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;quot;Simulated Valence Scores over Time for 100 People&amp;quot;) +
+  theme_minimal(base_size = 16)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_long %&amp;gt;%
+  ggplot(aes(x = time, y = arousal, group = person, color = rmssd_a)) +
+  geom_line(size = .75, alpha = .75) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_long$rmssd_a)) +
+  labs(x = &amp;quot;Time&amp;quot;,
+       y = &amp;quot;Arousal&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;quot;Simulated Arousal Scores over Time for 100 People&amp;quot;) +
+  theme_minimal(base_size = 16)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We see that some lines are fairly flat and others fluctuate more widely. More importantly, most people are somewhere in the middle.&lt;/p&gt;
+&lt;p&gt;We can get a sense of one simulated person’s affective state space as well. The goal here is to mimic the kinds of models shown in &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pubmed/20853980&#34;&gt;Kuppens, Oravecz, and Tuerlinckx (2010)&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_long %&amp;gt;%
+  filter(person %in% sample(1:100, 6, replace = FALSE)) %&amp;gt;%
+  ggplot(aes(x = valence, y = arousal, group = person)) +
+  geom_path(size = .75) + 
+  scale_x_continuous(limits = c(0, 6)) +
+  scale_y_continuous(limits = c(0, 6)) +
+  labs(x = &amp;quot;Valence&amp;quot;,
+       y = &amp;quot;Arousal&amp;quot;,
+       title = &amp;quot;Affective State Space for Six Randomly Simulated People&amp;quot;) +
+  facet_wrap(~person) +
+  theme_minimal(base_size = 18) +
+  theme(plot.title = element_text(size = 18, hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;animating-the-affective-state-space&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Animating the Affective State Space&lt;/h2&gt;
+&lt;p&gt;To really appreciate what’s going on, we need to animate this over time. I’ll add some labels to the affective state space so that it’s easier to interpret what one might be feeling at that time. I’ll also add color to show which individuals are more unstable according to RMSSD.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(gganimate)
+
+p &amp;lt;- emotions_long %&amp;gt;%
+  ggplot(aes(x = valence, y = arousal, color = rmssd_total)) +
+  annotate(&amp;quot;text&amp;quot;, x = c(1.5, 4.5, 1.5, 4.5), y = c(1.5, 1.5, 4.5, 4.5), label = c(&amp;quot;Gloomy&amp;quot;, &amp;quot;Calm&amp;quot;, &amp;quot;Anxious&amp;quot;, &amp;quot;Happy&amp;quot;),
+           size = 10, alpha = .50) + 
+  annotate(&amp;quot;rect&amp;quot;, xmin = 0, xmax = 3, ymin = 0, ymax = 3, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 3, xmax = 6, ymin = 0, ymax = 3, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 0, xmax = 3, ymin = 3, ymax = 6, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 3, xmax = 6, ymin = 3, ymax = 6, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  geom_point(size = 3.5) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_long$rmssd_total)) +
+  scale_x_continuous(limits = c(0, 6)) +
+  scale_y_continuous(limits = c(0, 6)) +
+  labs(x = &amp;quot;Valence&amp;quot;,
+       y = &amp;quot;Arousal&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;#39;Time: {round(frame_time)}&amp;#39;) +
+  transition_time(time) +
+  theme_minimal(base_size = 18)
+
+ani_p &amp;lt;- animate(p, nframes = 320, end_pause = 20, fps = 16, width = 550, height = 500)
+
+ani_p&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-7-1.gif&#34; /&gt;&lt;!-- --&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;theres-a-storm-coming&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;There’s a Storm Coming…&lt;/h2&gt;
+&lt;p&gt;Our simulation does a pretty good job at emulating the natural ebb and flow of emotions, but we know that emotions can be far more volatile. Let’s subject our simulation to a negative event. Perhaps all 100 &lt;strong&gt;simulatons&lt;/strong&gt; co-authored a paper that just got rejected. In the function &lt;em&gt;simulate_affect&lt;/em&gt;, there’s an optional argument &lt;em&gt;negative_event_time&lt;/em&gt; that causes a negative event to occur at the specified time. For this, we need to consider one more emotion dynamics parameter:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Recovery rate&lt;/strong&gt;: How quickly one recovers from an emotional event. If something bad happens, how long does it take to return to the attractor. You can see how I’ve modelled this parameter in the function above.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So we’ll run the simulation with a negative event arising at &lt;em&gt;t&lt;/em&gt; = 150. The negative event will cause a downward spike in valence and an upward spike in arousal.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_event &amp;lt;- simulate_affect(n = 100, time = 300, negative_event_time = 150)
+
+emotions_event_long &amp;lt;- emotions_event %&amp;gt;%
+  gather(key, value, -time) %&amp;gt;%
+  separate(key, into = c(&amp;quot;dimension&amp;quot;, &amp;quot;person&amp;quot;), sep = &amp;quot;_&amp;quot;) %&amp;gt;%
+  spread(dimension, value) %&amp;gt;%
+  group_by(person) %&amp;gt;%
+  mutate(rmssd_v = rmssd(valence),
+         rmssd_a = rmssd(arousal),
+         rmssd_total = mean(rmssd_v + rmssd_a)) %&amp;gt;%
+  ungroup()
+
+emotions_event_long %&amp;gt;%
+  ggplot(aes(x = time, y = valence, group = person, color = rmssd_v)) +
+  geom_line(size = .75, alpha = .75) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_event_long$rmssd_v)) +
+  labs(x = &amp;quot;Time&amp;quot;,
+       y = &amp;quot;Valence&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;quot;Simulated Valence Scores over Time for 100 People&amp;quot;) +
+  theme_minimal(base_size = 16)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;emotions_event_long %&amp;gt;%
+  ggplot(aes(x = time, y = arousal, group = person, color = rmssd_a)) +
+  geom_line(size = .75, alpha = .75) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_event_long$rmssd_a)) +
+  labs(x = &amp;quot;Time&amp;quot;,
+       y = &amp;quot;Arousal&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;quot;Simulated Arousal Scores over Time for 100 People&amp;quot;) +
+  theme_minimal(base_size = 16)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-8-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;It’s pretty clear that something bad happened. Of course, some of our &lt;strong&gt;simulatons&lt;/strong&gt; are unflappable, but most experienced a drop in valence and spike in arousal that we might identify as anxiety. Again, let’s visualize this evolving over time. Pay close attention to when the timer hits 150.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p2 &amp;lt;- emotions_event_long %&amp;gt;%
+  ggplot(aes(x = valence, y = arousal, color = rmssd_total)) +
+  annotate(&amp;quot;text&amp;quot;, x = c(1.5, 4.5, 1.5, 4.5), y = c(1.5, 1.5, 4.5, 4.5), label = c(&amp;quot;Gloomy&amp;quot;, &amp;quot;Calm&amp;quot;, &amp;quot;Anxious&amp;quot;, &amp;quot;Happy&amp;quot;),
+           size = 10, alpha = .50) + 
+  annotate(&amp;quot;rect&amp;quot;, xmin = 0, xmax = 3, ymin = 0, ymax = 3, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 3, xmax = 6, ymin = 0, ymax = 3, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 0, xmax = 3, ymin = 3, ymax = 6, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  annotate(&amp;quot;rect&amp;quot;, xmin = 3, xmax = 6, ymin = 3, ymax = 6, alpha = 0.25, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) +
+  geom_point(size = 3.5) +
+  scale_color_gradient2(low = &amp;quot;black&amp;quot;, mid = &amp;quot;grey&amp;quot;, high = &amp;quot;red&amp;quot;, midpoint = median(emotions_event_long$rmssd_total)) +
+  scale_x_continuous(limits = c(0, 6)) +
+  scale_y_continuous(limits = c(0, 6)) +
+  labs(x = &amp;quot;Valence&amp;quot;,
+       y = &amp;quot;Arousal&amp;quot;,
+       color = &amp;quot;Instability&amp;quot;,
+       title = &amp;#39;Time: {round(frame_time)}&amp;#39;) +
+  transition_time(time) +
+  theme_minimal(base_size = 18)
+
+ani_p2 &amp;lt;- animate(p2, nframes = 320, end_pause = 20, fps = 16, width = 550, height = 500)
+
+ani_p2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/emotion-simulation1/Emotion_Simulation_files/figure-html/unnamed-chunk-9-1.gif&#34; /&gt;&lt;!-- --&gt;&lt;/p&gt;
+&lt;p&gt;The overall picture is that some are more emotionally resilient than others. As of now, all the &lt;strong&gt;simulatons&lt;/strong&gt; return to their baseline attractor, but we would realistically expect some to stay stressed or gloomy following bad news. In the coming months I’ll be looking into how to incorporate emotion regulation into the simulation. For example, maybe some of the &lt;strong&gt;simulatons&lt;/strong&gt; use better coping strategies than others? I’m also interested in incorporating &lt;em&gt;appraisal&lt;/em&gt; mechanisms that allow for different reactions depending on the type of emotional stimulus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pubmed/20853980&#34;&gt;Kuppens, P., Oravecz, Z., &amp;amp; Tuerlinckx, F. (2010). Feelings change: Accounting for individual differences in the temporal dynamics of affect. &lt;em&gt;Journal of Personality and Social Psychology, 99&lt;/em&gt;, 1042-1060&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+      
+            <category>R</category>
+      
+      
+            <category>R</category>
+      
+            <category>Emotion Dynamics</category>
+      
+    </item>
     
     <item>
       <title>Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</title>
