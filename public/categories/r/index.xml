@@ -7,10 +7,318 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Wed, 26 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Modeling Motivation and Emotion using Feedback Loops</title>
+      <link>/post/feedback_loops/feedback_loops/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/feedback_loops/feedback_loops/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/htmlwidgets/htmlwidgets.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;/rmarkdown-libs/viz/viz.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;/rmarkdown-libs/DiagrammeR-styles/styles.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/grViz-binding/grViz.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to &lt;em&gt;do something&lt;/em&gt;. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts. Conversely, you could be comfortably ahead of your goals and be tempted to coast for a while (much like the Hare in the Tortoise and the Hare who takes a nap when he is far ahead of the Tortoise).&lt;/p&gt;
+&lt;p&gt;Charles Carver presented an elegant model of emotion and behavior as intertwined in nested &lt;em&gt;feedback loops&lt;/em&gt;. The idea behind a feedback loop is that you have a system whose output feeds into its input (the typical example being a thermostat). This idea isn’t new (see Powers, 1973), but Carver brilliantly formalized these ideas in this &lt;a href=&#34;https://journals.sagepub.com/doi/abs/10.1177/1754073915590616?journalCode=emra&#34;&gt;2015 paper&lt;/a&gt;, using process diagrams to illustrate his model. In honor of Dr. Carver who passed away this year, I’m bringing his model to life in the form of a simulation.&lt;/p&gt;
+&lt;div id=&#34;simple-feedback-loop&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Simple Feedback Loop&lt;/h2&gt;
+&lt;p&gt;Let’s start with a simple type of feedback loop called a &lt;em&gt;discrepancy-reducing loop&lt;/em&gt;. As we’ll see, the term implies that the object of the loop is to reduce a discrepancy between the system’s current state and an optimal, desired state. Imagine we have a goal of running a marathon and we’re tracking our progress toward that goal. Our desired outcome is to be 100% prepared for the marathon (note that we’re considering the act of running the marathon separate). Every day, we’ll compare our current progress to our desired outcome and this comparison will dictate how much effort we put into training that day. It’s easier to see with a process diagram:&lt;/p&gt;
+&lt;div id=&#34;htmlwidget-1&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;grViz html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-1&#34;&gt;{&#34;x&#34;:{&#34;diagram&#34;:&#34;\n\ndigraph {\ngraph [overlap = true, fontsize = 20]\nnode [shape = box,\n      fontname = Helvetica]\n\&#34;Desired Progress\&#34;; Behavior; \&#34;Current Progress\&#34;; \&#34;Environment\&#34;\n\nnode [shape = triangle,\n      fixedsize = true,\n      width = 1.8,\n      height = 1.2]\nComparison\n\&#34;Desired Progress\&#34; -&gt; Comparison -&gt; Behavior -&gt; \&#34;Environment\&#34; -&gt; \&#34;Current Progress\&#34; -&gt; Comparison\n}      \n&#34;,&#34;config&#34;:{&#34;engine&#34;:&#34;dot&#34;,&#34;options&#34;:null}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;This diagram describes a simple feedback loop whereby a Comparison between Current and Desired Progress affects behavior which, in turn, affects progress. We can emulate this in a simulation using R code.&lt;/p&gt;
+&lt;p&gt;Let’s return to our example of wannabe marathon runners. We’ll simulate 10 runners whose marathon preparedness progress starts at 0 and maxes out at 1. The code consists of nested loops. In the first loop (denoted by &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;) we have each of the 10 runners. We initialize their desired condition, which is 1 because they desire to be 100% prepared for the marathon. We then initialize the current condition to 0 to reflect their progress before the simulation starts.&lt;/p&gt;
+&lt;p&gt;In the second loop (denoted by &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;) we have each of the 100 days nested within each of the 10 runners. Each day, the runner compares their current progress with their desired condition. The larger this difference, the more &lt;em&gt;effort&lt;/em&gt; they’ll put into training, which increases their chances of making progress. The closer they are to their goal, the less effort they put in. If one’s effort is successful, they make 2.5% progress, if they are not successful, there is a 50/50 chance that progress will decline by 2.5% or stay at it’s current state.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;progress &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10)) # initialize an empty dataframe in which to store progress
+
+set.seed(1678) # for reproducibility
+
+for(i in 1:10){
+  desired_condition &amp;lt;- 1 # person desires to complete the task (100% completion)
+  current_condition &amp;lt;- 0 # person starts with 0% completion
+  for(j in 1:100){ 
+    behavior &amp;lt;- desired_condition - current_condition # distance between desire and reality
+    environment &amp;lt;- sample(x = c(-.025, 0, .025), size = 1, prob = c(abs(1 - behavior) * .50, abs(1 - behavior) * .50, abs(behavior)))
+    current_condition &amp;lt;- current_condition + environment 
+    progress[j, i] &amp;lt;- current_condition
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we track progress over each day, here’s what it looks like:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(RColorBrewer)
+
+progress &amp;lt;- progress %&amp;gt;%
+  mutate(time = 1:100)
+
+progress_gathered &amp;lt;- gather(progress, key = &amp;quot;person&amp;quot;, value = &amp;quot;progress&amp;quot;, -time)
+
+progress_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = progress, group = person)) +
+  geom_line(size = 1.25, color = &amp;quot;dodgerblue2&amp;quot;, alpha = .65) +
+  labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Progress toward Goal&amp;quot;,
+       title = &amp;quot;Simple Feedback Loop&amp;quot;) +
+  theme_minimal(base_size = 24) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Each line represents a person in the simulation. We see a sharp spike in progress during the first 25 days, then it levels off as the runners approach their goal. Admittedly, the example might not perfectly apply to marathon runners, who may actually see less progress early on when they are in poorer physical shape. A more appropriate example might be weight loss, where people are initially highly motivated to lose weight, but then the person reaches an asymptote and less progress is made.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;simple-feedback-with-an-outer-monitoring-loop&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Simple Feedback with an Outer Monitoring Loop&lt;/h2&gt;
+&lt;p&gt;So, our first example doesn’t do a great job of simulating &lt;em&gt;human&lt;/em&gt; behavior. One major drawback is that progress is only affected by the distance between one’s current state and their desired state. People don’t always use such a wide perspective when contemplating their goals. Recent progress is perhaps more important. In the rhetoric of motivational speakers and self help books: take it one day at a time.&lt;/p&gt;
+&lt;p&gt;So now we’ll incorporate an &lt;em&gt;outer loop&lt;/em&gt; that monitors activity in the &lt;em&gt;inner loop&lt;/em&gt; that we built earlier. Importantly though, this monitoring will affect stuff in the inner loop, so it’s not just a passive observer. We’re going to add a &lt;em&gt;rate&lt;/em&gt; parameter that measures the difference between one’s current progress and their progress of the previous day. This will be compared to their desired rate of progress, which we’ll choose to be 5% across the board. For greater clarity, here’s Carver’s take on how the outer loop functions:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“This second loop essentially checks on how well the first one is doing. Thus, the input for the second loop is a representation of the &lt;em&gt;rate of discrepancy reduction in the action system over time&lt;/em&gt;” (emphasis in original).&lt;/p&gt;
+&lt;p&gt;— Carver (2015, p. 302)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We’ll use the word &lt;em&gt;approach&lt;/em&gt; to define behavior directed toward a goal. Carver proposed that approach is essentially a &lt;em&gt;discrepancy-reducing&lt;/em&gt; behavior (as we’ll see soon, there’s a counterpart to approach that is instrumental to understanding more complex behaviors). So the higher one’s approach, the greater chances are of success. Diagramatically, it looks like this:&lt;/p&gt;
+&lt;div id=&#34;htmlwidget-2&#34; style=&#34;width:672px;height:480px;&#34; class=&#34;grViz html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-2&#34;&gt;{&#34;x&#34;:{&#34;diagram&#34;:&#34;\n\ndigraph {\ngraph [overlap = true, fontsize = 20]\nnode [shape = box,\n      fontname = Helvetica]\n\&#34;Desired Progress\&#34;; Behavior; \&#34;Current Progress\&#34;; \&#34;Environment\&#34;\n\nnode [shape = oval,\n      width = .5]\n\&#34;Desired Rate\&#34;; \&#34;Current Rate\&#34;; \&#34;Change in Rate\&#34;\n\nnode [shape = triangle,\n      fixedsize = true,\n      width = 2.1,\n      height = 1.6]\n\&#34;Comparison A\&#34;; \&#34;Comparison B\&#34;\n\&#34;Desired Progress\&#34; -&gt; \&#34;Comparison A\&#34; -&gt; Behavior -&gt; \&#34;Environment\&#34; -&gt; \&#34;Current Progress\&#34; -&gt; \&#34;Comparison A\&#34;\nBehavior -&gt; \&#34;Current Rate\&#34; -&gt; \&#34;Comparison B\&#34;\n\&#34;Desired Rate\&#34; -&gt; \&#34;Comparison B\&#34;-&gt; \&#34;Change in Rate\&#34; -&gt; \&#34;Environment\&#34; -&gt; \&#34;Current Rate\&#34;\n}      \n&#34;,&#34;config&#34;:{&#34;engine&#34;:&#34;dot&#34;,&#34;options&#34;:null}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;Adding another feedback loop complicates things, but what’s important to see is that the organism is comparing both the overall progress and the rate of progress. We can think of it as reflecting on how well it’s doing - not just how far it is from its goal. Now we can add these parameters to the simulation.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(1272)
+
+progress &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10))
+
+for(i in 1:10){
+  desired_condition &amp;lt;- 1 
+  desired_rate &amp;lt;- .025 # desirable rate of progress (2.5% per instance)
+  current_condition &amp;lt;- 0 
+  rate_comparison &amp;lt;- 1 # person starts with rate comparison of 1
+  for(j in 1:100){ 
+    # Inner Loop
+    comparison &amp;lt;- desired_condition - current_condition 
+    approach &amp;lt;- comparison * .50 + rate_comparison * .50
+    environment &amp;lt;- sample(x = c(-.025, 0, .025), size = 1, prob = c(abs(1 - approach) * .50, abs(1 - approach) * .50, abs(approach)))
+    current_condition &amp;lt;- current_condition + environment
+    progress[j, i] &amp;lt;- current_condition
+
+    # Outer Loop
+    if(j == 1) { 
+      current_rate &amp;lt;- 0
+    } else {
+      current_rate &amp;lt;- progress[j, i] - progress[j - 1, i]
+    }
+    rate_comparison &amp;lt;- desired_rate - current_rate
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Again, we can look at progress over time. From now on, I’ll use different colors for each person in the simulation.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;progress &amp;lt;- progress %&amp;gt;%
+  mutate(time = 1:100)
+
+progress_gathered &amp;lt;- gather(progress, key = &amp;quot;person&amp;quot;, value = &amp;quot;progress&amp;quot;, -time)
+
+progress_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = progress, color = person)) +
+  geom_line(size = 1.25, alpha = .65) +
+  scale_color_brewer(palette = &amp;quot;Spectral&amp;quot;) +
+  labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Progress toward Goal&amp;quot;,
+       title = &amp;quot;Feedback Loop with Monitoring&amp;quot;) +
+  theme_minimal(base_size = 24) +
+  theme(plot.title = element_text(hjust = .5),
+        legend.position = &amp;quot;none&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Compared to before, the rate of progress is slower on average. There is also more variation between people, as some achieve 50% progress and others are not much farther from where they started. What’s happening is &lt;em&gt;approach&lt;/em&gt; behavior increases when the rate of progress is less than desirable. However, when the rate of progress is greater than desirable, approach behavior decreases. This leads to a fluctuating pattern of ups and downs, similar to what occurs in people who diet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;feedback-loops-and-mood&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Feedback Loops and Mood&lt;/h2&gt;
+&lt;p&gt;In the last example, we used an &lt;em&gt;Outer Loop&lt;/em&gt; to monitor the rate of progress in the system. We can think of &lt;em&gt;mood&lt;/em&gt; as a byproduct of this outer loop - our subjective feeling about our progress. When we make progress toward our goals we feel happy and we relax. When we fall behind in our goals we feel upset and increase our efforts.&lt;/p&gt;
+&lt;p&gt;Now we’ll add to the outer loop a variable called &lt;em&gt;affect&lt;/em&gt;, which is just the psychologist’s way of saying ‘mood’. Unlike my previous emotion simulations, we’ll stick to only one dimension of affect: valence (pleasant vs. unpleasant). High valence means you’re feeling happy, while low valence could mean sadness or anger.&lt;/p&gt;
+&lt;p&gt;Affect will be neutral for the first 5 days. After that, affect will be a function of &lt;em&gt;autocorrelation&lt;/em&gt;, one’s current rate of progress, and their overall &lt;em&gt;progress slope&lt;/em&gt; (i.e., extant rate of progress). The progress slope forecasts one’s overall rate of progress based on how well they’ve done so far. In this way, if someone is progressing at a slow rate, they will feel more negative.&lt;/p&gt;
+&lt;p&gt;We won’t bother with the diagrams from hereout because they become needlessly complicated. What’s important to know is that affect emerges as a byproduct of multiple comparisons between progress and desired progress. Here’s the revised R code for the simulation with affect.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(12581)
+
+progress &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10))
+affect &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10))
+
+for(i in 1:10){
+  desired_condition &amp;lt;- 1
+  desired_rate &amp;lt;- .025
+  current_condition &amp;lt;- 0
+  rate_comparison &amp;lt;- 1
+  valence_attractor &amp;lt;- rnorm(n = 1, mean = 0.3, sd = .01) # average emotional state
+  for(j in 1:100){ 
+    # Inner Loop
+    comparison &amp;lt;- desired_condition - current_condition
+    approach &amp;lt;- comparison * .50 + rate_comparison * .50
+    environment &amp;lt;- sample(x = c(-.025, 0, .025), size = 1, prob = c(abs(1 - approach) * .50, abs(1 - approach) * .50, abs(approach)))
+    current_condition &amp;lt;- current_condition + environment
+    progress[j, i] &amp;lt;- current_condition
+
+    # Outer Loop
+    if(j == 1) {
+      current_rate &amp;lt;- 0
+    } else {
+      current_rate &amp;lt;- progress[j, i] - progress[j - 1, i]
+    }
+    rate_comparison &amp;lt;- desired_rate - current_rate
+    progress_slope &amp;lt;- progress[j, i] - progress[1, i]/(j - 1)
+    if(j &amp;lt;= 5) {
+      affect[j, i] &amp;lt;- valence_attractor + rnorm(n = 1, mean = valence_attractor, sd = 1) * .01
+    } else {
+      affect[j, i] &amp;lt;- affect[j - 1, i] * .25 + progress_slope * .50 + (1 - rate_comparison) * .24 + rnorm(n = 1, mean = valence_attractor, sd = 1) * .01
+    }
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we have progress and affect, let’s look at them together. We can add two plots together using the &lt;em&gt;ggpubr&lt;/em&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggpubr)
+
+progress &amp;lt;- progress %&amp;gt;%
+  mutate(time = 1:100)
+
+progress_gathered &amp;lt;- gather(progress, key = &amp;quot;person&amp;quot;, value = &amp;quot;progress&amp;quot;, -time)
+
+progress_plot &amp;lt;- progress_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = progress, color = person)) +
+  geom_line(size = 1.25, alpha = .65) +
+  scale_color_brewer(palette = &amp;quot;Spectral&amp;quot;) +
+  labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Progress toward Goal&amp;quot;,
+       title = &amp;quot;Progress&amp;quot;) +
+  theme_minimal(base_size = 20) +
+  theme(legend.position = &amp;quot;none&amp;quot;,
+        plot.title = element_text(hjust = .5),
+        axis.title.y = element_text(size = 14)) 
+
+affect &amp;lt;- affect %&amp;gt;%
+  mutate(time = 1:100)
+
+affect_gathered &amp;lt;- gather(affect, key = &amp;quot;person&amp;quot;, value = &amp;quot;affect&amp;quot;, -time)
+
+affect_plot &amp;lt;- affect_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = affect, color = person)) +
+  geom_line(size = 1.25, alpha = .65) +
+  scale_color_brewer(palette = &amp;quot;Spectral&amp;quot;) +
+  labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Affect (higher = happier)&amp;quot;,
+       title = &amp;quot;Affect&amp;quot;) +
+  theme_minimal(base_size = 20) +
+  theme(legend.position = &amp;quot;none&amp;quot;,
+        plot.title = element_text(hjust = .5),
+        axis.title.y = element_text(size = 14))
+
+plots1 &amp;lt;- ggarrange(progress_plot, affect_plot, nrow = 2)
+plots1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Affect is largely in-step with progress. Again, this is reflecting that people feel happier when they are making progress toward their goals. But we know that our mood is more complicated than this. Say we’re competing against others in a diet challenge to see who can lose the most weight over 100 days. If we see that we’re way behind in our progress, with no hope of catching up, we may throw in the towel and quit trying altogether. Indeed, humans are highly attuned to &lt;em&gt;social comparisons&lt;/em&gt;, especially in competitive environments.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;feedback-loops-mood-and-social-comparison&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Feedback Loops, Mood, and Social Comparison&lt;/h2&gt;
+&lt;p&gt;Our last and most complex simulation will take into account how people’s behavior toward a goal changes when they receive social comparison feedback. If you have no chance winning the competition, why expend effort at all? Things get even more complicated from here, as we now have to create dependence among organisms in the simulation. Before, everyone’s performance was independent; now each new person who enters the simulation becomes aware of their performance relative to their peers’.&lt;/p&gt;
+&lt;p&gt;We add two new parameters. The first, &lt;em&gt;average progress rate&lt;/em&gt;, is the average slope of prior runs in the simulation (akin to watching your competitor’s performance and then yourself performing). Indeed, these are not run in parallel, so the first simulated person has no insight into the performance of others, while the second person is only aware of how well the first person did, and so on. The second parameter is &lt;em&gt;relative standing&lt;/em&gt; and it is simply the difference between one’s current progress rate and the average progress rate. In general, as relative standing increases (as the distance becomes larger) avoidance behavior increases. This works in two ways: (1) performance exceeds that of others and effort goes down (e.g., coasting) or (2) performance pales relative to others and hopelessness ensues. To model this, at the halfway point, if one’s relative standing is 35% less than the average, that person will effectively give up, saving themselves from severe upset. Indeed, some have suggested that this is an adaptive response because it allows people to reprioritize their efforts (Simon, 1967).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(1249)
+
+progress &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10))
+affect &amp;lt;- data.frame(matrix(nrow = 100, ncol = 10))
+
+for(i in 1:10){
+  desired_condition &amp;lt;- 1
+  desired_rate &amp;lt;- .050
+  current_condition &amp;lt;- 0
+  rate_comparison &amp;lt;- 1
+  valence_attractor &amp;lt;- rnorm(n = 1, mean = 0.3, sd = .01)
+  average_progress_rate &amp;lt;- 0
+  relative_standing &amp;lt;- 1
+  for(j in 1:100){ 
+    # Inner Loop
+    comparison &amp;lt;- desired_condition - current_condition
+    approach &amp;lt;- (abs(comparison * .50 + rate_comparison * .50))/(abs(relative_standing) + (comparison * .75 + abs(rate_comparison) * .25))
+    avoidance &amp;lt;- (abs(relative_standing))/(abs(relative_standing) + (comparison * .75 + abs(rate_comparison) * .25))
+    environment &amp;lt;- sample(x = c(-.025, 0, .025), size = 1, prob = c(avoidance * .50, avoidance * .50, approach))
+    current_condition &amp;lt;- current_condition + environment 
+    progress[j, i] &amp;lt;- ifelse(current_condition &amp;lt;= 0, 0, current_condition)
+
+    # Outer Loop
+    if(j == 1) {
+      current_rate &amp;lt;- 0
+    } else {
+      current_rate &amp;lt;- progress[j, i] - progress[j - 1, i]
+      progress_slope &amp;lt;- progress[j, i] - progress[1, i]/(j - 1)
+      relative_standing &amp;lt;- progress_slope - average_progress_rate
+    }
+    rate_comparison &amp;lt;- desired_rate - current_rate
+    if(j &amp;lt;= 5) {
+      affect[j, i] &amp;lt;- valence_attractor + rnorm(n = 1, mean = valence_attractor, sd = 1) * .01
+    } else if (j &amp;gt;= 50 &amp;amp;&amp;amp; relative_standing &amp;lt;= .35) {
+      desired_condition &amp;lt;- current_condition
+      rate_comparison &amp;lt;- 0
+      affect[j, i] &amp;lt;- affect[j - 1, i] * .99 + rnorm(n = 1, mean = valence_attractor, sd = 1) * .01
+    } else {
+      affect[j, i] &amp;lt;- affect[j - 1, i] * .25 + progress_slope * .50 + relative_standing * .24 + rnorm(n = 1, mean = valence_attractor, sd = 1) * .01
+    }
+  }
+  if(i &amp;gt; 1){
+    average_progress_rate &amp;lt;- mean(t(progress[100, (i - 1):1]))
+  } else {
+    average_progress_rate &amp;lt;- 0
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Running the code above, we can enter it into the next code chunk to get the plots. Again, we’ll plot them together to compare progress and affect.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;progress &amp;lt;- progress %&amp;gt;%
+  mutate(time = 1:100)
+
+progress_gathered &amp;lt;- gather(progress, key = &amp;quot;person&amp;quot;, value = &amp;quot;progress&amp;quot;, -time)
+
+progress_plot2 &amp;lt;- progress_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = progress, color = person)) +
+  geom_line(size = 1.25, alpha = .65) +
+  scale_color_brewer(palette = &amp;quot;Spectral&amp;quot;) +
+  labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Progress toward Goal&amp;quot;,
+       title = &amp;quot;Progress&amp;quot;) +
+  theme_minimal(base_size = 20) +
+  theme(legend.position = &amp;quot;none&amp;quot;,
+        plot.title = element_text(hjust = .5),
+        axis.title.y = element_text(size = 14)) 
+
+affect &amp;lt;- affect %&amp;gt;%
+  mutate(time = 1:100)
+
+affect_gathered &amp;lt;- gather(affect, key = &amp;quot;person&amp;quot;, value = &amp;quot;affect&amp;quot;, -time)
+
+affect_plot2 &amp;lt;- affect_gathered %&amp;gt;%
+  ggplot(aes(x = time, y = affect, color = person)) +
+  geom_line(size = 1.25, alpha = .65) +
+  scale_color_brewer(palette = &amp;quot;Spectral&amp;quot;) +
+    labs(x = &amp;quot;Day&amp;quot;,
+       y = &amp;quot;Affect (higher = happier)&amp;quot;,
+       title = &amp;quot;Affect&amp;quot;) +
+  theme_minimal(base_size = 20) +
+  theme(legend.position = &amp;quot;none&amp;quot;,
+        plot.title = element_text(hjust = .5),
+        axis.title.y = element_text(size = 14))
+
+plots2 &amp;lt;- ggarrange(progress_plot2, affect_plot2, nrow = 2)
+plots2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can clearly see where a few competitors bailed out and their progress dropped to zero. This is because their relative standing was weak and they relinquished. Importantly though, they didn’t suffer too heavy a blow in affect, and this is because they no longer valued progress toward this goal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;We set out to show that motivation and emotion can be simulated using fairly simple feedback loops. Of course, human behavior is exceedingly more complicated, but we can learn a lot by simulating ersatz humans with only a handful of parameters. As I continue to work toward my PhD, my appreciation for Carver’s computational models only grows stronger. My goal is to see psychological research and computer simulations partake in their own form of feedback loop, where knowledge from the former feeds into our construction of the latter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://journals.sagepub.com/doi/abs/10.1177/1754073915590616?journalCode=emra&#34;&gt;Carver, C. S. (2015). Control processes, priority management, and affective dynamics. &lt;em&gt;Emotion Review, 7&lt;/em&gt;, 301-307.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Powers, W. T. (1973). &lt;em&gt;Behavior: The control of perception.&lt;/em&gt; Chicago, IL: Aldine.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://psycnet.apa.org/record/1967-03946-001&#34;&gt;Simon, H. A. (1967). Motivational and emotional controls of cognition. &lt;em&gt;Psychology Review, 74&lt;/em&gt;, 29-39.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+      
+            <category>R</category>
+      
+      
+            <category>R</category>
+      
+            <category>Emotion Dynamics</category>
+      
+    </item>
     
     <item>
       <title>A Model and Simulation of Emotion Dynamics</title>

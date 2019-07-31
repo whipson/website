@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>/post/feedback_loops/feedback_loops/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/emotion-simulation1/emotion_sim/</loc>
       <lastmod>2019-06-26T00:00:00+00:00</lastmod>
     </url>
@@ -221,8 +229,8 @@
     
     <url>
     
-      <loc>/categories/emotion-dynamics/</loc>
-      <lastmod>2019-06-26T00:00:00+00:00</lastmod>
+      <loc>/tags/emotion-dynamics/</loc>
+      <lastmod>2019-03-18T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -230,8 +238,8 @@
     
     <url>
     
-      <loc>/tags/emotion-dynamics/</loc>
-      <lastmod>2019-03-18T00:00:00+00:00</lastmod>
+      <loc>/categories/emotion-dynamics/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -257,8 +265,8 @@
     
     <url>
     
-      <loc>/categories/r/</loc>
-      <lastmod>2019-06-26T00:00:00+00:00</lastmod>
+      <loc>/tags/r/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -266,8 +274,8 @@
     
     <url>
     
-      <loc>/tags/r/</loc>
-      <lastmod>2019-06-26T00:00:00+00:00</lastmod>
+      <loc>/categories/r/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
