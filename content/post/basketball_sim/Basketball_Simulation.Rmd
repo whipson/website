@@ -3,8 +3,8 @@ title: Simulating Emotions during a Basketball Game - Just a Feeling in the Crow
 author: ~
 date: '2019-06-05'
 slug: basketball_sim
-categories: ["R", "Emotion Dynamics"]
-tags: ["R"]
+categories: ["R", "Emotion Dynamics", "Simulation"]
+tags: ["R", "Emotion Dynamics", "Simulation"]
 ---
 
 ```{r setup, include=FALSE}

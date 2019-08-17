@@ -3,8 +3,8 @@ title: "Modeling Motivation and Emotion using Feedback Loops"
 author: ~
 date: '2019-07-31'
 slug: feedback_loops
-tags: ["R"]
-categories: ["R", "Emotion Dynamics"]
+tags: ["R", "Emotion Dynamics", "Simulation", "Feedback Loops"]
+categories: ["R", "Emotion Dynamics", "Simulation", "Feedback Loops"]
 ---
 
 ```{r setup, include=FALSE}

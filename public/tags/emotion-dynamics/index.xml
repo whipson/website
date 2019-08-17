@@ -7,10 +7,38 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Mon, 18 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/emotion-dynamics/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Modeling Motivation and Emotion using Feedback Loops</title>
+      <link>/post/feedback_loops/feedback_loops/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/feedback_loops/feedback_loops/</guid>
+      <description>If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to do something. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts.</description>
+    </item>
+    
+    <item>
+      <title>A Model and Simulation of Emotion Dynamics</title>
+      <link>/post/emotion-simulation1/emotion_sim/</link>
+      <pubDate>Wed, 26 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/emotion-simulation1/emotion_sim/</guid>
+      <description>Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment.</description>
+    </item>
+    
+    <item>
+      <title>Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</title>
+      <link>/post/basketball_sim/basketball_sim/</link>
+      <pubDate>Wed, 05 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/basketball_sim/basketball_sim/</guid>
+      <description>Sporting events host witness to a wide range of human emotion. The emotional ups and downs are especially clear among invested fans. Fans experience the joy and excitement of a triumphant comeback, or the anxiety and disappointment of a loss. It is particularly interesting to see how emotions differ from two opposing fan groups watching the same match.
+I decided to perform some simulations on how a crowd of fans would react during a basketball game.</description>
+    </item>
     
     <item>
       <title>Network Analysis of Emotions</title>

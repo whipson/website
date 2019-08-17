@@ -3,8 +3,8 @@ title: Quick Example of Latent Profile Analysis in R
 author: ~
 date: '2019-04-20'
 slug: latent-profile
-categories: ["R"]
-tags: ["R"]
+categories: ["R", "Latent Profile Analysis"]
+tags: ["R", "Latent Profile Analysis"]
 ---
 
 ```{r setup, include=FALSE}

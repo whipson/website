@@ -230,7 +230,7 @@
     <url>
     
       <loc>/tags/emotion-dynamics/</loc>
-      <lastmod>2019-03-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -240,6 +240,42 @@
     
       <loc>/categories/emotion-dynamics/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/feedback-loops/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/feedback-loops/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/latent-profile-analysis/</loc>
+      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/latent-profile-analysis/</loc>
+      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -299,6 +335,24 @@
     
     <url>
     
+      <loc>/tags/simulation/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/simulation/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/tags/social-development/</loc>
       <lastmod>2019-01-09T00:00:00-05:00</lastmod>
       <priority>0</priority>
@@ -309,7 +363,7 @@
     <url>
     
       <loc>/tags/</loc>
-      <lastmod>2019-03-18T00:00:00+00:00</lastmod>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

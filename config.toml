@@ -284,6 +284,11 @@ enableGitInfo = false
     icon = "github"
     icon_pack = "fab"
     link = "https://github.com/whipson?tab=repositories"
+    
+  [[params.social]]
+    icon = "osf"
+    icon_pack = "ai"
+    link = "https://osf.io/profile/"
 
   # Link to a PDF of your resume/CV from the About widget.
   # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
@@ -306,34 +311,29 @@ enableGitInfo = false
   weight = 1
 
 [[menu.main]]
-  name = "Projects"
-  url = "#projects"
-  weight = 2
-
-[[menu.main]]
   name = "Posts"
   url = "#posts"
-  weight = 3
+  weight = 2
 
 [[menu.main]]
   name = "Publications"
   url = "#publications_selected"
-  weight = 4
+  weight = 3
 
 [[menu.main]]
   name = "CV"
   url = "files/Academic CV.pdf"
-  weight = 5
+  weight = 4
   
 [[menu.main]]
   name = "Apps"
   url = "/shiny/"
-  weight = 6
+  weight = 5
     
 [[menu.main]]
   name = "R-bloggers"
   url = "https://www.r-bloggers.com/"
-  weight = 7
+  weight = 6
 
 # Search.
 [params.search]

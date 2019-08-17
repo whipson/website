@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
-    <lastBuildDate>Mon, 18 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,27 @@
     <item>
       <title>Emotion Dynamics</title>
       <link>/tags/emotion-dynamics/</link>
-      <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/emotion-dynamics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Feedback Loops</title>
+      <link>/tags/feedback-loops/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/feedback-loops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Latent Profile Analysis</title>
+      <link>/tags/latent-profile-analysis/</link>
+      <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/latent-profile-analysis/</guid>
       <description></description>
     </item>
     
@@ -36,6 +54,15 @@
       <pubDate>Sat, 23 Feb 2019 00:00:00 -0500</pubDate>
       
       <guid>/tags/sentiment-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Simulation</title>
+      <link>/tags/simulation/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/simulation/</guid>
       <description></description>
     </item>
     
