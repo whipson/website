@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linear Mixed Models on Will Hipson</title>
+    <link>/tags/linear-mixed-models/</link>
+    <description>Recent content in Linear Mixed Models on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Thu, 05 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/linear-mixed-models/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bayesian Linear Mixed Models: Random Intercepts, Slopes, and Missing Data</title>
+      <link>/post/bayesian_mlm/bayesian_mlm/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/bayesian_mlm/bayesian_mlm/</guid>
+      <description>This past summer, I watched a brilliant lecture series by Richard McElreath on Bayesian statistics. It honestly changed my whole outlook on statistics, so I couldn’t recommend it more (plus, McElreath is an engaging instructor). One of the most compelling cases for using Bayesian statistics is with a collection of statistical tools called linear mixed models or multilevel/hierarchical models. It’s common that data are grouped or clustered in some way.</description>
+    </item>
+    
+  </channel>
+</rss>

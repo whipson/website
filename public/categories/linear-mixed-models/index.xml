@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linear Mixed Models on Will Hipson</title>
+    <link>/categories/linear-mixed-models/</link>
+    <description>Recent content in Linear Mixed Models on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Thu, 05 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/categories/linear-mixed-models/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bayesian Linear Mixed Models: Random Intercepts, Slopes, and Missing Data</title>
+      <link>/post/bayesian_mlm/bayesian_mlm/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/bayesian_mlm/bayesian_mlm/</guid>
+      <description>
+
+
+&lt;p&gt;This past summer, I watched a brilliant &lt;a href=&#34;https://www.youtube.com/watch?v=4WVelCswXo4&amp;amp;list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34;&gt;lecture series by Richard McElreath&lt;/a&gt; on Bayesian statistics. It honestly changed my whole outlook on statistics, so I couldn’t recommend it more (plus, McElreath is an engaging instructor). One of the most compelling cases for using Bayesian statistics is with a collection of statistical tools called &lt;em&gt;linear mixed models&lt;/em&gt; or &lt;em&gt;multilevel/hierarchical models&lt;/em&gt;. It’s common that data are grouped or clustered in some way. Often in psychology we have repeated observations nested within participants, so we know that data coming from the same participant will share some variance. Linear mixed models are powerful tools for dealing with multilevel data, usually in the form of modeling &lt;em&gt;random intercepts&lt;/em&gt; and &lt;em&gt;random slopes&lt;/em&gt;. In this tutorial I assume familiarity with linear regression and some background knowledge in Bayesian inference, such that you should have some familiarity with &lt;em&gt;priors&lt;/em&gt; and &lt;em&gt;posterior distributions&lt;/em&gt; (if not, go &lt;a href=&#34;https://www.sciencedirect.com/science/article/pii/S0732118X18300746?via%3Dihub&#34;&gt;here&lt;/a&gt;) or watch McElreath’s videos.&lt;/p&gt;
+&lt;p&gt;Why use Bayesian instead of Frequentist statistics? One reason is that &lt;em&gt;prior&lt;/em&gt; knowledge about a parameter - for example, it’s distribution - can be incorporated in the model. Another reason especially relevant to linear mixed models is that we can easily include multiple random intercepts and slopes without running into the same stringent sample size requirements as with frequentist approaches. This is not an exhaustive list; more can be found &lt;a href=&#34;https://www.sciencedirect.com/science/article/pii/S0732118X18300746?via%3Dihub&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;div id=&#34;setting-it-all-up&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Setting it All Up&lt;/h2&gt;
+&lt;p&gt;Installing and running &lt;em&gt;brms&lt;/em&gt; is a bit more complicated than your run-of-the-mill R packages. Because &lt;em&gt;brms&lt;/em&gt; uses STAN as its back-end engine to perform Bayesian analysis, you will need to install &lt;em&gt;rstan&lt;/em&gt;. Carefully follow the instructions at this &lt;a href=&#34;https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started&#34;&gt;link&lt;/a&gt; and you should have no problem. Once you’ve done that you should be able to install &lt;em&gt;brms&lt;/em&gt; and load it up.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Loading required package: Rcpp&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Loading &amp;#39;brms&amp;#39; package (version 2.10.0). Useful instructions
+## can be found by typing help(&amp;#39;brms&amp;#39;). A more detailed introduction
+## to the package is available through vignette(&amp;#39;brms_overview&amp;#39;).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s normal to get some warning messages upon loading the package. That’s fine. We can now load up the &lt;em&gt;tidyverse&lt;/em&gt; for data manipulation and visualization.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The data is available on GitHub &lt;a href=&#34;https://github.com/MultiLevelAnalysis/Datasets-third-edition-Multilevel-book/blob/master/chapter%205/Curran/CurranLong.sav&#34;&gt;here&lt;/a&gt; in a .sav format. You’ll need the &lt;em&gt;haven&lt;/em&gt; package to read it into R. Make sure you import it from your working directory or specify the path to your downloads folder.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(haven)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The dataset was curated by &lt;a href=&#34;http://curran.web.unc.edu/&#34;&gt;Patrick Curran&lt;/a&gt; for the purpose of demonstrating different approaches for handling multilevel, longitudinal data (see &lt;a href=&#34;https://jflournoy.github.io/assets/pdf/srcdmeth.pdf&#34;&gt;here&lt;/a&gt; for more info). The dataset consists of 405 children in the first two years of elementary school measured over four assessment points on reading recognition and antisocial behaviour. As well, it included time invariant covariates, such as emotional support and cognitive stimulation. For this post, we’ll focus on reading and cognitive stimulation, and we’ll use Bayesian Linear Mixed Models to address a number of questions about children’s reading ability.&lt;/p&gt;
+&lt;p&gt;For now, we’ll omit assessment periods with missing data, but we’ll return to the issue of missing data at the end of this demonstration.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat &amp;lt;- read_sav(&amp;quot;CurranLong.sav&amp;quot;) %&amp;gt;%
+  select(id, occasion, read, homecog) %&amp;gt;%
+  filter(complete.cases(.))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 1,325 x 4
+##       id occasion  read homecog
+##    &amp;lt;dbl&amp;gt;    &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;
+##  1    22        0   2.1      13
+##  2    22        1   3.9      13
+##  3    34        0   2.1       9
+##  4    34        1   2.9       9
+##  5    34        2   4.5       9
+##  6    34        3   4.5       9
+##  7    58        0   2.3       9
+##  8    58        1   4.5       9
+##  9    58        2   4.2       9
+## 10    58        3   4.6       9
+## # ... with 1,315 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The data is conveniently in long form already, which means that each row represents a single &lt;span class=&#34;math inline&#34;&gt;\(j^{th}\)&lt;/span&gt; assessment period for an &lt;span class=&#34;math inline&#34;&gt;\(i^{th}\)&lt;/span&gt; child. With no other data cleaning to do, we can move ahead with our research questions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-1-one-random-effect-no-covariates&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 1: One Random Effect, No Covariates&lt;/h2&gt;
+&lt;p&gt;We’ll start with a population-level intercept and a random intercept for participants. Our formula looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[READ_{ij} = \beta_0+u_{0i}+\epsilon_{ij}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Where &lt;span class=&#34;math inline&#34;&gt;\(\beta_0\)&lt;/span&gt; is the population intercept, &lt;span class=&#34;math inline&#34;&gt;\(u_{0i}\)&lt;/span&gt; is a random intercept term for an &lt;span class=&#34;math inline&#34;&gt;\(i^{th}\)&lt;/span&gt; participant, and &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_{ij}\)&lt;/span&gt; is a random noise term for an &lt;span class=&#34;math inline&#34;&gt;\(i^{th}\)&lt;/span&gt; participant and &lt;span class=&#34;math inline&#34;&gt;\(j^{th}\)&lt;/span&gt; assessment period.&lt;/p&gt;
+&lt;p&gt;If you find formulae distasteful, that’s OK. They’re not essential to understanding how linear mixed models work. conceptually, think of the &lt;span class=&#34;math inline&#34;&gt;\(u_{0i}\)&lt;/span&gt; in the above formula as giving a little &lt;em&gt;nudge&lt;/em&gt; to the intercept for each participant.&lt;/p&gt;
+&lt;p&gt;Here I’ll walk carefully through the &lt;em&gt;brms&lt;/em&gt; code and then each subsequent model will just build one this one. We start by providing our data. The &lt;em&gt;family&lt;/em&gt; argument is where we supply a distribution for our outcome variable, reading. We’ll use the default &lt;em&gt;gaussian&lt;/em&gt; to indicate that reading should be normally distributed. The next line is where we specify our model formula. If you’re familiar with mixed effects models in the &lt;em&gt;lme4&lt;/em&gt; package you’ll be happy to see there are no differences here. I’ve only included the population level intercept ‘1’ after ‘read ~’ to be precise, but this will be included by default. The random intercept is indicated by the ‘(1 | id)’ as in typical mixed effects notation. We then specify some priors. Our first prior is for the population-level &lt;em&gt;Intercept&lt;/em&gt;. We’ll specify a fairly wide normal distribution for the intercept.&lt;/p&gt;
+&lt;p&gt;If this whole business of deciding on priors seems strange and arbitrary, just note that a wide prior such as this one will have little bearing on the posterior distribution. If instead we were extremely confident that the intercept was zero, we could use a narrow prior of ‘normal(0, .05)’ which would have a strong effect on the resulting posterior distribution.&lt;/p&gt;
+&lt;p&gt;The next prior is for the &lt;em&gt;standard deviation&lt;/em&gt; of the random effects. Unlike an intercept which can be positive or negative, variance (and by association, standard deviation) can only be positive, so we specify a &lt;em&gt;cauchy&lt;/em&gt; distribution that constrains the sd to be positive. We do the same for &lt;em&gt;sigma&lt;/em&gt; which is the overall variability.&lt;/p&gt;
+&lt;p&gt;The rest of the code has to do with how the Markov Chain Monte Carlo (MCMC) algorithm runs. Without going too much into the &lt;em&gt;whys&lt;/em&gt; (a more detailed treatise can be found &lt;a href=&#34;https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/sampling-the-imaginary.html#sampling-to-simulate-prediction&#34;&gt;here&lt;/a&gt;), we will run 2,000 chained simulations. The first 1,000 of these will be in the warmup period and we will be rejected. We will run 4 parallel chains on 4 cores (if your computer has fewer cores you will want to reduce this). To help the model converge, I’ve increased the adapt_delta and max_treedepth arguments. Finally, an arbitrary seed number for reproducibility.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read1 &amp;lt;- brm(data = curran_dat,
+             family = gaussian,
+             formula = read ~ 1 + (1 | id),
+             prior = c(prior(normal(0, 10), class = Intercept),
+                       prior(cauchy(0, 1), class = sd),
+                       prior(cauchy(0, 1), class = sigma)),
+             iter = 2000, warmup = 1000, chains = 4, cores = 4,
+             control = list(adapt_delta = .975, max_treedepth = 20),
+             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: read ~ 1 + (1 | id) 
+##    Data: curran_dat (Number of observations: 1325) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sd(Intercept)     0.54      0.08     0.37     0.68 1.00      992     1847
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     4.11      0.05     4.01     4.21 1.00     4866     3424
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     1.55      0.04     1.48     1.62 1.00     2219     2827
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What does the output tell us? Right away, we see an estimate of an Intercept of 4.11 within a 95% &lt;em&gt;credible interval&lt;/em&gt; (you might call it the Bayesian version of a confidence interval, although they’re not quite the same thing) of 4.01 and 4.21. What’s more interesting is the estimate of standard deviation of the random intercepts ‘sd(Intercept)’. So there is person-level variability in reading scores. In turn, &lt;em&gt;sigma&lt;/em&gt; is the estimate of the overall variability in reading scores.&lt;/p&gt;
+&lt;p&gt;We can further inspect these estimates by looking at the traceplots and the posterior distributions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(read1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Each row corresponds with a parameter in the model. The traceplot shows the MCMC samples. These should resemble ‘hairy caterpillars’ - we don’t want to see the chain getting stuck near a particular value.&lt;/p&gt;
+&lt;p&gt;For a more intuitive understanding of what the mixed effects model is doing, let’s compare a sample of the observed values with the model predicted values. &lt;em&gt;brms&lt;/em&gt; outputs fitted values using the &lt;em&gt;fitted&lt;/em&gt; function. We’ll sample 6 participants and see their observed reading scores and model-derived reading scores.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
+
+curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read1))) %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  nest() %&amp;gt;%
+  sample_n(6) %&amp;gt;%
+  unnest() %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Model 1: One Random Effect, No Covariates&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.075, .075), breaks = 0:3) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can see that each estimate is drawn toward the population-level mean and its cluster-level mean. This phenomenon is called &lt;em&gt;partial-pooling&lt;/em&gt; or &lt;em&gt;shrinkage&lt;/em&gt;. If we’d run the model without the random effect, all of the estimates (black circles) would be on a single horizontal line. But here we have some variation between individuals. Notice too how points further away from the means (population- and cluster-level) are pulled more strongly. However, there is clearly an increase in reading ability over time that is being ignored by this model.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-2-two-random-effects-no-covariates&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 2: Two Random Effects, No Covariates&lt;/h2&gt;
+&lt;p&gt;Let’s add a random intercept for assessment period (labelled ‘occasion’ in this dataset). This model will recognize that observations are nested within participants &lt;em&gt;and&lt;/em&gt; assessment periods. For now, we’ll consider assessment as a random effect because we are still only interested in the variability in reading scores. Here’s our new formula:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[READ_{ij} = \beta_0+u_{0i}+w_{0j}+\epsilon_{ij}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Now we have a term &lt;span class=&#34;math inline&#34;&gt;\(w_{0j}\)&lt;/span&gt; for the random intercept for the &lt;span class=&#34;math inline&#34;&gt;\(j^{th}\)&lt;/span&gt; assessment period.&lt;/p&gt;
+&lt;p&gt;The only change to our model code is that we’ve added a second random intercept: ‘(1 | occasion)’.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read2 &amp;lt;- brm(data = curran_dat,
+             family = gaussian,
+             read ~ 1 + (1 | id) + (1 | occasion),
+             prior = c(prior(normal(0, 10), class = Intercept),
+                       prior(cauchy(0, 1), class = sd),
+                       prior(cauchy(0, 1), class = sigma)),
+             iter = 2000, warmup = 1000, chains = 4, cores = 4,
+             control = list(adapt_delta = .975, max_treedepth = 20),
+             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: read ~ 1 + (1 | id) + (1 | occasion) 
+##    Data: curran_dat (Number of observations: 1325) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sd(Intercept)     0.89      0.04     0.82     0.96 1.00     1270     2122
+## 
+## ~occasion (Number of levels: 4) 
+##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sd(Intercept)     1.71      0.86     0.79     3.99 1.00     1701     1878
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     4.32      0.89     2.46     6.08 1.00     1426     1848
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.64      0.01     0.61     0.67 1.00     3630     3056
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Looking again at our output now, we see variability in the random intercepts for id, but even larger variability across occasions (assessment periods). In fact, the overall variability, sigma, is quite reduced from the previous model. This demonstrates an important lesson about mixed models: that they decompose the overall variance (sigma) into cluster-level variance. If we just ran a linear regression, it wouldn’t differentiate between measurement error and variation between participants and time points.&lt;/p&gt;
+&lt;p&gt;Let’s again compare the estimates with the observed values. We’ll use the same subsample as before to illustrate the effect of adding a second random effect.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
+
+curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read2))) %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  nest() %&amp;gt;%
+  sample_n(6) %&amp;gt;%
+  unnest() %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Model 2: Two Random Effects, No Covariates&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.075, .075), breaks = 0:3) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can see that the model now adjusts the points based on the assessment-level intercept. The fact that the black circles follow a nearly linear increase is telling us that there is probably an effect of time, such that children get better at reading over time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-3-one-random-effect-one-covariate&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 3: One Random Effect, One Covariate&lt;/h2&gt;
+&lt;p&gt;Now let’s make a conceptual shift. Maybe as researchers we decide that we’re interested in the effect of time (assessment period) on reading ability. Since each assessment was spaced equally apart in time and we have good reason to think that time has a global effect on reading, it makes sense to include it as a fixed effect (this sort of conceptual decision should be made beforehand, but for illustrative purposes I’ve shown it as a random and a fixed effect).&lt;/p&gt;
+&lt;p&gt;It’s always a good idea to visualize what’s going on so that we know if our assumptions are tenable. we’ll create a lineplot showing the change in reading ability over time, but with each line representing an individual in our sample.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat %&amp;gt;%
+  ggplot(aes(x = occasion, y = read, group = id)) +
+  geom_line(size = .75, alpha = .20) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;) +
+  theme_minimal(base_size = 16)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;There’s a clear upward trend - most children improve in their reading over time. We can now proceed with formally testing the growth in reading:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[READ_{ij} = \beta_0+\beta_1Time_j+u_{0i}+\epsilon_{ij}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Here’s the model code. Note that we are still modeling the random effect of id, but now occasion is a covariate (predictor). We need to specify a new prior, &lt;em&gt;b&lt;/em&gt; for beta. The beta estimate for the effect of time on reading ability is assumed to derive from a normal distribution with mean 0 and sd 1.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read3 &amp;lt;- brm(data = curran_dat,
+             family = gaussian,
+             read ~ 1 + occasion + (1 | id),
+             prior = c(prior(normal(0, 10), class = Intercept),
+                       prior(normal(0, 1), class = b),
+                       prior(cauchy(0, 1), class = sd),
+                       prior(cauchy(0, 1), class = sigma)),
+             iter = 2000, warmup = 1000, chains = 4, cores = 4,
+             control = list(adapt_delta = .975, max_treedepth = 20),
+             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: read ~ 1 + occasion + (1 | id) 
+##    Data: curran_dat (Number of observations: 1325) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sd(Intercept)     0.89      0.04     0.82     0.96 1.00     1204     1906
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     2.70      0.05     2.60     2.81 1.00     1036     1692
+## occasion      1.10      0.02     1.07     1.14 1.00     6696     3112
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.68      0.02     0.65     0.71 1.00     3004     3138
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Our output gives a smaller intercept because it’s not telling us the mean any more, instead it’s the y-intercept of the regression line. We have an estimate of beta as 1.10 within a 95% credible interval of 1.07 and 1.14. So there’s strong evidence of a positive effect of time on reading ability.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
+
+curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read3))) %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  nest() %&amp;gt;%
+  sample_n(6) %&amp;gt;%
+  unnest() %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Model 3: One Random Effect, One Covariate&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.075, .075), breaks = 0:3) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The estimates aren’t actually that different from the model with two random effects. The main difference now is that the black circles show a strictly linear trend that is the same across participants. But maybe this assumption of equal effects across the board isn’t tenable either.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-4-one-random-slope-one-covariate&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 4: One Random Slope, One Covariate&lt;/h2&gt;
+&lt;p&gt;Let’s ramp things up by modeling a random slope for each participant:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[READ_{ij} = \beta_0+u_{0i}+\beta_1Time_j+u_{1ij}+\epsilon_{ij}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Where &lt;span class=&#34;math inline&#34;&gt;\(u_{1ij}\)&lt;/span&gt; is the random slope for the effect of assessment period between participants.&lt;/p&gt;
+&lt;p&gt;A random slope model also has a random intercept, but now, the slope for time on reading ability will be different for each participant: ‘(1 + occasion | id)’. Another change to our model code is a new prior specifying the correlation between the Intercept and the beta for occasion. For an overview of the Cholesky Distribution I’d recommend this &lt;a href=&#34;https://www.psychstatistics.com/2014/12/27/d-lkj-priors/&#34;&gt;post&lt;/a&gt;, but all you need to know here is that the higher above 1 the value is, the more “speculative” the model is of strong correlations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read4 &amp;lt;- brm(data = curran_dat,
+             family = gaussian,
+             read ~ 1 + occasion + (1 + occasion | id),
+             prior = c(prior(normal(0, 10), class = Intercept),
+                       prior(normal(0, 1), class = b),
+                       prior(cauchy(0, 1), class = sd),
+                       prior(cauchy(0, 1), class = sigma),
+                       prior(lkj_corr_cholesky(1.5), class = cor)),
+             iter = 2000, warmup = 1000, chains = 4, cores = 4,
+             control = list(adapt_delta = .975, max_treedepth = 20),
+             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read4)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: read ~ 1 + occasion + (1 + occasion | id) 
+##    Data: curran_dat (Number of observations: 1325) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## sd(Intercept)               0.76      0.04     0.68     0.84 1.00     1279
+## sd(occasion)                0.27      0.02     0.22     0.32 1.00      614
+## cor(Intercept,occasion)     0.29      0.12     0.07     0.53 1.00      664
+##                         Tail_ESS
+## sd(Intercept)               2218
+## sd(occasion)                1082
+## cor(Intercept,occasion)     1070
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     2.70      0.05     2.60     2.79 1.00     1465     2297
+## occasion      1.12      0.02     1.08     1.16 1.00     2963     3299
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.59      0.02     0.56     0.62 1.00      908     1758
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
+
+curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read4))) %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  nest() %&amp;gt;%
+  sample_n(6) %&amp;gt;%
+  unnest() %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Model 4: One Random Slope, One Covariate&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.075, .075), breaks = 0:3) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I won’t belabour the output here. Just notice how the strength of the linear trend for the fitted values is different for each participant. We can see this across the whole sample with the following code:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read4))) %&amp;gt;%
+  ggplot() +
+  geom_line(aes(x = occasion, y = Estimate, group = id), size = .75, alpha = .30) +
+  geom_line(aes(x = occasion, y = read, group = id), size = .75, alpha = .15, color = &amp;quot;dodgerblue2&amp;quot;) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Model 4: One Random Slope, One Covariate&amp;quot;,
+       subtitle = &amp;quot;Blue lines are observed values. Black lines are fitted.&amp;quot;) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-5-one-random-slope-two-covariates&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 5: One Random Slope, Two Covariates&lt;/h2&gt;
+&lt;p&gt;Suppose we wanted to see whether there’s an effect of the amount of &lt;em&gt;cognitive stimulation&lt;/em&gt; that children are exposed to at home on reading ability over time. Maybe cognitive stimulation impacts some children more strongly than others. Our last formula would thus be:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[READ_{ij} = \beta_0+u_{0i}+\beta_1Time_j+u_{1ij}+\beta_{2}Cog_i+u_{2ij}+\epsilon_{ij}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Does the hypothesis hold up to a visual inspection? For illustrative purposes, we can split the data into equal bins of low, medium, and high cognitive stimulation. Of course, because stimulation is a continuous variable, it will stay continuous in our Bayesian model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat %&amp;gt;%
+  mutate(homecog_grp = factor(ntile(homecog, 3))) %&amp;gt;%
+  ggplot(aes(x = occasion, y = read)) +
+  geom_line(aes(group = id, color = homecog_grp), size = .75, alpha = .50) +
+  geom_smooth(method = &amp;#39;lm&amp;#39;, color = &amp;quot;black&amp;quot;, size = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Cognitive Home Environment&amp;quot;) +
+  facet_wrap(~homecog_grp, labeller = as_labeller(c(&amp;quot;1&amp;quot; = &amp;quot;Low&amp;quot;,
+                                                    &amp;quot;2&amp;quot; = &amp;quot;Medium&amp;quot;,
+                                                    &amp;quot;3&amp;quot; = &amp;quot;High&amp;quot;))) +
+  guides(color = FALSE) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5, size = 14))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;If there is an effect of cognitive stimulation, it’s a small one. So let’s find out:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read5 &amp;lt;- brm(data = curran_dat,
+            family = gaussian,
+            read ~ 1 + occasion + homecog + (1 + occasion + homecog | id),
+            prior = c(prior(normal(0, 5), class = Intercept),
+                      prior(normal(0, 1), class = b),
+                      prior(cauchy(0, 1), class = sd),
+                      prior(cauchy(0, 1), class = sigma),
+                      prior(lkj_corr_cholesky(1.5), class = cor)),
+            iter = 2000, warmup = 1000, chains = 4, cores = 4,
+            control = list(adapt_delta = .975, max_treedepth = 20),
+            seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read5)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: The model has not converged (some Rhats are &amp;gt; 1.1). Do not analyse the results! 
+## We recommend running more iterations and/or setting stronger priors.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: There were 150 divergent transitions after warmup. Increasing adapt_delta above 0.975 may help.
+## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: read ~ 1 + occasion + homecog + (1 + occasion + homecog | id) 
+##    Data: curran_dat (Number of observations: 1325) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## sd(Intercept)               0.72      0.11     0.50     0.99 1.02      456
+## sd(occasion)                0.27      0.03     0.22     0.32 1.00     1010
+## sd(homecog)                 0.04      0.02     0.00     0.09 1.10       39
+## cor(Intercept,occasion)     0.28      0.20    -0.14     0.70 1.02      178
+## cor(Intercept,homecog)     -0.07      0.39    -0.73     0.73 1.05       70
+## cor(occasion,homecog)      -0.02      0.38    -0.72     0.73 1.01      247
+##                         Tail_ESS
+## sd(Intercept)                165
+## sd(occasion)                1608
+## sd(homecog)                   54
+## cor(Intercept,occasion)      319
+## cor(Intercept,homecog)       369
+## cor(occasion,homecog)        418
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     2.15      0.16     1.84     2.46 1.00     2211     2188
+## occasion      1.12      0.02     1.07     1.16 1.00     3363     3237
+## homecog       0.06      0.02     0.03     0.10 1.00     2290     2399
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.59      0.02     0.56     0.63 1.00     1120     2369
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Running this model, we get a few warnings about large Rhats and divergent transitions. We would be better off running a few more iterations (maybe 4000) if we wanted more confidence in the results. Nevertheless, we see a pretty weak effect of cognitive stimulation. The credible interval for the population effect of cognitive stimulation doesn’t include zero, but the evidence is weak that it’s doing anything at all in this model. There’s some indication that the intercepts vary by cognitive stimulation, such that at higher stimulation children have a higher initial reading ability. But there’s no evidence that the slopes vary by cognitive stimulation.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read5))) %&amp;gt;%
+  mutate(homecog_grp = factor(ntile(homecog, 3))) %&amp;gt;%
+  ggplot(aes(x = occasion, y = Estimate, group = id, color = homecog_grp)) +
+  geom_line(size = .75, alpha = .50) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Cognitive Home Environment&amp;quot;) +
+  facet_wrap(~homecog_grp, labeller = as_labeller(c(&amp;quot;1&amp;quot; = &amp;quot;Low&amp;quot;,
+                                                    &amp;quot;2&amp;quot; = &amp;quot;Medium&amp;quot;,
+                                                    &amp;quot;3&amp;quot; = &amp;quot;High&amp;quot;))) +
+  guides(color = FALSE) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5, size = 14))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-25-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-6-dealing-with-missing-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model 6: Dealing with Missing Data&lt;/h2&gt;
+&lt;p&gt;So far we’ve been dealing with complete data - where each assessment has no missing values. In doing so, we are effectively claiming that the data are missing completely at random (MCAR). This may not be a tenable assumption. Missingness on one variable may be correlated with another variable (Missing at Random; MAR) or, even worse, correlated with the variable itself (Missing Not At Random; MNAR). Without diving into the theoretical aspects of missing data (a more thoughtful discussion can be found &lt;a href=&#34;https://stefvanbuuren.name/fimd/sec-MCAR.html&#34;&gt;here&lt;/a&gt;) let’s end by running Bayesian imputation.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat_missing &amp;lt;- read_sav(&amp;quot;CurranLong.sav&amp;quot;) %&amp;gt;%
+  select(id, occasion, read, homecog)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In &lt;em&gt;brms&lt;/em&gt; we indicate missingness with &lt;em&gt;mi()&lt;/em&gt;. Here we’re rerunning Model 5, but we’re also imputing missingness on reading ability and cognitive stimulation. We actually have two model formulae - one for each variable in the model with missing data. I’ll also note quickly that we have hidden missingness in this data as missing assessment points do not show up as rows in the dataset. For the purpose of this demonstration, it won’t be a problem, but in the real world, we’d want to impute these as well.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;read6 &amp;lt;- brm(data = curran_dat_missing,
+             family = gaussian,
+             bf(read | mi() ~ 1 + occasion + mi(homecog) + (1 + occasion | id)) +
+               bf(homecog | mi() ~ 1) + 
+               set_rescor(FALSE),
+             prior = c(prior(normal(0, 5), class = Intercept),
+                       prior(normal(0, 1), class = b),
+                       prior(lkj_corr_cholesky(1.5), class = cor)),
+             iter = 2000, warmup = 1000, chains = 4, cores = 4,
+             control = list(adapt_delta = .975, max_treedepth = 20),
+             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read6)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: MV(gaussian, gaussian) 
+##   Links: mu = identity; sigma = identity
+##          mu = identity; sigma = identity 
+## Formula: read | mi() ~ 1 + occasion + mi(homecog) + (1 + occasion | id) 
+##          homecog | mi() ~ 1 
+##    Data: curran_dat_missing (Number of observations: 1393) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 405) 
+##                                   Estimate Est.Error l-95% CI u-95% CI
+## sd(read_Intercept)                    0.75      0.04     0.68     0.83
+## sd(read_occasion)                     0.27      0.02     0.22     0.32
+## cor(read_Intercept,read_occasion)     0.25      0.12     0.03     0.51
+##                                   Rhat Bulk_ESS Tail_ESS
+## sd(read_Intercept)                1.00     1360     2987
+## sd(read_occasion)                 1.01      770     1589
+## cor(read_Intercept,read_occasion) 1.00      960     1492
+## 
+## Population-Level Effects: 
+##                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## read_Intercept        2.15      0.16     1.84     2.47 1.00     2028
+## homecog_Intercept     8.91      0.07     8.77     9.05 1.00     9040
+## read_occasion         1.12      0.02     1.08     1.16 1.00     4599
+## read_mihomecog        0.06      0.02     0.03     0.09 1.00     2066
+##                   Tail_ESS
+## read_Intercept        2534
+## homecog_Intercept     2687
+## read_occasion         2956
+## read_mihomecog        2596
+## 
+## Family Specific Parameters: 
+##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma_read        0.59      0.02     0.56     0.62 1.00      943     2256
+## sigma_homecog     2.57      0.05     2.47     2.66 1.00    12854     2668
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Output is all well and good, but to really see what’s going on we’ll return to our sampling technique. Here are the fitted values on 3 individuals from Model 5 (non-imputed) and the same 3 from Model 6 (imputed).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p1 &amp;lt;- curran_dat %&amp;gt;%
+  bind_cols(as_tibble(fitted(read5))) %&amp;gt;%
+  filter(id %in% c(1048, 1050, 1498)) %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 5, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 5, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Unimputed Data&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
+  scale_y_continuous(limits = c(2, 9)) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 12) +
+  theme(plot.title = element_text(hjust = .5))
+
+p2 &amp;lt;- curran_dat_missing %&amp;gt;%
+  bind_cols(as_tibble(fitted(read6))) %&amp;gt;%
+  filter(id %in% c(1048, 1050, 1498)) %&amp;gt;%
+  ggplot() +
+  geom_point(aes(x = occasion, y = read), size = 5, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
+  geom_point(aes(x = occasion, y = Estimate.read), shape = 1, size = 5, stroke = 1.5) +
+  labs(x = &amp;quot;Assessment Period&amp;quot;,
+       y = &amp;quot;Reading Ability&amp;quot;,
+       title = &amp;quot;Bayesian Imputation&amp;quot;,
+       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+  scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
+  scale_y_continuous(limits = c(2, 9)) +
+  facet_wrap(~id, nrow = 1) +
+  theme_bw(base_size = 12) +
+  theme(plot.title = element_text(hjust = .5))
+
+library(ggpubr)
+
+ggarrange(p1, p2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-29-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;So we get reasonable estimates for the missing values. Our work here is done.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;final-words&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Final Words&lt;/h1&gt;
+&lt;p&gt;This topic is so vast that I couldn’t possibly cover everything there is to say about Bayesian Linear Mixed Models. We only scratched the surface on interpreting Bayesian posteriors. For example, &lt;em&gt;brms&lt;/em&gt; offers formal ways of comparing models and I highly recommend looking into these.
+I’m indebted to Richard McElreath’s fantastic lectures series for all that I know on the topic. Honestly, if you can spare the time, they’re so so worth it - plus they’re freely available on YouTube &lt;a href=&#34;https://www.youtube.com/watch?v=4WVelCswXo4&amp;amp;list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34;&gt;here&lt;/a&gt;. Watch these and then follow along with the code in this &lt;em&gt;brms&lt;/em&gt; guide &lt;a href=&#34;https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/&#34;&gt;here&lt;/a&gt; and you’re golden! Finally, if you want a short primer on Bayesian MLM and an excellent guide for writing STAN code (not &lt;em&gt;brms&lt;/em&gt;), I’d highly recommend this &lt;a href=&#34;https://www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf&#34;&gt;paper&lt;/a&gt; by Sorensen, Hohenstein, and Vasishth (2016). It helped immensely in my ongoing transition from Frequentist to Bayesian statistics.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.psychstatistics.com/2014/12/27/d-lkj-priors/&#34;&gt;Baldwin, S. (2014). &lt;em&gt;Visualizing the LKJ Correlation Distribution.&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://jflournoy.github.io/assets/pdf/srcdmeth.pdf&#34;&gt;Curran, P. J. (1997). Comparing Three Modern Approaches to Longitudinal Data Analysis: An Examination of a Single Developmental Sample. &lt;em&gt;Symposium Conducted at the 1997 Biennial Meeting of the Society for Research in Child Development, Washington, D.C.&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/&#34;&gt;Kurz, A. S. (2019). &lt;em&gt;Statistical Rethinking with brms, ggplot2, and the tidyverse.&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.tqmp.org/RegularArticles/vol12-3/p175/&#34;&gt;Sorensen, T., Hohenstein, S., &amp;amp; Vasishth, S. (2016). Bayesian linear mixed models using Stan: A tutorial for psychologists, linguists, and cognitive scientists. &lt;em&gt;The Quantitative Methods for Psychology&lt;/em&gt;, 175-200. doi: 10.20982/tqmp.12.3.p175&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.sciencedirect.com/science/article/pii/S0732118X18300746?via%3Dihub&#34;&gt;van Zyl, C. J. J. (2018). Frequentist and Bayesian inference: A conceptual primer. &lt;em&gt;New Ideas in Psychology, 51&lt;/em&gt;, 44-49.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+      
+            <category>R</category>
+      
+            <category>Bayesian</category>
+      
+            <category>Linear Mixed Models</category>
+      
+            <category>Multilevel Modeling</category>
+      
+            <category>Tutorial</category>
+      
+      
+            <category>R</category>
+      
+            <category>Bayesian</category>
+      
+            <category>Linear Mixed Models</category>
+      
+            <category>Multilevel Modeling</category>
+      
+            <category>Tutorial</category>
+      
+    </item>
+    
+  </channel>
+</rss>

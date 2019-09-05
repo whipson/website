@@ -7,9 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2019</copyright>
+    <lastBuildDate>Thu, 05 Sep 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bayesian</title>
+      <link>/categories/bayesian/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/bayesian/</guid>
+      <description></description>
+      
+      
+    </item>
     
     <item>
       <title>Emotion Dynamics</title>
@@ -45,9 +57,31 @@
     </item>
     
     <item>
+      <title>Linear Mixed Models</title>
+      <link>/categories/linear-mixed-models/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/linear-mixed-models/</guid>
+      <description></description>
+      
+      
+    </item>
+    
+    <item>
+      <title>Multilevel Modeling</title>
+      <link>/categories/multilevel-modeling/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/multilevel-modeling/</guid>
+      <description></description>
+      
+      
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
       <description></description>
@@ -61,6 +95,17 @@
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/simulation/</guid>
+      <description></description>
+      
+      
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>/categories/tutorial/</link>
+      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/tutorial/</guid>
       <description></description>
       
       
