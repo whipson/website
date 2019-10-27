@@ -13,9 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don't know, is the capital city of Canada. For a capital city, it's fairly small, but it's increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day. What's great is that this [data is shared publicly](https://open.ottawa.ca/datasets/bicycle-trip-counters) by the city.
 
-I started looking into this data, [cleaned it up](https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R), and eventually put it together an [interactive web app](https://whipson.shinyapps.io/Ottawa_Bike_Counters/):
+I started looking into this data, [cleaned it up](https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R), and eventually put it together in an [interactive web app](https://whipson.shinyapps.io/Ottawa_Bike_Counters/):
 
-![Interactive Ottawa Bicycles App](/bicycle_app/Bicycle_App_files/ottawa bike counters.png)
+![Click [here](https://whipson.shinyapps.io/Ottawa_Bike_Counters/) to go the app.](/post/bicycle_app/Bicycle_App_files/ottawa bike counters.png)
 
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)

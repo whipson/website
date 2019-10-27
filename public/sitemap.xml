@@ -237,7 +237,7 @@
     
     <url>
     
-      <loc>/categories/bayesian/</loc>
+      <loc>/tags/bayesian/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -246,7 +246,7 @@
     
     <url>
     
-      <loc>/tags/bayesian/</loc>
+      <loc>/categories/bayesian/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -264,15 +264,6 @@
     
     <url>
     
-      <loc>/categories/emotion-dynamics/</loc>
-      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
       <loc>/tags/emotion-dynamics/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -282,7 +273,7 @@
     
     <url>
     
-      <loc>/categories/feedback-loops/</loc>
+      <loc>/categories/emotion-dynamics/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -300,8 +291,8 @@
     
     <url>
     
-      <loc>/categories/latent-profile-analysis/</loc>
-      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
+      <loc>/categories/feedback-loops/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -318,8 +309,8 @@
     
     <url>
     
-      <loc>/categories/linear-mixed-models/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <loc>/categories/latent-profile-analysis/</loc>
+      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -336,7 +327,7 @@
     
     <url>
     
-      <loc>/categories/multilevel-modeling/</loc>
+      <loc>/categories/linear-mixed-models/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -346,6 +337,15 @@
     <url>
     
       <loc>/tags/multilevel-modeling/</loc>
+      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/multilevel-modeling/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -372,7 +372,7 @@
     
     <url>
     
-      <loc>/categories/r/</loc>
+      <loc>/tags/r/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -381,7 +381,7 @@
     
     <url>
     
-      <loc>/tags/r/</loc>
+      <loc>/categories/r/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -399,7 +399,7 @@
     
     <url>
     
-      <loc>/categories/shiny/</loc>
+      <loc>/tags/shiny/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -408,7 +408,7 @@
     
     <url>
     
-      <loc>/tags/shiny/</loc>
+      <loc>/categories/shiny/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -424,7 +424,7 @@
     
     <url>
     
-      <loc>/categories/simulation/</loc>
+      <loc>/tags/simulation/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -433,7 +433,7 @@
     
     <url>
     
-      <loc>/tags/simulation/</loc>
+      <loc>/categories/simulation/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -460,7 +460,7 @@
     
     <url>
     
-      <loc>/categories/tutorial/</loc>
+      <loc>/tags/tutorial/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -469,7 +469,7 @@
     
     <url>
     
-      <loc>/tags/tutorial/</loc>
+      <loc>/categories/tutorial/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
