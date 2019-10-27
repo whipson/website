@@ -34,7 +34,10 @@
 
 &lt;p&gt;This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don’t know, is the capital city of Canada. For a capital city, it’s fairly small, but it’s increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day. What’s great is that this &lt;a href=&#34;https://open.ottawa.ca/datasets/bicycle-trip-counters&#34;&gt;data is shared publicly&lt;/a&gt; by the city.&lt;/p&gt;
 &lt;p&gt;I started looking into this data, &lt;a href=&#34;https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R&#34;&gt;cleaned it up&lt;/a&gt;, and eventually put it together an &lt;a href=&#34;https://whipson.shinyapps.io/Ottawa_Bike_Counters/&#34;&gt;interactive web app&lt;/a&gt;:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;/content/post/bicycle_app/ottawa%20bike%20counters.png&#34;&gt;&lt;img src=&#34;https://whipson.shinyapps.io/Ottawa_Bike_Counters/&#34; alt=&#34;Ottawa Bicycle Counter App&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/bicycle_app/Bicycle_App_files/ottawa%20bike%20counters.png&#34; alt=&#34;Interactive Ottawa Bicycles App&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Interactive Ottawa Bicycles App&lt;/p&gt;
+&lt;/div&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
 library(leaflet)
 library(leafpop)&lt;/code&gt;&lt;/pre&gt;

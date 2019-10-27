@@ -15,7 +15,7 @@ This is a different kind of post, but one that I think is kind of fun. I current
 
 I started looking into this data, [cleaned it up](https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R), and eventually put it together an [interactive web app](https://whipson.shinyapps.io/Ottawa_Bike_Counters/):
 
-[![Ottawa Bicycle Counter App](https://whipson.shinyapps.io/Ottawa_Bike_Counters/)](/content/post/bicycle_app/ottawa bike counters.png)
+![Interactive Ottawa Bicycles App](/bicycle_app/Bicycle_App_files/ottawa bike counters.png)
 
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
