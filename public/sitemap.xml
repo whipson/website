@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>/post/bicycle_app/bicycle_app/</loc>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/bayesian_mlm/bayesian_mlm/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
     </url>
@@ -365,7 +373,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -374,7 +382,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -384,6 +392,24 @@
     
       <loc>/tags/sentiment-analysis/</loc>
       <lastmod>2019-02-23T00:00:00-05:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/shiny/</loc>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/shiny/</loc>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -435,7 +461,7 @@
     <url>
     
       <loc>/tags/tutorial/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -444,7 +470,7 @@
     <url>
     
       <loc>/categories/tutorial/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

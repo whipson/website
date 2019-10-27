@@ -1,0 +1,383 @@
+---
+title: "Building a Shiny App for Cycling in Ottawa"
+author: ~
+date: '2019-10-27'
+slug: bicycle_app
+categories: ["R", "Shiny", "Tutorial"]
+tags: ["R", "Shiny", "Tutorial"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don't know, is the capital city of Canada. For a capital city, it's fairly small, but it's increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day. What's great is that this [data is shared publicly](https://open.ottawa.ca/datasets/bicycle-trip-counters) by the city.
+
+I started looking into this data, [cleaned it up](https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R), and eventually put it together an [interactive web app](https://whipson.shinyapps.io/Ottawa_Bike_Counters/):
+
+[![Ottawa Bicycle Counter App](https://whipson.shinyapps.io/Ottawa_Bike_Counters/)](/content/post/bicycle_app/ottawa bike counters.png)
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(leaflet)
+library(leafpop)
+```
+
+We'll start by reading in the data from the GitHub repositiory. There's a lot of missing data, so much that R gets confused about the data structure of some of the columns. We need to add another argument to *read_csv* telling it the type of data in each column. The *col_types* argument takes a letter for each column, with *?* meaning that we let R decide what the data is and *n* meaning 'numeric'.
+
+```{r}
+bikes <- read_csv("https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/bikes_app.csv", col_types = c("?nnnnnnnnnnnnnn"))
+
+bikes
+```
+
+Each row is a day and the columns are bicycle counters spread across the city. Let's start by creating the graphs we want in the Shiny app. It's easier to do this outside of the Shiny framework first. We'll start by plotting total bicycle counts over time.
+
+```{r}
+bikes_total <- bikes %>%
+  pivot_longer(names_to = "counter", values_to = "count", -date) %>%
+  group_by(date) %>%
+  mutate(daily_total = sum(count, na.rm = TRUE))
+
+bikes_total
+```
+
+And now to plot it over time:
+
+```{r}
+bikes_total %>%
+  ggplot(aes(x = date, y = daily_total)) +
+  geom_line(size = .5, alpha = .80, color = "#36648B") +
+  scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+  labs(x = NULL,
+       y = "Count",
+       title = "Total Bicycle Crossings in Ottawa",
+       subtitle = "Jan 2010 - Sep 2019") +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_text(size = 16))
+```
+
+There's clear seasonality, with bicycle crossings peaking in the summer months and troughing in the winter. There also appears to be a trend, increasing from 2010 to 2017, then leveling out. Does this mean that bicycling is leveling off in Ottawa? We may want to look at specific counters to get a better sense of this.
+
+```{r}
+bikes %>%
+  pivot_longer(names_to = "counter", values_to = "count", -date) %>% 
+  ggplot(aes(x = date, y = count)) +
+  geom_line(size = .5, alpha = .80, color = "#36648B") +
+  labs(x = NULL,
+       y = "Count",
+       title = "Bicycle Crossings in Ottawa by Location",
+       subtitle = "Jan 2010 - Sep 2019") +
+  facet_wrap(~counter) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_blank())
+  
+```
+
+This graph tells us that we have to be a bit careful about interpreting the total count because some counters are introduced later or go out of commission. The drop in total counts for 2018 could be due to the Western Canal counter going offline that year. What about average counts over time?
+
+```{r}
+bikes %>%
+  pivot_longer(names_to = "counter", values_to = "count", -date) %>%
+  group_by(date) %>%
+  mutate(daily_average = mean(count, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, y = daily_average)) +
+  geom_line(size = .5, alpha = .80, color = "#36648B") +
+  scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+  labs(x = NULL,
+       y = "Count",
+       title = "Average Bicycle Crossings in Ottawa",
+       subtitle = "Jan 2010 - Sep 2019") +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_text(size = 16))
+```
+
+There may be an upward trend, but it's less clear compared to the total count. We again have to be careful because earlier years have fewer counters online so the average is based on less data. However, knowing both the total and the average counts gives us a pretty clear picture of how cycling is changing over time in Ottawa.
+
+## Maps with Leaflet
+
+Now we'll add the functionality of an interactive map - one that shows where the counters are located geographically and allows the user to select specific counters. Earlier we loaded up the *leaflet* and *leafpop* packages. These will help us construct our map of Ottawa.
+
+We'll also need the latitude and longitude coordinates of the counters. Using information from the [Open Data Ottawa](https://open.ottawa.ca/datasets/bicycle-trip-counters), I found the location of each counter and obtained its latitude and longitude using Google Maps. I also added a bit of descriptive information for each counter. We can put all of this in a dataframe as follows:
+
+```{r}
+coords <- data.frame(counter = names(bikes[,2:15]),
+                     name = c("Alexandra Bridge", "Eastern Canal Pathway", "Ottawa River Pathway", "Western Canal Pathway",
+                              "Laurier at Bay", "Laurier at Lyon", "Laurier at Metcalfe", "Somerset Bridge", "OTrain at Young",
+                              "OTrain at Gladstone", "OTrain at Bayview", "Portage Bridge", "Adawe Crossing A", "Adawe Crossing B"),
+                     lat = c(45.430366, 45.420924, 45.411959, 45.406280,
+                             45.415893, 45.417036, 45.419790, 45.420512,
+                             45.402859, 45.404599, 45.408636, 45.421980, 
+                             45.426282, 45.426575),
+                     long = c(-75.704761, -75.685060, -75.723424, -75.681814,
+                              -75.705328, -75.702613, -75.697623, -75.684625,
+                              -75.712760, -75.714812, -75.723644, -75.713324,
+                              -75.670234, -75.669765),
+                     desc = c("Ottawa approach to the NCC Alexandra Bridge Bikeway. This counter was not operational for most of 2010
+                              due to bridge construction. This is one of the more consistent counters, until the internal battery
+                              failed in August 2019.",
+                              "NCC Eastern Canal Pathway approximately 100m north of the Corktown Bridge.",
+                              "NCC Ottawa River Pathway approximately 100m east of the Prince of Wales Bridge. Canada Day in 2011
+                              boasts the highest single day count of any counter.",
+                              "NCC Western Canal Pathway approximately 200m north of “The Ritz”. Out of operation for much of 2018.
+                              MEC Bikefest on May 17, 2015 accounts for the large spike that day.",
+                              "Laurier Segregated Bike lane just west of Bay. Minimal data available due to inactivity after 2014.",
+                              "Laurier Segregated Bike lane just east of Lyon. No longer in operation since 2016.",
+                              "Laurier Segregated Bike lane just west of Metcalfe. Construction in late 2012 accounts for unusual dip
+                              in counts.",
+                              "Somerset bridge over O-Train west-bound direction only. Inexplicably large spike in 2012 followed by a
+                              typical seasonal pattern. Inactive since late 2018.",
+                              "O-Train Pathway just north of Young Street. Minimal data available due to inactivity after 2016. See
+                              O-Train at Gladstone counter for a better estimate.",
+                              "O-Train Pathway just north of Gladstone Avenue. In operation since mid-2013. Shows unusual spike in
+                              November of 2017.",
+                              "O-Train Pathway just north of Bayview Station. In operation since mid-2013. Trending upward.",
+                              "Portage Bridge connecting Gatineau to Ottawa. Installed in late 2013, this counter registered
+                              relatively high traffic but seems to have experienced outages during Winter months. Inactive since early
+                              2016.",
+                              "Adàwe Crossing Bridge bike lane. This counter is one of a pair on this pedestrian bridge. Installed in
+                              2016, it seems to have experienced an outage during the Winter of its inaugural year.",
+                              "The second of two counters on the Adàwe Crossing Bridge. This counter may pick up more pedestrian than
+                              bike traffic, as suggested by the trend over time."))
+
+```
+
+Now we just pipe the coordinate data into leaflet.
+
+```{r}
+leaflet(data = coords) %>%
+  addTiles() %>%
+  addMarkers(~long, ~lat)
+```
+
+Leaflet automatically generates a map of size to fit all the markers. There are a few modifications to make though. One is to have it so that when the user hovers the mouse over a marker a label pops up with the name of that counter. Another is to make the map more aesthetically pleasing. Finally, we may want to add some bounds so that the user can't scroll too far away from the markers.
+
+```{r}
+leaflet(data = coords) %>%
+  addTiles() %>%
+  addMarkers(~long, ~lat, label = ~name) %>%
+  setMaxBounds(-75.65, 45.38, -75.75, 45.46) %>%
+  addProviderTiles(providers$CartoDB.Positron)
+```
+
+Great. So we now have the two components of the app: the time plots and the map. Time to bring in Shiny and put it all together. Now, if you have never used Shiny before, this probably isn't the easiest example to start with. I'd highly recommend this [set of tutorial videos by Garrett Grolemund](https://shiny.rstudio.com/tutorial/) to get started. 
+
+## Creating the Shiny App
+
+There are two parts to every Shiny app: the *UI* or User Interface and the *Server*. The UI is like the look and feel of the app, it's where we tell Shiny what kinds of inputs and outputs we want, how we want to organize the panels, and so on. In contrast, the Server is the engine of the app. We'll start by constructing the UI. It's important to note that it's easier to build a Shiny app in a new R script. So we're basically going to start over in a new script, which means we'll reload the packages and the data as if we were starting new:
+
+### Create a new R script
+
+We'll start with the packages and data. We haven't done anything with the UI or Server yet. We usually want to keep the data outside the UI. We'll also transform our data as we did earlier to generate the total and average time plots.
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(leaflet)
+library(leafpop)
+library(shiny)
+library(shinythemes)
+library(shinyWidgets)
+
+bikes <- read_csv("https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/bikes_app.csv", col_types = c("?nnnnnnnnnnnnnn"))
+
+#For ease, I've put the coordinates in a separate file, but you could just as easily rerun the 'coords' object above
+
+coords <- read_csv("https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/coords.csv")
+
+bikes_plot <- bikes %>%
+  pivot_longer(names_to = "counter", values_to = "count", -date) %>%
+  left_join(coords, by = "counter")
+
+bikes_total <- bikes_plot %>%
+  group_by(date) %>%
+  summarize(count = sum(count, na.rm = TRUE))
+
+bikes_mean <- bikes_plot %>%
+  group_by(date) %>%
+  summarize(count = mean(count, na.rm = TRUE))
+```
+
+Now, still in the same R script, we can build the UI. It's going to look a bit strange with parentheses all over the place. It's just customary Shiny scripting to use hanging parentheses.
+
+### Specifying the UI
+
+```{r eval=FALSE}
+ui <- fluidPage(theme = shinytheme("flatly"),
+
+  sidebarLayout(  #Layout
+    
+    sidebarPanel(id = "Sidebar",  #Side panel
+                 h2("Ottawa Bicycle Counters", align = "center", tags$style("#Sidebar{font-family: Verdana;}")),
+                 fluidRow(  # Row 1 of side panel
+                   htmlOutput("caption"),  # Caption output, provides descriptive text
+                   tags$style("#caption{font-size: 16px; height: 200px; font-family: Verdana;}")
+                 ),
+                 fluidRow(  # Row 2 of side panel
+                   htmlOutput("stats"),  # Statistics output, provides descriptive statistics 
+                   tags$style("#stats{font-size: 16px; height: 125px; font-family: Verdana;}")
+                 ),
+                 fluidRow(  # Row 3 of side panel
+                   switchInput("average",  # User input, allows the user to turn a switch to display the average
+                               "Display Average",
+                               value = FALSE)
+                 ),
+                 fluidRow(  # Row 4 of side panel
+                   htmlOutput("caption2"),  # More caption output
+                   tags$style("#caption2{font-size: 12px; height: 80px; font-family: Verdana;}")
+                   ),
+                 fluidRow(  # Row 5 of side panel 
+                   downloadButton("download", "Download Data")  # A button so that users can download the data
+                   )
+                 ),
+    mainPanel(id = "Main",  # Main panel (this is where the plots and map go)
+              fluidRow(  # Row 1 of main panel
+                leafletOutput("map", height = 400)  # Here's the output for the map
+                ),
+              fluidRow(  # Row 2 of main panel
+                plotOutput("timeplot", height = 300)  # Here's the output for the time plots
+                )
+              )
+    )
+)
+```
+
+There's the code for the UI. Starting from the top, we use the *FluidPage* function and here I'm using the theme *flatly*. Then I say that I want to use a *sidebarLayout*. From here, I split the code into a *sidebarPanel* and a *mainPanel*. I further split things into *fluidRows* which just helps to organize the layout. All of the #s are notes, of course, and will not actually be run.
+
+The big thing to notice is that there are inputs and outputs. The only input is a *switchInput* which lets the user choose whether to display totals or averages. Everything else is an output. Each of these gets a name, for example, I'm calling the leafletOutput *map*. These names are important, as they will correspond with what we provide in the server part.
+
+### Specifying the Server
+
+```{r eval=FALSE}
+server <- function(input, output) {
+  
+  output$map <- renderLeaflet({  # Map output
+      leaflet(data = coords) %>%
+         addTiles() %>%
+         addMarkers(~long, ~lat, label = ~name) %>%
+         setMaxBounds(-75.65, 45.38, -75.75, 45.46) %>%
+         addProviderTiles(providers$CartoDB.Positron)
+    })
+  
+  output$caption2 <- renderUI({  # Lower caption output
+    str1 <- paste("Created by ", a("Will Hipson.", href = "https://willhipson.netlify.com/"))
+    str2 <- paste("Data courtesy of ", a("Open Data Ottawa.", href = "https://open.ottawa.ca/datasets/bicycle-trip-counters"))
+    str3 <- "2010-01-01 - 2019-09-30"
+    str4 <- "Updated on 2019-10-24"
+    HTML(paste(str1, str2, str3, str4, sep = '<br/>'))
+  })
+  
+  observeEvent(input$map_marker_click, { # If the user clicks a marker, this line is run.
+    output$timeplot <- renderPlot({
+      if(input$average == TRUE) { # if average is selected we get average overlayed
+        ggplot() +
+          geom_line(data = bikes_plot[bikes_plot$lat == input$map_marker_click$lat, ], 
+                    aes(x = date, y = count), size = .5, alpha = .70, color = "#36648B") +
+          geom_line(data = bikes_mean, aes(x = date, y = count), alpha = .50, color = "#9F79EE") +
+          scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+          scale_y_continuous(limits = c(0, 6000)) +
+          labs(x = NULL,
+               y = "Count",
+               title = paste(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$name)) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = "Verdana"))
+      } else { # if average is not selected, then it's just the total
+        ggplot() +
+          geom_line(data = bikes_plot[bikes_plot$lat == input$map_marker_click$lat, ], 
+                    aes(x = date, y = count), size = .5, alpha = .70, color = "#36648B") +
+          scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+          scale_y_continuous(limits = c(0, 6000)) +
+          labs(x = NULL,
+               y = "Count",
+               title = paste(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$name)) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = "Verdana"))
+      }
+    })
+    
+    output$caption <- renderUI({ # counter specific description
+      str1 <- coords[coords$lat == input$map_marker_click$lat, ]$desc
+      HTML(str1)
+    })
+    
+    output$stats <- renderUI({ # counter specific statistics
+      str1 <- "<b>Statistics</b>"
+      str2 <- paste("Total count: ", format(round(sum(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count, na.rm = TRUE)), big.mark = ","))
+      str3 <- paste("Average count: ", format(round(mean(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count, na.rm = TRUE), 1), big.mark = ","))
+      str4 <- paste("Busiest day: ", bikes_plot[which.max(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count),]$date)
+      HTML(paste(str1, str2, str3, str4, sep = '<br/>'))
+      })
+  })
+    
+  observeEvent(input$map_click, ignoreNULL = FALSE, {  # If the user clicks on the map it goes back to the cumulative data
+    output$timeplot <- renderPlot({
+      if(input$average == TRUE) {  # if the average is selected, it displays average
+      ggplot(data = bikes_mean, aes(x = date, y = count)) +
+          geom_line(size = .5, alpha = .70, color = "#36648B") +
+          scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+          labs(x = NULL,
+               y = "Count") +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = "Verdana"))
+      } else { # if average is not selected it is the total
+        ggplot(data = bikes_total, aes(x = date, y = count)) +
+          geom_line(size = .5, alpha = .70, color = "#36648B") +
+          scale_x_datetime(date_breaks = "2 years", date_labels = "%Y") +
+          labs(x = NULL,
+               y = "Count") +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = "Verdana"))
+      }
+    })
+    
+    output$caption <- renderUI({  # the default caption
+      str1 <- "Presenting data from bicycle counters across Ottawa. There are 14 counters spread across the city. The graph below displays how daily counts change over time. Click on a map marker to select a specific counter."
+      HTML(str1)
+    })
+    
+    output$stats <- renderUI({  # Statistics output
+      str1 <- "<b>Statistics</b>"
+      str2 <- paste("Total count: ", format(round(sum(bikes_total$count, na.rm = TRUE)), big.mark = ","))
+      str3 <- paste("Average count: ", format(round(mean(bikes_total$count, na.rm = TRUE), 1), big.mark = ","))
+      str4 <- paste("Busiest day: ", bikes_total[which.max(bikes_total$count),]$date)
+      HTML(paste(str1, str2, str3, str4, sep = '<br/>'))
+    })
+  })
+  
+  output$download <- downloadHandler( # download button. Will turn 'bikes' object into a csv file.
+    filename = function() {
+      paste("ottawa_bikes", ".csv", sep = "")
+    },
+    
+    content = function(file) {
+      write.csv(bikes, file)
+    }
+  )
+}
+```
+
+The code for the server is much busier and it can be overwhelming. Essentially we're just saying what we want to do with the inputs and outputs. We generate a little code chunk for each output. Look at the first one for *map*. This is where we generate the map. We say we want to *renderLeaflet* and then we just copy the code that we made earlier into this block.
+
+Where things get a bit more complicated is when we want our output to change based on user input. If the user selects the switch that converts the data to averages, for example. I used if and else statements to modulate the output based on whether 'average' is selected. What happens, is when the user clicks on the switch, the value of input\$average changes to TRUE. Using if and else functions, I just say what I want to happen when 'average' is TRUE and what happens if it's FALSE.
+
+Finally, we want the user to be able to click on specific markers and have the output change to that specific marker. We use the *observeEvent* function and specify the input, 'map_marker_click'. We also want the user to be able to click off the marker to go back to the default output. Again, we use *observeEvent* but now with 'click_map'. 
+
+Once we have all the other outputs in place for the downloads and the captions, we put it all together using the *shinyApp* function.
+
+```{r, eval=FALSE}
+shinyApp(ui, server)
+```
+
+And there it is, a user-friendly app for exploring bicycling data in Ottawa. Future avenues include building in some time-series forecasting. It would be cool to show the user how the trend is expected to change over time.
+
+One last shout out to [Open Data Ottawa](https://open.ottawa.ca/datasets/bicycle-trip-counters) for sharing this data!
