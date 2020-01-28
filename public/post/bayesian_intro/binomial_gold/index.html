@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+    
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 3.3.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="author" content="Will Hipson">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/bayesian_intro/binomial_gold/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-132275491-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Will Hipson">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/bayesian_intro/binomial_gold/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Will Hipson">
+  <meta property="og:url" content="/post/bayesian_intro/binomial_gold/">
+  <meta property="og:title" content="An Intuitive Look at Binomial Probability in a Bayesian Context | Will Hipson">
+  <meta property="og:description" content="Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example."><meta property="og:image" content="/img/portrait.jpg">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2020-01-28T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2020-01-28T00:00:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>An Intuitive Look at Binomial Probability in a Bayesian Context | Will Hipson</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Will Hipson</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/files/Academic%20CV.pdf">
+            
+            <span>CV</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/shiny/">
+            
+            <span>Apps</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.r-bloggers.com/" target="_blank" rel="noopener">
+            
+            <span>R-bloggers</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">An Intuitive Look at Binomial Probability in a Bayesian Context</h1>
+
+  
+
+  
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2020-01-28 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+    <time datetime="2020-01-28 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+      Jan 28, 2020
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Will Hipson">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/r/">R</a>, 
+    
+    <a href="/categories/bayesian/">Bayesian</a>, 
+    
+    <a href="/categories/binomial/">Binomial</a>, 
+    
+    <a href="/categories/probability/">Probability</a>, 
+    
+    <a href="/categories/animation/">Animation</a>
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=An%20Intuitive%20Look%20at%20Binomial%20Probability%20in%20a%20Bayesian%20Context&amp;url=%2fpost%2fbayesian_intro%2fbinomial_gold%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fbayesian_intro%2fbinomial_gold%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fbayesian_intro%2fbinomial_gold%2f&amp;title=An%20Intuitive%20Look%20at%20Binomial%20Probability%20in%20a%20Bayesian%20Context"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2fbayesian_intro%2fbinomial_gold%2f&amp;title=An%20Intuitive%20Look%20at%20Binomial%20Probability%20in%20a%20Bayesian%20Context"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=An%20Intuitive%20Look%20at%20Binomial%20Probability%20in%20a%20Bayesian%20Context&amp;body=%2fpost%2fbayesian_intro%2fbinomial_gold%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p>Binomial probability is the relatively simple case of estimating the proportion of <em>successes</em> in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example. Instead of coin flips, we’ll imagine a scenario where we are mining for gold!</p>
+<div id="setting-the-scene" class="section level2">
+<h2>Setting the Scene</h2>
+<p>There’s talk in the town that gold is to be found in the nearby hills! We focus on a local merchant who buys gold from prospectors to trade with neighbouring towns. The merchant needs to know <em>how much gold is out there</em> so that they can set a competitive price for buying and selling. The merchant decides to investigate the proportion of gold in the hills by collecting data. It is impossible to survey the entire landscape, but the merchant assumes that a sample of the hills will provide a good estimate of the total proportion of gold.</p>
+<p>The merchant’s goal is to estimate the true proportion of gold in the hills. We will use <span class="math inline">\(\theta\)</span> to represent this quantity that we are trying to estimate.</p>
+</div>
+<div id="simulating-the-problem" class="section level2">
+<h2>Simulating the Problem</h2>
+<p>For this example, we will simulate the entire landscape as a 100 x 100 grid. We will allow each of the 10,000 points on the grid to have a probability of .10 (10%) of containing gold. This is our chosen value of <span class="math inline">\(\theta\)</span> for the simulation. We’ll also identify a sample 10 x 10 grid. Here’s a plot of the simulated landscape identifying the location of gold and the sample area.</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Remember we are omniscient but our merchant knows nothing about where the gold is and how much there truly is. Bayesian statistics is all about dealing with uncertainty by incorporating information from new data <em>and</em> prior sources of information.</p>
+</div>
+<div id="bayes-theorem" class="section level2">
+<h2>Bayes’ Theorem</h2>
+<p>I’m sure that most readers have encountered Bayes’ theorem at some point in their stats journey, although maybe the notation was different. We are most interested in computing the <em>posterior probability</em>, which we denote as <span class="math inline">\(p(\theta|y)\)</span>. It combines information obtained from the data <span class="math inline">\(y\)</span> and our prior information (what we already know about <span class="math inline">\(\theta\)</span>). Expressed more formally,</p>
+<p><span class="math display">\[p(\theta|y)=\frac{p(y|\theta)p(\theta)}{p(y)}\]</span></p>
+<p>where <span class="math inline">\(\theta\)</span> (<span class="math inline">\(p(\theta|y)\)</span> is the posterior probability; <span class="math inline">\(p(y|\theta)\)</span> is the data-generating process, usually referred to as the <em>likelihood</em>; <span class="math inline">\(p(\theta)\)</span> is the prior probability of <span class="math inline">\(\theta\)</span>; and <span class="math inline">\(p(y)\)</span> is a normalizing constant. We won’t worry ourselves with the normalizing constant, <span class="math inline">\(p(y)\)</span> as it doesn’t affect our conclusions. Thus, we’ll stick with the nonnormalized posterior likelihood:</p>
+<p><span class="math display">\[p(\theta|y)=p(y|\theta)p(\theta)\]</span></p>
+<p>At first, this formula can be quite confusing. When I first encountered it, I was confused by what <span class="math inline">\(\theta\)</span> represented (and this stemmed from a fuzzy understanding of likelihood estimation I had at the time). What’s important to understand is that <span class="math inline">\(\theta\)</span> is an unknown parameter, but in order to estimate our uncertainty about <span class="math inline">\(\theta\)</span> we are going to try out <strong>different values</strong> of <span class="math inline">\(\theta\)</span>.</p>
+<p>For example, we want to know the proportion of gold in the area which ranges from 0 to 1 (0 being no gold; 1 being all gold). So in our equation, <span class="math inline">\(\theta\)</span> would represent all values between 0 and 1. However, there are infinite values between 0 and 1, so in practice we could try out values between 0 and 1. In this example, we will use a relatively simple process called <em>grid approximation</em> where we use an equally spaced grid of values between 0 and 1 for <span class="math inline">\(\theta\)</span>.</p>
+<div id="binomial-likelihood" class="section level3">
+<h3>Binomial Likelihood</h3>
+<p>Let’s tackle the first piece of Bayes’ theorem: the likelihood, <span class="math inline">\(p(y|\theta)\)</span>. Here, we are essentially asking the question: “how likely is the data, given a particular value for <span class="math inline">\(\theta\)</span>?” Here, we introduce the binomial likelihood function:</p>
+<p><span class="math display">\[p(y|\theta)=\theta^y(1-\theta)^{n-y}\]</span></p>
+<p>where <span class="math inline">\(y\)</span> is the number of successes and <span class="math inline">\(n\)</span> is the number of trials.</p>
+<p>Let’s return to our gold merchant and see how we can express the likelihood in terms of the data the merchant observes. Imagine our merchant collects data by digging each of the 10 x 10 squares in the sample. The merchant finds that 14 out of 100 spaces in the sample contain gold:</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Here’s how we express the data in terms of the binomial likelihood function:</p>
+<p><span class="math display">\[p(y|\theta)=\theta^{14}(1-\theta)^{100-14}\]</span></p>
+<p>If we compute <span class="math inline">\(p(y|\theta)\)</span> across the grid of <span class="math inline">\(\theta\)</span> values from 0 to 1, we get the following probability density:</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Reproducing this in R is fairly simple - we could substitute the values into the binomial formula, or just use the built-in <em>dbinom</em> function. We then create a dataframe containing the likelihood for each theta and use <em>ggplot2</em> from the <em>tidyverse</em> to draw the plot:</p>
+<pre class="r"><code>library(tidyverse)
+
+# use seq(.01, 1, .01) to generate a sequence from .01 to 1 in .01 increments
+likelihood &lt;- dbinom(x = 14, size = 100, prob = seq(.01, 1, .01))
+
+# creating a data frame with &#39;likelihood&#39; for plotting
+df &lt;- data.frame(theta = seq(.01, 1, .01),
+                 likelihood)
+
+# create the plot
+ggplot(df, aes(x = theta, y = likelihood)) +
+  geom_line(size = 1) +
+  labs(x = TeX(&quot;$\\theta$&quot;),
+       y = &quot;Likelihood&quot;,
+       title = TeX(&quot;$p(y|\\theta) = \\theta^{14}(1 - \\theta)^{100 - 14}$&quot;),
+       subtitle = &quot;Dashed red line indicates maximum likelihood estimate.&quot;,
+       caption = &quot;Using nonnormalized likelihood.&quot;) +
+  geom_vline(xintercept = .14, size = 1.25, color = &quot;red&quot;, linetype = 2) +
+  scale_x_continuous(breaks = seq(0, 1, by = .10)) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.title = element_text(hjust = .5, size = 20))</code></pre>
+<p>Not surprisingly, the most likely value of <span class="math inline">\(\theta\)</span> (the maximum likelihood estimate) is .14. In Bayesian statistics, however, we aren’t content with just the point estimate and instead we use the entire density to express uncertainty about <span class="math inline">\(\theta\)</span>.</p>
+</div>
+<div id="incorporating-prior-information" class="section level3">
+<h3>Incorporating Prior Information</h3>
+<p>Imagine that our merchant hears rumours that each 100 square meters of land has a 20% probability of containing gold. We now want to incorporate this prior information into our model. <span class="math inline">\(p(\theta)\)</span> is the prior probability of <span class="math inline">\(\theta\)</span> and it can represent past data or even subjective knowledge about the likely value and uncertainty of <span class="math inline">\(\theta\)</span>.</p>
+<p>A common approach when choosing priors is to identify a <em>conjugate prior</em>: a formula for expressing the prior that has a similar data structure to that of the likelihood. In this case, a conjugate prior for the binomial likelihood is the beta function:</p>
+<p><span class="math display">\[\text{beta}(a,b)=\theta^{a-1}(1-\theta)^{b-1}\]</span></p>
+<p>where <span class="math inline">\(a\)</span> can represent successes and <span class="math inline">\(b\)</span> can represent failures.</p>
+<p>Notice the similarity between the formulas for the binomial and beta functions. They have identical data structures, which makes the beta a conjugate prior for the binomial likelihood. Let’s use a <span class="math inline">\(\text{beta}(2,8)\)</span> as a prior, representing our knowledge of a rumored 20% probability of gold.</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Similarly, you can reproduce this using the <em>dbeta</em> function in R:</p>
+<pre class="r"><code># here we use x as a sequence from .01-1
+b_likelihood &lt;- dbeta(x = seq(.01, 1, .01), shape1 = 2, shape2 = 8)
+
+df &lt;- data.frame(theta = seq(.01, 1, .01),
+                 b_likelihood)
+
+df %&gt;%
+  ggplot(aes(x = theta, y = b_likelihood)) +
+  geom_line(size = 1) +
+  labs(x = TeX(&quot;$\\theta$&quot;),
+       y = NULL,
+       title = TeX(&quot;beta(2,8)&quot;)) +
+  scale_x_continuous(breaks = seq(0, 1, by = .10)) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.title = element_text(hjust = .5, size = 20))</code></pre>
+<p>Why use a beta prior instead of another binomial density? The reason is that the binomial density is dependent on a sample size parameter <em>n</em>, whereas the beta density is not. It is more convenient to express our prior knowledge without <em>n</em>.</p>
+</div>
+<div id="getting-the-posterior" class="section level3">
+<h3>Getting the Posterior</h3>
+<p>The posterior probability, <span class="math inline">\(p(\theta|y)\)</span> takes into account the data and the prior. It is often viewed as a <em>compromise</em> between the data likelihood and the prior probability. This is more easily understood graphically:</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Here’s how to produce this figure:</p>
+<pre class="r"><code>theta &lt;- seq(.01, 1, .01)
+prior &lt;- dbeta(x = theta, shape1 = 2, shape2 = 8)
+
+#multiply the binomial likelihood by 100 to express it in &#39;probability terms&#39; like the beta
+likelihood &lt;- dbinom(x = 14, size = 100, prob = theta) * 100
+posterior_density &lt;- likelihood * prior
+
+df &lt;- data.frame(theta = theta,
+                 likelihood = likelihood,
+                 prior = prior,
+                 pd = posterior_density)
+
+# use pivot_longer to create a variable out of likelihood vs. prior vs. posterior
+data_long &lt;- pivot_longer(df, cols = c(likelihood, prior, pd))
+
+data_long %&gt;%
+  ggplot(aes(x = theta, y = value, color = name)) +
+  geom_line(size = 1.5) +
+  labs(x = TeX(&quot;$\\theta$&quot;),
+       y = NULL,
+       color = NULL,
+       title = &quot;Posterior, Likelihood, and Prior&quot;) +
+  scale_color_discrete(labels = c(&quot;Likelihood&quot;, &quot;Posterior&quot;, &quot;Prior&quot;)) +
+  scale_x_continuous(breaks = seq(0, 1, by = .10)) +
+  theme_minimal(base_size = 16) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.title = element_text(hjust = .5, size = 20))</code></pre>
+<p>The above chart shows the posterior, likelihood, and prior side by side. Notice how the prior (in blue) contains less certainty than the likelihood. The posterior density is simply the prior multiplied by the likelihood, thus it contains information from both sources. It’s a general rule that in instances when there is a lot of data <em>and</em> our prior is mostly uninformative that the likelihood will overwhelm the prior.</p>
+<p>If we were to extend this further to make actual conclusions about our uncertainty of the proportion of gold in the hills, we would need to draw random samples from the posterior distribution and generate interval estimates based on these draws. For this post, however, we will stick to a graphical evaluation of <span class="math inline">\(p(\theta|y)\)</span>.</p>
+</div>
+</div>
+<div id="an-animated-example" class="section level2">
+<h2>An Animated Example</h2>
+<p>I’m a huge proponent of using animations to illustrate complicated topics (if you haven’t yet, you should consider watching <a href="https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw">3Blue1Brown’s videos</a> covering mathematics concepts). So I want to end by bringing to life our example of a gold miner estimating the proportion of gold in a section of land. We’ll use the same information as before, but the difference this time is that the gold miner will investigate each 1 x 1 section of land at a time and update the likelihood.</p>
+<p>The animation begins with our merchant-miner (indicated by the red square) on square 1,1. As the merchant covers the sample, the influence of the likelihood over the prior increases and there is more certainty in the estimate. If we expanded our sample to cover more of the territory, our estimate would get even closer to the true value of <span class="math inline">\(\theta\)</span> and we’d be more certain about it.</p>
+<p><img src="/post/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-10-1.gif" /><!-- --></p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>The binomial likelihood serves as a great introductory case into Bayesian statistics. It may seem like overkill to use a Bayesian approach to estimate a binomial proportion, indeed the point estimate equals the sample proportion. But remember that it’s far more important to get an estimate of uncertainty as opposed to a simple point estimate.</p>
+<p>There’s a lot we didn’t cover here; namely, making inferences from the posterior distribution, which typically involves sampling from the posterior distribution. As well, I hope to soon extend into more practical cases such as logistic regression, mixture modeling, etc, with demonstrations using Stan.</p>
+<p>If you’re eager for more examples and tutorials with Bayesian statistics, I’d recommend watching this <a href="https://www.youtube.com/watch?v=3OJEae7Qb_o">video series</a> by Rasmus Bååth. John Kruschke’s book <a href="http://doingbayesiandataanalysis.blogspot.com/">Doing Bayesian Data Analysis</a> is a great introductory text. If you’re up for the challenge, consider also <a href="http://www.stat.columbia.edu/~gelman/book/">Bayesian Data Analysis, 3rd edition</a> by Gelman et al, widely considered to be the <em>Bayesian Bible</em>. Much of the content for this blog post was inspired from the first few chapters of that book.</p>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/r/">R</a>
+  
+  <a class="badge badge-light" href="/tags/bayesian/">Bayesian</a>
+  
+  <a class="badge badge-light" href="/tags/binomial/">Binomial</a>
+  
+  <a class="badge badge-light" href="/tags/probability/">Probability</a>
+  
+  <a class="badge badge-light" href="/tags/animation/">Animation</a>
+  
+</div>
+
+
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="/img/portrait.jpg" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Will Hipson</a></h5>
+    <h6 class="card-subtitle">PhD Candidate, Psychology</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+      <li>
+        <a itemprop="sameAs" href="mailto:william.hipson@carleton.ca" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://twitter.com/whipson3" target="_blank" rel="noopener">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.com/citations?user=NjVAwkcAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.researchgate.net/profile/Will_Hipson" target="_blank" rel="noopener">
+          <i class="ai ai-researchgate"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.mendeley.com/profiles/will-hipson/" target="_blank" rel="noopener">
+          <i class="ai ai-mendeley"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/whipson?tab=repositories" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://osf.io/profile/" target="_blank" rel="noopener">
+          <i class="ai ai-osf"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+    <div class="article-widget">
+      <div class="hr-light"></div>
+      <h3>Related</h3>
+      <ul>
+        
+        <li><a href="/post/bayesian_mlm/bayesian_mlm/">Bayesian Linear Mixed Models: Random Intercepts, Slopes, and Missing Data</a></li>
+        
+        <li><a href="/post/bicycle_app/bicycle_app/">Building a Shiny App for Cycling in Ottawa</a></li>
+        
+        <li><a href="/post/feedback_loops/feedback_loops/">Modeling Motivation and Emotion using Feedback Loops</a></li>
+        
+        <li><a href="/post/emotion-simulation1/emotion_sim/">A Model and Simulation of Emotion Dynamics</a></li>
+        
+        <li><a href="/post/basketball_sim/basketball_sim/">Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</a></li>
+        
+      </ul>
+    </div>
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  
+
+  <p class="powered-by">
+    &copy; 2020 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academic.min.70f0041f5a24c6a675ac218c98d7ef71.js"></script>
+
+    
+
+  </body>
+</html>
+

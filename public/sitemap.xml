@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>/post/bayesian_intro/binomial_gold/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/bicycle_app/bicycle_app/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
     </url>
@@ -237,8 +245,17 @@
     
     <url>
     
-      <loc>/tags/bayesian/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <loc>/categories/animation/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/animation/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -247,7 +264,34 @@
     <url>
     
       <loc>/categories/bayesian/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/bayesian/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/binomial/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/binomial/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -256,16 +300,7 @@
     <url>
     
       <loc>/categories/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/emotion-dynamics/</loc>
-      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -282,7 +317,7 @@
     
     <url>
     
-      <loc>/tags/feedback-loops/</loc>
+      <loc>/tags/emotion-dynamics/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -300,8 +335,8 @@
     
     <url>
     
-      <loc>/tags/latent-profile-analysis/</loc>
-      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
+      <loc>/tags/feedback-loops/</loc>
+      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -318,6 +353,24 @@
     
     <url>
     
+      <loc>/tags/latent-profile-analysis/</loc>
+      <lastmod>2019-04-20T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/linear-mixed-models/</loc>
+      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/tags/linear-mixed-models/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -327,7 +380,7 @@
     
     <url>
     
-      <loc>/categories/linear-mixed-models/</loc>
+      <loc>/categories/multilevel-modeling/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -345,8 +398,17 @@
     
     <url>
     
-      <loc>/categories/multilevel-modeling/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <loc>/categories/probability/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/probability/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -372,8 +434,8 @@
     
     <url>
     
-      <loc>/tags/r/</loc>
-      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <loc>/categories/r/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -381,8 +443,8 @@
     
     <url>
     
-      <loc>/categories/r/</loc>
-      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <loc>/tags/r/</loc>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -399,7 +461,7 @@
     
     <url>
     
-      <loc>/tags/shiny/</loc>
+      <loc>/categories/shiny/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -408,7 +470,7 @@
     
     <url>
     
-      <loc>/categories/shiny/</loc>
+      <loc>/tags/shiny/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -424,7 +486,7 @@
     
     <url>
     
-      <loc>/tags/simulation/</loc>
+      <loc>/categories/simulation/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -433,7 +495,7 @@
     
     <url>
     
-      <loc>/categories/simulation/</loc>
+      <loc>/tags/simulation/</loc>
       <lastmod>2019-07-31T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -452,16 +514,7 @@
     <url>
     
       <loc>/tags/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/tutorial/</loc>
-      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -470,6 +523,15 @@
     <url>
     
       <loc>/categories/tutorial/</loc>
+      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/tutorial/</loc>
       <lastmod>2019-10-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
