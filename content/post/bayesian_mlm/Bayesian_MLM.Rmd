@@ -22,7 +22,7 @@ Why use Bayesian instead of Frequentist statistics? One reason is that *prior* k
 
 ## Setting it All Up
 
-Installing and running *brms* is a bit more complicated than your run-of-the-mill R packages. Because *brms* uses STAN as its back-end engine to perform Bayesian analysis, you will need to install *rstan*. Carefully follow the instructions at this [link](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) and you should have no problem. Once you've done that you should be able to install *brms* and load it up.
+Installing and running *brms* is a bit more complicated than your run-of-the-mill R packages. Because *brms* uses Stan as its back-end engine to perform Bayesian analysis, you will need to install *rstan*. Carefully follow the instructions at this [link](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) and you should have no problem. Once you've done that you should be able to install *brms* and load it up.
 
 ```{r}
 library(brms)
@@ -105,12 +105,11 @@ For a more intuitive understanding of what the mixed effects model is doing, let
 ```{r}
 set.seed(25)
 
+ids <- sample(unique(curran_dat$id), 6)
+
 curran_dat %>%
   bind_cols(as_tibble(fitted(read1))) %>%
-  group_by(id) %>%
-  nest() %>%
-  sample_n(6) %>%
-  unnest() %>%
+  filter(id %in% ids) %>%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = "dodgerblue2") +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -161,10 +160,7 @@ set.seed(25)
 
 curran_dat %>%
   bind_cols(as_tibble(fitted(read2))) %>%
-  group_by(id) %>%
-  nest() %>%
-  sample_n(6) %>%
-  unnest() %>%
+  filter(id %in% ids) %>%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = "dodgerblue2") +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -225,10 +221,7 @@ set.seed(25)
 
 curran_dat %>%
   bind_cols(as_tibble(fitted(read3))) %>%
-  group_by(id) %>%
-  nest() %>%
-  sample_n(6) %>%
-  unnest() %>%
+  filter(id %in% ids) %>%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = "dodgerblue2") +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -277,10 +270,7 @@ set.seed(25)
 
 curran_dat %>%
   bind_cols(as_tibble(fitted(read4))) %>%
-  group_by(id) %>%
-  nest() %>%
-  sample_n(6) %>%
-  unnest() %>%
+  filter(id %in% ids) %>%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = "dodgerblue2") +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -414,8 +404,7 @@ p1 <- curran_dat %>%
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 5, stroke = 1.5) +
   labs(x = "Assessment Period",
        y = "Reading Ability",
-       title = "Unimputed Data",
-       subtitle = "Blue points are observed values. Black circles are fitted values.") +
+       title = "Unimputed Data") +
   scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
   scale_y_continuous(limits = c(2, 9)) +
   facet_wrap(~id, nrow = 1) +
@@ -430,8 +419,7 @@ p2 <- curran_dat_missing %>%
   geom_point(aes(x = occasion, y = Estimate.read), shape = 1, size = 5, stroke = 1.5) +
   labs(x = "Assessment Period",
        y = "Reading Ability",
-       title = "Bayesian Imputation",
-       subtitle = "Blue points are observed values. Black circles are fitted values.") +
+       title = "Bayesian Imputation") +
   scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
   scale_y_continuous(limits = c(2, 9)) +
   facet_wrap(~id, nrow = 1) +
@@ -440,7 +428,9 @@ p2 <- curran_dat_missing %>%
 
 library(ggpubr)
 
-ggarrange(p1, p2)
+figure <- ggarrange(p1, p2)
+
+annotate_figure(figure, bottom = text_grob("Blue points are observed values. Black circles are fitted values.", hjust = 1, x = 1, face = "italic"))
 ```
 
 So we get reasonable estimates for the missing values. Our work here is done.
@@ -448,7 +438,7 @@ So we get reasonable estimates for the missing values. Our work here is done.
 # Final Words
 
 This topic is so vast that I couldn't possibly cover everything there is to say about Bayesian Linear Mixed Models. We only scratched the surface on interpreting Bayesian posteriors. For example, *brms* offers formal ways of comparing models and I highly recommend looking into these. 
-I'm indebted to Richard McElreath's fantastic lectures series for all that I know on the topic. Honestly, if you can spare the time, they're so so worth it - plus they're freely available on YouTube [here](https://www.youtube.com/watch?v=4WVelCswXo4&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI). Watch these and then follow along with the code in this *brms* guide [here](https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/) and you're golden! Finally, if you want a short primer on Bayesian MLM and an excellent guide for writing STAN code (not *brms*), I'd highly recommend this [paper](https://www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf) by Sorensen, Hohenstein, and Vasishth (2016). It helped immensely in my ongoing transition from Frequentist to Bayesian statistics.
+I'm indebted to Richard McElreath's fantastic lectures series for all that I know on the topic. Honestly, if you can spare the time, they're so so worth it - plus they're freely available on YouTube [here](https://www.youtube.com/watch?v=4WVelCswXo4&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI). Watch these and then follow along with the code in this *brms* guide [here](https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/) and you're golden! Finally, if you want a short primer on Bayesian MLM and an excellent guide for writing Stan code (not *brms*), I'd highly recommend this [paper](https://www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf) by Sorensen, Hohenstein, and Vasishth (2016). It helped immensely in my ongoing transition from Frequentist to Bayesian statistics.
 
 # References
 

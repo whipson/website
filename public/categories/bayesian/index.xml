@@ -199,10 +199,10 @@ data_long %&amp;gt;%
 &lt;p&gt;Why use Bayesian instead of Frequentist statistics? One reason is that &lt;em&gt;prior&lt;/em&gt; knowledge about a parameter - for example, it’s distribution - can be incorporated in the model. Another reason especially relevant to linear mixed models is that we can easily include multiple random intercepts and slopes without running into the same stringent sample size requirements as with frequentist approaches. This is not an exhaustive list; more can be found &lt;a href=&#34;https://www.sciencedirect.com/science/article/pii/S0732118X18300746?via%3Dihub&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;div id=&#34;setting-it-all-up&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Setting it All Up&lt;/h2&gt;
-&lt;p&gt;Installing and running &lt;em&gt;brms&lt;/em&gt; is a bit more complicated than your run-of-the-mill R packages. Because &lt;em&gt;brms&lt;/em&gt; uses STAN as its back-end engine to perform Bayesian analysis, you will need to install &lt;em&gt;rstan&lt;/em&gt;. Carefully follow the instructions at this &lt;a href=&#34;https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started&#34;&gt;link&lt;/a&gt; and you should have no problem. Once you’ve done that you should be able to install &lt;em&gt;brms&lt;/em&gt; and load it up.&lt;/p&gt;
+&lt;p&gt;Installing and running &lt;em&gt;brms&lt;/em&gt; is a bit more complicated than your run-of-the-mill R packages. Because &lt;em&gt;brms&lt;/em&gt; uses Stan as its back-end engine to perform Bayesian analysis, you will need to install &lt;em&gt;rstan&lt;/em&gt;. Carefully follow the instructions at this &lt;a href=&#34;https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started&#34;&gt;link&lt;/a&gt; and you should have no problem. Once you’ve done that you should be able to install &lt;em&gt;brms&lt;/em&gt; and load it up.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Loading required package: Rcpp&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Loading &amp;#39;brms&amp;#39; package (version 2.10.0). Useful instructions
+&lt;pre&gt;&lt;code&gt;## Loading &amp;#39;brms&amp;#39; package (version 2.11.1). Useful instructions
 ## can be found by typing help(&amp;#39;brms&amp;#39;). A more detailed introduction
 ## to the package is available through vignette(&amp;#39;brms_overview&amp;#39;).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;It’s normal to get some warning messages upon loading the package. That’s fine. We can now load up the &lt;em&gt;tidyverse&lt;/em&gt; for data manipulation and visualization.&lt;/p&gt;
@@ -271,8 +271,8 @@ data_long %&amp;gt;%
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma     1.55      0.04     1.48     1.62 1.00     2219     2827
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;What does the output tell us? Right away, we see an estimate of an Intercept of 4.11 within a 95% &lt;em&gt;credible interval&lt;/em&gt; (you might call it the Bayesian version of a confidence interval, although they’re not quite the same thing) of 4.01 and 4.21. What’s more interesting is the estimate of standard deviation of the random intercepts ‘sd(Intercept)’. So there is person-level variability in reading scores. In turn, &lt;em&gt;sigma&lt;/em&gt; is the estimate of the overall variability in reading scores.&lt;/p&gt;
 &lt;p&gt;We can further inspect these estimates by looking at the traceplots and the posterior distributions.&lt;/p&gt;
@@ -282,12 +282,11 @@ data_long %&amp;gt;%
 &lt;p&gt;For a more intuitive understanding of what the mixed effects model is doing, let’s compare a sample of the observed values with the model predicted values. &lt;em&gt;brms&lt;/em&gt; outputs fitted values using the &lt;em&gt;fitted&lt;/em&gt; function. We’ll sample 6 participants and see their observed reading scores and model-derived reading scores.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
 
+ids &amp;lt;- sample(unique(curran_dat$id), 6)
+
 curran_dat %&amp;gt;%
   bind_cols(as_tibble(fitted(read1))) %&amp;gt;%
-  group_by(id) %&amp;gt;%
-  nest() %&amp;gt;%
-  sample_n(6) %&amp;gt;%
-  unnest() %&amp;gt;%
+  filter(id %in% ids) %&amp;gt;%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -342,8 +341,8 @@ curran_dat %&amp;gt;%
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma     0.64      0.01     0.61     0.67 1.00     3630     3056
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Looking again at our output now, we see variability in the random intercepts for id, but even larger variability across occasions (assessment periods). In fact, the overall variability, sigma, is quite reduced from the previous model. This demonstrates an important lesson about mixed models: that they decompose the overall variance (sigma) into cluster-level variance. If we just ran a linear regression, it wouldn’t differentiate between measurement error and variation between participants and time points.&lt;/p&gt;
 &lt;p&gt;Let’s again compare the estimates with the observed values. We’ll use the same subsample as before to illustrate the effect of adding a second random effect.&lt;/p&gt;
@@ -351,10 +350,7 @@ curran_dat %&amp;gt;%
 
 curran_dat %&amp;gt;%
   bind_cols(as_tibble(fitted(read2))) %&amp;gt;%
-  group_by(id) %&amp;gt;%
-  nest() %&amp;gt;%
-  sample_n(6) %&amp;gt;%
-  unnest() %&amp;gt;%
+  filter(id %in% ids) %&amp;gt;%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -415,18 +411,15 @@ curran_dat %&amp;gt;%
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma     0.68      0.02     0.65     0.71 1.00     3004     3138
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Our output gives a smaller intercept because it’s not telling us the mean any more, instead it’s the y-intercept of the regression line. We have an estimate of beta as 1.10 within a 95% credible interval of 1.07 and 1.14. So there’s strong evidence of a positive effect of time on reading ability.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
 
 curran_dat %&amp;gt;%
   bind_cols(as_tibble(fitted(read3))) %&amp;gt;%
-  group_by(id) %&amp;gt;%
-  nest() %&amp;gt;%
-  sample_n(6) %&amp;gt;%
-  unnest() %&amp;gt;%
+  filter(id %in% ids) %&amp;gt;%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -486,17 +479,14 @@ curran_dat %&amp;gt;%
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma     0.59      0.02     0.56     0.62 1.00      908     1758
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(25)
 
 curran_dat %&amp;gt;%
   bind_cols(as_tibble(fitted(read4))) %&amp;gt;%
-  group_by(id) %&amp;gt;%
-  nest() %&amp;gt;%
-  sample_n(6) %&amp;gt;%
-  unnest() %&amp;gt;%
+  filter(id %in% ids) %&amp;gt;%
   ggplot() +
   geom_point(aes(x = occasion, y = read), size = 4, alpha = .75, color = &amp;quot;dodgerblue2&amp;quot;) +
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 4, stroke = 1.5) +
@@ -556,7 +546,7 @@ curran_dat %&amp;gt;%
             control = list(adapt_delta = .975, max_treedepth = 20),
             seed = 190831)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(read5)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: The model has not converged (some Rhats are &amp;gt; 1.1). Do not analyse the results! 
+&lt;pre&gt;&lt;code&gt;## Warning: The model has not converged (some Rhats are &amp;gt; 1.05). Do not analyse the results! 
 ## We recommend running more iterations and/or setting stronger priors.&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: There were 150 divergent transitions after warmup. Increasing adapt_delta above 0.975 may help.
 ## See http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup&lt;/code&gt;&lt;/pre&gt;
@@ -594,8 +584,8 @@ curran_dat %&amp;gt;%
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma     0.59      0.02     0.56     0.63 1.00     1120     2369
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Running this model, we get a few warnings about large Rhats and divergent transitions. We would be better off running a few more iterations (maybe 4000) if we wanted more confidence in the results. Nevertheless, we see a pretty weak effect of cognitive stimulation. The credible interval for the population effect of cognitive stimulation doesn’t include zero, but the evidence is weak that it’s doing anything at all in this model. There’s some indication that the intercepts vary by cognitive stimulation, such that at higher stimulation children have a higher initial reading ability. But there’s no evidence that the slopes vary by cognitive stimulation.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;curran_dat %&amp;gt;%
@@ -643,34 +633,29 @@ curran_dat %&amp;gt;%
 ## 
 ## Group-Level Effects: 
 ## ~id (Number of levels: 405) 
-##                                   Estimate Est.Error l-95% CI u-95% CI
-## sd(read_Intercept)                    0.75      0.04     0.68     0.83
-## sd(read_occasion)                     0.27      0.02     0.22     0.32
-## cor(read_Intercept,read_occasion)     0.25      0.12     0.03     0.51
-##                                   Rhat Bulk_ESS Tail_ESS
-## sd(read_Intercept)                1.00     1360     2987
-## sd(read_occasion)                 1.01      770     1589
-## cor(read_Intercept,read_occasion) 1.00      960     1492
+##                                   Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(read_Intercept)                    0.75      0.04     0.68     0.83 1.00
+## sd(read_occasion)                     0.27      0.02     0.22     0.32 1.01
+## cor(read_Intercept,read_occasion)     0.25      0.12     0.03     0.51 1.00
+##                                   Bulk_ESS Tail_ESS
+## sd(read_Intercept)                    1360     2987
+## sd(read_occasion)                      770     1589
+## cor(read_Intercept,read_occasion)      960     1492
 ## 
 ## Population-Level Effects: 
-##                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
-## read_Intercept        2.15      0.16     1.84     2.47 1.00     2028
-## homecog_Intercept     8.91      0.07     8.77     9.05 1.00     9040
-## read_occasion         1.12      0.02     1.08     1.16 1.00     4599
-## read_mihomecog        0.06      0.02     0.03     0.09 1.00     2066
-##                   Tail_ESS
-## read_Intercept        2534
-## homecog_Intercept     2687
-## read_occasion         2956
-## read_mihomecog        2596
+##                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## read_Intercept        2.15      0.16     1.84     2.47 1.00     2028     2534
+## homecog_Intercept     8.91      0.07     8.77     9.05 1.00     9040     2687
+## read_occasion         1.12      0.02     1.08     1.16 1.00     4599     2956
+## read_mihomecog        0.06      0.02     0.03     0.09 1.00     2066     2596
 ## 
 ## Family Specific Parameters: 
 ##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 ## sigma_read        0.59      0.02     0.56     0.62 1.00      943     2256
 ## sigma_homecog     2.57      0.05     2.47     2.66 1.00    12854     2668
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
+## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Output is all well and good, but to really see what’s going on we’ll return to our sampling technique. Here are the fitted values on 3 individuals from Model 5 (non-imputed) and the same 3 from Model 6 (imputed).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p1 &amp;lt;- curran_dat %&amp;gt;%
@@ -681,8 +666,7 @@ curran_dat %&amp;gt;%
   geom_point(aes(x = occasion, y = Estimate), shape = 1, size = 5, stroke = 1.5) +
   labs(x = &amp;quot;Assessment Period&amp;quot;,
        y = &amp;quot;Reading Ability&amp;quot;,
-       title = &amp;quot;Unimputed Data&amp;quot;,
-       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+       title = &amp;quot;Unimputed Data&amp;quot;) +
   scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
   scale_y_continuous(limits = c(2, 9)) +
   facet_wrap(~id, nrow = 1) +
@@ -697,8 +681,7 @@ p2 &amp;lt;- curran_dat_missing %&amp;gt;%
   geom_point(aes(x = occasion, y = Estimate.read), shape = 1, size = 5, stroke = 1.5) +
   labs(x = &amp;quot;Assessment Period&amp;quot;,
        y = &amp;quot;Reading Ability&amp;quot;,
-       title = &amp;quot;Bayesian Imputation&amp;quot;,
-       subtitle = &amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;) +
+       title = &amp;quot;Bayesian Imputation&amp;quot;) +
   scale_x_continuous(expand = c(.1, .1), breaks = 0:3) +
   scale_y_continuous(limits = c(2, 9)) +
   facet_wrap(~id, nrow = 1) +
@@ -707,14 +690,16 @@ p2 &amp;lt;- curran_dat_missing %&amp;gt;%
 
 library(ggpubr)
 
-ggarrange(p1, p2)&lt;/code&gt;&lt;/pre&gt;
+figure &amp;lt;- ggarrange(p1, p2)
+
+annotate_figure(figure, bottom = text_grob(&amp;quot;Blue points are observed values. Black circles are fitted values.&amp;quot;, hjust = 1, x = 1, face = &amp;quot;italic&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/bayesian_mlm/Bayesian_MLM_files/figure-html/unnamed-chunk-29-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;So we get reasonable estimates for the missing values. Our work here is done.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;final-words&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Final Words&lt;/h1&gt;
 &lt;p&gt;This topic is so vast that I couldn’t possibly cover everything there is to say about Bayesian Linear Mixed Models. We only scratched the surface on interpreting Bayesian posteriors. For example, &lt;em&gt;brms&lt;/em&gt; offers formal ways of comparing models and I highly recommend looking into these.
-I’m indebted to Richard McElreath’s fantastic lectures series for all that I know on the topic. Honestly, if you can spare the time, they’re so so worth it - plus they’re freely available on YouTube &lt;a href=&#34;https://www.youtube.com/watch?v=4WVelCswXo4&amp;amp;list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34;&gt;here&lt;/a&gt;. Watch these and then follow along with the code in this &lt;em&gt;brms&lt;/em&gt; guide &lt;a href=&#34;https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/&#34;&gt;here&lt;/a&gt; and you’re golden! Finally, if you want a short primer on Bayesian MLM and an excellent guide for writing STAN code (not &lt;em&gt;brms&lt;/em&gt;), I’d highly recommend this &lt;a href=&#34;https://www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf&#34;&gt;paper&lt;/a&gt; by Sorensen, Hohenstein, and Vasishth (2016). It helped immensely in my ongoing transition from Frequentist to Bayesian statistics.&lt;/p&gt;
+I’m indebted to Richard McElreath’s fantastic lectures series for all that I know on the topic. Honestly, if you can spare the time, they’re so so worth it - plus they’re freely available on YouTube &lt;a href=&#34;https://www.youtube.com/watch?v=4WVelCswXo4&amp;amp;list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34;&gt;here&lt;/a&gt;. Watch these and then follow along with the code in this &lt;em&gt;brms&lt;/em&gt; guide &lt;a href=&#34;https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/&#34;&gt;here&lt;/a&gt; and you’re golden! Finally, if you want a short primer on Bayesian MLM and an excellent guide for writing Stan code (not &lt;em&gt;brms&lt;/em&gt;), I’d highly recommend this &lt;a href=&#34;https://www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf&#34;&gt;paper&lt;/a&gt; by Sorensen, Hohenstein, and Vasishth (2016). It helped immensely in my ongoing transition from Frequentist to Bayesian statistics.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
