@@ -36,4 +36,4 @@ weight = 5
 
 # Biography
 
-I'm a graduate student at Carleton University, where I conduct research on emotions. I'm interested in how emotions change over time - both from moment-to-moment and over the course of human development. My current projects are focused on children's and adolescents' emotion regulation and its links with social behaviors. I'm also interested in quantitative methodology, and applying new statistical approaches.
+I'm a graduate student at Carleton University, where I conduct research on emotions. I'm interested in how emotions change over time - both from moment-to-moment and over the course of human development. My current projects are focused on children's and adolescents' emotion regulation and its links with social behaviors. I'm also involved in text analytics research at the National Research Council Canada.
