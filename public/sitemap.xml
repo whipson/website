@@ -4,6 +4,14 @@
     
     <url>
     
+      <loc>/post/markov-sim/markov_chain/</loc>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/bayesian_intro/binomial_gold/</loc>
       <lastmod>2020-01-28T00:00:00+00:00</lastmod>
     </url>
@@ -246,7 +254,7 @@
     <url>
     
       <loc>/tags/animation/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -255,7 +263,7 @@
     <url>
     
       <loc>/categories/animation/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -264,7 +272,7 @@
     <url>
     
       <loc>/tags/bayesian/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -273,7 +281,7 @@
     <url>
     
       <loc>/categories/bayesian/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -300,7 +308,7 @@
     <url>
     
       <loc>/categories/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -380,6 +388,24 @@
     
     <url>
     
+      <loc>/tags/markov-chain/</loc>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/markov-chain/</loc>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/tags/multilevel-modeling/</loc>
       <lastmod>2019-09-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -399,7 +425,7 @@
     <url>
     
       <loc>/tags/probability/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -408,7 +434,7 @@
     <url>
     
       <loc>/categories/probability/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -435,7 +461,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -444,7 +470,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -487,7 +513,7 @@
     <url>
     
       <loc>/tags/simulation/</loc>
-      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -496,7 +522,7 @@
     <url>
     
       <loc>/categories/simulation/</loc>
-      <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -514,7 +540,7 @@
     <url>
     
       <loc>/tags/</loc>
-      <lastmod>2020-01-28T00:00:00+00:00</lastmod>
+      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

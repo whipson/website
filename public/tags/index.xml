@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 28 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Animation</title>
       <link>/tags/animation/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/animation/</guid>
       <description></description>
@@ -24,7 +24,7 @@
     <item>
       <title>Bayesian</title>
       <link>/tags/bayesian/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/bayesian/</guid>
       <description></description>
@@ -76,6 +76,15 @@
     </item>
     
     <item>
+      <title>Markov Chain</title>
+      <link>/tags/markov-chain/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/markov-chain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Multilevel Modeling</title>
       <link>/tags/multilevel-modeling/</link>
       <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
@@ -87,7 +96,7 @@
     <item>
       <title>Probability</title>
       <link>/tags/probability/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/probability/</guid>
       <description></description>
@@ -96,7 +105,7 @@
     <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/r/</guid>
       <description></description>
@@ -123,7 +132,7 @@
     <item>
       <title>Simulation</title>
       <link>/tags/simulation/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/simulation/</guid>
       <description></description>

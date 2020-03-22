@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 28 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/bayesian/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Visualizing a Markov Chain</title>
+      <link>/post/markov-sim/markov_chain/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/markov-sim/markov_chain/</guid>
+      <description>A Markov Chain describes a sequence of states where the probability of transitioning from states depends only the current state. Markov chains are useful in a variety of computer science, mathematics, and probability contexts, also featuring prominently in Bayesian computation as Markov Chain Monte Carlo. Here, we’re going to look at a relatively simple breed of Markov chain and build up some intuition using simulations and animations (two of my favorite things).</description>
+    </item>
     
     <item>
       <title>An Intuitive Look at Binomial Probability in a Bayesian Context</title>

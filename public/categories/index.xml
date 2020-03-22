@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 28 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Animation</title>
       <link>/categories/animation/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/animation/</guid>
       <description></description>
@@ -26,7 +26,7 @@
     <item>
       <title>Bayesian</title>
       <link>/categories/bayesian/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/bayesian/</guid>
       <description></description>
@@ -90,6 +90,17 @@
     </item>
     
     <item>
+      <title>Markov Chain</title>
+      <link>/categories/markov-chain/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/markov-chain/</guid>
+      <description></description>
+      
+      
+    </item>
+    
+    <item>
       <title>Multilevel Modeling</title>
       <link>/categories/multilevel-modeling/</link>
       <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
@@ -103,7 +114,7 @@
     <item>
       <title>Probability</title>
       <link>/categories/probability/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/probability/</guid>
       <description></description>
@@ -114,7 +125,7 @@
     <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
       <description></description>
@@ -136,7 +147,7 @@
     <item>
       <title>Simulation</title>
       <link>/categories/simulation/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/simulation/</guid>
       <description></description>
