@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Sat, 23 Feb 2019 00:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2020 00:00:00 -0400</lastBuildDate>
     
 	<atom:link href="/tags/sentiment-analysis/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PoKi: A large dataset of poems by children</title>
+      <link>/publication/hipson-mohammad.-2020/</link>
+      <pubDate>Tue, 14 Apr 2020 00:00:00 -0400</pubDate>
+      
+      <guid>/publication/hipson-mohammad.-2020/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry</title>
