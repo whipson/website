@@ -47,12 +47,10 @@ BIC <- mclustBIC(interests_clustering)
 
 mod1 <- Mclust(interests_clustering, modelNames = "VEE", G = 3, x = BIC)
 
-library(reshape2)
-
-means <- data.frame(mod1$parameters$mean, stringsAsFactors = FALSE) %>%
+means <- data.frame(mod1$parameters$mean) %>%
   rownames_to_column() %>%
   rename(Interest = rowname) %>%
-  melt(id.vars = "Interest", variable.name = "Profile", value.name = "Mean") %>%
+  pivot_longer(cols = c(X1, X2, X3), names_to = "Profile", values_to = "Mean") %>%
   mutate(Mean = round(Mean, 2),
          Mean = ifelse(Mean > 1, 1, Mean))
 
@@ -168,19 +166,17 @@ mclustBootstrapLRT(interests_clustering, modelName = "VEE")
 
 BLRT also suggests that a 3-profile solution is ideal.
 
-##Visualizing LPA
+## Visualizing LPA
 
 Now that we're confident in our choice of a 3-profile solution, let's plot the results. Specifically, we want to see how the profiles differ on the indicators, that is, the items that made up the profiles. If the solution is theoretically meaningful, we should see differences that make sense.
 
-First, we'll extract the means for each profile (remember, we chose these to be standardized). Then, we *melt* this into long form. Note that I'm trimming values exceeding +1 SD, otherwise we run into plotting issues.
+First, we'll extract the means for each profile (remember, we chose these to be standardized). Then, we use *pivot_longer* to wrangle it into long form. Note that I'm trimming values exceeding +1 SD, otherwise we run into plotting issues.
 
 ```{r}
-library(reshape2)
-
-means <- data.frame(mod1$parameters$mean, stringsAsFactors = FALSE) %>%
+means <- data.frame(mod1$parameters$mean) %>%
   rownames_to_column() %>%
   rename(Interest = rowname) %>%
-  melt(id.vars = "Interest", variable.name = "Profile", value.name = "Mean") %>%
+  pivot_longer(cols = c(X1, X2, X3), names_to = "Profile", values_to = "Mean") %>%
   mutate(Mean = round(Mean, 2),
          Mean = ifelse(Mean > 1, 1, Mean))
 ```
@@ -242,7 +238,7 @@ ggplotly(p, tooltip = c("Interest", "Mean")) %>%
 
 There's a quick example of LPA. Overall, I think LPA is great tool for Exploratory Analysis, although I question its reproducibility. What's important is that the statistician considers both fit indices and theory when deciding on the number of profiles.
 
-###References & Resources
+### References & Resources
 
 Bertoletti, M., Friel, N., & Rastelli, R. (2015). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. https://arxiv.org/pdf/1411.4257.pdf.
 
