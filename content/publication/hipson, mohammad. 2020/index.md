@@ -1,6 +1,6 @@
 +++
 title = "PoKi: A large dataset of poems by children"
-date = 2020-04-14
+date = 2020-05-01
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
@@ -15,10 +15,10 @@ authors = ["WE Hipson", "SM Mohammad"]
 # 4 = Report
 # 5 = Book
 # 6 = Book section
-publication_types = ["2"]
+publication_types = ["1"]
 
 # Publication name and optional abbreviated version.
-publication = "In *arXiv preprint*"
+publication = "In *LREC 2020*"
 publication_short = ""
 
 # Abstract and optional shortened version.
@@ -48,7 +48,7 @@ url_project = ""
 url_slides = ""
 url_video = ""
 url_poster = ""
-url_source = "https://arxiv.org/abs/2004.06188"
+url_source = "https://www.aclweb.org/anthology/2020.lrec-1.196.pdf"
 
 # Custom links (optional).
 #   Uncomment line below to enable. For multiple links, use the form `[{...}, {...}, {...}]`.

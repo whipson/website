@@ -4,8 +4,24 @@
     
     <url>
     
+      <loc>/post/stan-random-slopes/varying_effects_stan/</loc>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/publication/hipson-mohammad.-2020/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/publication/kiritchenko-et-al.-2020/</loc>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
     </url>
     
   
@@ -252,8 +268,17 @@
     
     <url>
     
+      <loc>/publication_types/1/</loc>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/publication_types/2/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2019-05-26T00:00:00-04:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -280,7 +305,7 @@
     <url>
     
       <loc>/tags/bayesian/</loc>
-      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -289,7 +314,7 @@
     <url>
     
       <loc>/categories/bayesian/</loc>
-      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -325,7 +350,7 @@
     <url>
     
       <loc>/tags/computational-linguistics/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -388,7 +413,7 @@
     <url>
     
       <loc>/tags/linear-mixed-models/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -397,7 +422,7 @@
     <url>
     
       <loc>/categories/linear-mixed-models/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -424,7 +449,7 @@
     <url>
     
       <loc>/tags/multilevel-modeling/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -433,7 +458,7 @@
     <url>
     
       <loc>/categories/multilevel-modeling/</loc>
-      <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -469,7 +494,7 @@
     <url>
     
       <loc>/publication_types/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -478,7 +503,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -487,7 +512,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2020-03-23T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -496,7 +521,7 @@
     <url>
     
       <loc>/tags/sentiment-analysis/</loc>
-      <lastmod>2020-04-14T00:00:00-04:00</lastmod>
+      <lastmod>2020-05-01T00:00:00-04:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -556,6 +581,24 @@
     
     <url>
     
+      <loc>/tags/stan/</loc>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/stan/</loc>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/tags/</loc>
       <lastmod>2020-03-23T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -566,7 +609,7 @@
     <url>
     
       <loc>/tags/tutorial/</loc>
-      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -575,7 +618,7 @@
     <url>
     
       <loc>/categories/tutorial/</loc>
-      <lastmod>2019-10-27T00:00:00+00:00</lastmod>
+      <lastmod>2020-06-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

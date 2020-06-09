@@ -26,7 +26,7 @@
     <item>
       <title>Bayesian</title>
       <link>/categories/bayesian/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/bayesian/</guid>
       <description></description>
@@ -81,7 +81,7 @@
     <item>
       <title>Linear Mixed Models</title>
       <link>/categories/linear-mixed-models/</link>
-      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/linear-mixed-models/</guid>
       <description></description>
@@ -103,7 +103,7 @@
     <item>
       <title>Multilevel Modeling</title>
       <link>/categories/multilevel-modeling/</link>
-      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/multilevel-modeling/</guid>
       <description></description>
@@ -125,7 +125,7 @@
     <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
       <description></description>
@@ -156,9 +156,20 @@
     </item>
     
     <item>
+      <title>Stan</title>
+      <link>/categories/stan/</link>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/stan/</guid>
+      <description></description>
+      
+      
+    </item>
+    
+    <item>
       <title>Tutorial</title>
       <link>/categories/tutorial/</link>
-      <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/tutorial/</guid>
       <description></description>

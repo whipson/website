@@ -334,7 +334,7 @@ enableGitInfo = false
     
 [[menu.main]]
   name = "R-bloggers"
-  url = "https://www.r-bloggers.com/"
+  url = "https://www.r-bloggers.com/author/r-on-will-hipson/"
   weight = 6
 
 # Search.

@@ -7,17 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 14 Apr 2020 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Bayesian Varying Effects Models in R and Stan</title>
+      <link>/post/stan-random-slopes/varying_effects_stan/</link>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/stan-random-slopes/varying_effects_stan/</guid>
+      <description>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the varying effects approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole.</description>
+    </item>
+    
+    <item>
       <title>PoKi: A large dataset of poems by children</title>
       <link>/publication/hipson-mohammad.-2020/</link>
-      <pubDate>Tue, 14 Apr 2020 00:00:00 -0400</pubDate>
+      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
       
       <guid>/publication/hipson-mohammad.-2020/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SOLO: A corpus of tweets for examining the state of being alone</title>
+      <link>/publication/kiritchenko-et-al.-2020/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
+      
+      <guid>/publication/kiritchenko-et-al.-2020/</guid>
       <description></description>
     </item>
     

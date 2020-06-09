@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 14 Apr 2020 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2020 00:00:00 -0400</lastBuildDate>
     
 	<atom:link href="/tags/computational-linguistics/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>PoKi: A large dataset of poems by children</title>
       <link>/publication/hipson-mohammad.-2020/</link>
-      <pubDate>Tue, 14 Apr 2020 00:00:00 -0400</pubDate>
+      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
       
       <guid>/publication/hipson-mohammad.-2020/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SOLO: A corpus of tweets for examining the state of being alone</title>
+      <link>/publication/kiritchenko-et-al.-2020/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
+      
+      <guid>/publication/kiritchenko-et-al.-2020/</guid>
       <description></description>
     </item>
     
