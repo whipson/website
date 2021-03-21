@@ -1,589 +1,187 @@
+<!doctype html>
+<html lang="en">
 
-
-<!DOCTYPE html>
-    
-<html lang="en-us">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> R - Will Hipson </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="Will Hipson" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://willhipson.netlify.app/categories/r/" />
+    <meta property="og:title" content="R" />
+    <meta property="og:image" content="https://willhipson.netlify.app" />
+    <meta property="og:description" content="" />
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="generator" content="Source Themes Academic 3.3.0">
-  <meta name="generator" content="Hugo 0.54.0" />
-  <meta name="author" content="Will Hipson">
-
-  
-  
-  
-  
+    <meta name="twitter:card" content="summary_large_image" />
     
-  
-  <meta name="description" content="PhD Candidate, Psychology">
+    <meta name="twitter:title" content="R" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app" />
 
-  
-  <link rel="alternate" hreflang="en-us" href="/categories/r/">
+    <link rel="canonical" href="https://willhipson.netlify.app/categories/r/">
 
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-  
-  <meta name="theme-color" content="#4caf50">
-  
-
-  
-  
-  
-  
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://willhipson.netlify.appcss/custom.css" />
 
     
-    
-    
-      
-    
-    
-      
-      
-        
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
-        
-      
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
     
 
     
 
+    <link rel="shortcut icon"
+        href="https://willhipson.netlify.app/images/favicon.png">
+
     
-
-  
-
-  
-  
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
-  
-
-  <link rel="stylesheet" href="/styles.css">
-  
-
-  
-  
-    <script>
-      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', 'UA-132275491-1', 'auto');
-      
-      ga('require', 'eventTracker');
-      ga('require', 'outboundLinkTracker');
-      ga('require', 'urlChangeTracker');
-      ga('send', 'pageview');
-    </script>
-    <script async src="//www.google-analytics.com/analytics.js"></script>
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
-    
-  
-  
-
-  
-  <link rel="alternate" href="/categories/r/index.xml" type="application/rss+xml" title="Will Hipson">
-  <link rel="feed" href="/categories/r/index.xml" type="application/rss+xml" title="Will Hipson">
-  
-
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="icon" type="image/png" href="/img/icon.png">
-  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
-
-  <link rel="canonical" href="/categories/r/">
-
-  
-  
-  
-  
-    
-    
-  
-  <meta property="twitter:card" content="summary">
-  
-  <meta property="og:site_name" content="Will Hipson">
-  <meta property="og:url" content="/categories/r/">
-  <meta property="og:title" content="R | Will Hipson">
-  <meta property="og:description" content="PhD Candidate, Psychology"><meta property="og:image" content="/img/portrait.jpg">
-  <meta property="og:locale" content="en-us">
-  
-  <meta property="og:updated_time" content="2020-06-09T00:00:00&#43;00:00">
-  
-
-  
-
-  
-
-  <title>R | Will Hipson</title>
-
 </head>
-<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
-  <aside class="search-results" id="search">
-  <div class="container">
-    <section class="search-header">
 
-      <div class="row no-gutters justify-content-between mb-3">
-        <div class="col-6">
-          <h1>Search</h1>
+<body>
+    
+<div class="mt-xl header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="https://willhipson.netlify.app">
+                    <h1 class="name">whipson blogs</h1>
+                </a>
+            </div>
         </div>
-        <div class="col-6 col-search-close">
-          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+
+        <div class="row justify-content-center">
+            <ul class="nav nav-primary">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
+                        
+                        Home
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
+                        
+                        About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/whipson">
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://twitter.com/whipson3">
+                        
+                        Twitter
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/index.xml">
+                        
+                        Subscribe
+                    </a>
+                </li>
+                
+            </ul>
         </div>
-      </div>
-
-      <div id="search-box">
-        
-        
-        
-      </div>
-
-    </section>
-    <section class="section-search-results">
-
-      <div id="search-hits">
-        
-      </div>
-
-    </section>
-  </div>
-</aside>
-
-
-<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
-  <div class="container">
-
-    
-      <a class="navbar-brand" href="/">Will Hipson</a>
-      
-      <button type="button" class="navbar-toggler" data-toggle="collapse"
-              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span><i class="fas fa-bars"></i></span>
-      </button>
-      
-
-    
-    <div class="collapse navbar-collapse" id="navbar">
-
-      
-      
-      <ul class="navbar-nav ml-auto">
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="/#about">
-            
-            <span>Home</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="/#posts">
-            
-            <span>Posts</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="/#publications_selected">
-            
-            <span>Publications</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="/files/Academic%20CV.pdf">
-            
-            <span>CV</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="/shiny/">
-            
-            <span>Apps</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-            
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.r-bloggers.com/author/r-on-will-hipson/" target="_blank" rel="noopener">
-            
-            <span>R-bloggers</span>
-            
-          </a>
-        </li>
-
-        
-        
-
-      
-
-        
-
-        
-
-        
-
-        
-
-      </ul>
-
     </div>
-  </div>
-</nav>
+</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-  
-  
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-8">
+                <div class="mx-0 mx-md-4">
+                    <h2>Posts about R</h2>
+                    <hr>
+                    <ul>
+                        
+                        <ul class="list-unstyled">
     
-  
-<div class="universal-wrapper pt-3">
-  <h1 itemprop="name">R</h1>
-
-  
-
-  
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                        <ul class="list-unstyled">
+    
+</ul>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-<div class="universal-wrapper">
-  
-
-  
-  
-  <div>
-    <h2><a href="/post/stan-random-slopes/varying_effects_stan/">Bayesian Varying Effects Models in R and Stan</a></h2>
-    <div class="article-style">
-      
-      In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the varying effects approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/markov-sim/markov_chain/">Visualizing a Markov Chain</a></h2>
-    <div class="article-style">
-      
-      A Markov Chain describes a sequence of states where the probability of transitioning from states depends only the current state. Markov chains are useful in a variety of computer science, mathematics, and probability contexts, also featuring prominently in Bayesian computation as Markov Chain Monte Carlo. Here, we’re going to look at a relatively simple breed of Markov chain and build up some intuition using simulations and animations (two of my favorite things).
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/bayesian_intro/binomial_gold/">An Intuitive Look at Binomial Probability in a Bayesian Context</a></h2>
-    <div class="article-style">
-      
-      Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/bicycle_app/bicycle_app/">Building a Shiny App for Cycling in Ottawa</a></h2>
-    <div class="article-style">
-      
-      This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don’t know, is the capital city of Canada. For a capital city, it’s fairly small, but it’s increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/bayesian_mlm/bayesian_mlm/">Bayesian Linear Mixed Models: Random Intercepts, Slopes, and Missing Data</a></h2>
-    <div class="article-style">
-      
-      This past summer, I watched a brilliant lecture series by Richard McElreath on Bayesian statistics. It honestly changed my whole outlook on statistics, so I couldn’t recommend it more (plus, McElreath is an engaging instructor). One of the most compelling cases for using Bayesian statistics is with a collection of statistical tools called linear mixed models or multilevel/hierarchical models. It’s common that data are grouped or clustered in some way.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/feedback_loops/feedback_loops/">Modeling Motivation and Emotion using Feedback Loops</a></h2>
-    <div class="article-style">
-      
-      If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to do something. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/emotion-simulation1/emotion_sim/">A Model and Simulation of Emotion Dynamics</a></h2>
-    <div class="article-style">
-      
-      Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/basketball_sim/basketball_sim/">Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</a></h2>
-    <div class="article-style">
-      
-      Sporting events host witness to a wide range of human emotion. The emotional ups and downs are especially clear among invested fans. Fans experience the joy and excitement of a triumphant comeback, or the anxiety and disappointment of a loss. It is particularly interesting to see how emotions differ from two opposing fan groups watching the same match.
-I decided to perform some simulations on how a crowd of fans would react during a basketball game.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/latent-profile/latent-profile/">Quick Example of Latent Profile Analysis in R</a></h2>
-    <div class="article-style">
-      
-      Latent Profile Analysis (LPA) tries to identify clusters of individuals (i.e., latent profiles) based on responses to a series of continuous variables (i.e., indicators). LPA assumes that there are unobserved latent profiles that generate patterns of responses on indicator items.
-Here, I will go through a quick example of LPA to identify groups of people based on their interests/hobbies. The data comes from the Young People Survey, available freely on Kaggle.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/post/emotion-network/emotion-network/">Network Analysis of Emotions</a></h2>
-    <div class="article-style">
-      
-      In this month’s post, I set out to create a visual network of emotions. Emotion Dynamics tells us that different emotions are highly interconnected, such that one emotion morphs into another and so on. I’ll be using a large dataset from an original study published in PLOS ONE by Trampe, Quoidbach, and Taquet (2015). Thanks to Google Dataset Search, I was able to locate this data. The data is collected from 11,000 participants who completed daily questionnaires on the emotions they felt at a given moment.
-      
-    </div>
-  </div>
-  
-
-  
-<nav>
-  <ul class="pagination justify-content-center">
-    
-    
-    <li class="page-item"><a class="page-link" href="/categories/r/page/2/">&raquo;</a></li>
-    
-  </ul>
-</nav>
-
-
-</div>
-<div class="container">
-  <footer class="site-footer">
-  
-  <p class="powered-by">
-    <a href="/privacy/">Privacy Policy</a>
-  </p>
-  
-
-  <p class="powered-by">
-    &copy; 2020 &middot; 
-
-    Powered by the
-    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
-    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
-
-    
-    <span class="float-right" aria-hidden="true">
-      <a href="#" id="back_to_top">
-        <span class="button_icon">
-          <i class="fas fa-chevron-up fa-2x"></i>
-        </span>
-      </a>
-    </span>
-    
-  </p>
-</footer>
-
-</div>
-
-
-<div id="modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Cite</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <pre><code class="tex hljs"></code></pre>
-      </div>
-      <div class="modal-footer">
-        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
-          <i class="fas fa-copy"></i> Copy
-        </a>
-        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
-          <i class="fas fa-download"></i> Download
-        </a>
-        <div id="modal-error"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
     
 
     
-    
-    
-    <script src="/js/mathjax-config.js"></script>
-    
-
-    
-    
-    
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
-
-      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js" defer></script>
         
-      
-
-      
-      
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
-      
-    
-
-    
-    
-
-    
-    
-    
-
-    
-    
-    <script>hljs.initHighlightingOnLoad();</script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/python.min.js" defer></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/stan.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.initHighlighting();
+            }, true);
+        </script>
     
 
     
 
     
     
+        
 
     
+</body>
 
-    
-    
-
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    <script src="/js/academic.min.70f0041f5a24c6a675ac218c98d7ef71.js"></script>
-
-    
-
-  </body>
 </html>
-
-
-

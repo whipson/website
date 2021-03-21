@@ -1,0 +1,791 @@
+---
+title: "Bayesian Varying Effects Models in R and Stan"
+author: "null"
+date: '2020-06-09'
+slug: varying_effects_stan
+math: true
+categories:
+- R
+- Stan
+- Bayesian
+- Linear Mixed Models
+- Multilevel Modeling
+- Tutorial
+tags:
+- R
+- Stan
+- Bayesian
+- Linear Mixed Models
+- Multilevel Modeling
+- Tutorial
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the <strong>varying effects</strong> approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole. And there is no better way to analyze this kind of data than with Bayesian statistics. Not only does Bayesian statistics give solutions that are directly interpretable in the language of probability, but Bayesian models can be infinitely more complex than Frequentist ones. This is crucial when dealing with multilevel models, which get complex quickly.</p>
+<p>A preview of what’s to come:</p>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><a href="https://mc-stan.org/">Stan</a> is the <em>lingua franca</em> for programming Bayesian models. You code your model using the Stan language and then run the model using a data science language like R or Python. Stan is extremely powerful, but it is also intimidating even for an experienced programmer. In this post, I’ll demonstrate how to code, run, and evaluate multilevel models in Stan.</p>
+<p>I assume a basic grasp of Bayesian logic (i.e., you understand priors, likelihoods, and posteriors). I’ve written some content introducing these terms <a href="https://willhipson.netlify.app/post/bayesian_intro/binomial_gold/">here</a> if you want to check that out first. I also assume familiarity with R and the <em>tidyverse</em> packages (in particular, ggplot2, dplyr, and purrr).</p>
+<p>You’ll need to install the <em>rstan</em> package to follow along. This installation is more involved than typical R packages. The instructions on <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">Stan’s website</a> will help you get started.</p>
+<p>One more note before we dive in. If you’re just starting out with Bayesian statistics in R and you have some familiarity with running Frequentist models using packages like <em>lme4</em>, <em>nlme</em>, or the base <em>lm</em> function, you may prefer starting out with more user-friendly packages that use Stan as a backend, but hide a lot of the complicated details. Some time back I wrote up a <a href="https://willhipson.netlify.app/post/bayesian_mlm/bayesian_mlm/">demonstration</a> using the <em>brms</em> package, which allows you to run Bayesian mixed models (and more) using familiar model syntax. I started with brms and am gradually building up competency in Stan. Stan is the way to go if you want more control and a deeper understanding of your models, but maybe brms is a better place to start. Regardless, I’ll try to give intuitive explanations behind the Stan code so that you can hopefully start writing it yourself someday. Don’t be discouraged if it doesn’t sink in right away.</p>
+<div id="simulating-the-data" class="section level1">
+<h1>Simulating the Data</h1>
+<p>We are creating <strong>repeated measures</strong> data where we have several days of observations for a group of participants (each denoted by <code class="R">pid</code>). Our outcome variable is <code class="R">y</code> and our continuous predictor is <code class="R">x</code>. We’ll imagine that the days of observation are random so we won’t need to model it as a grouping variable.</p>
+<p>Here’s the code to simulate the data we’ll use in this post. For now, it’s just enough to copy the code and run it so that you’ll have the data. This code will make more sense once we start working with the models.</p>
+<pre class="r"><code>library(tidyverse) # for ggplot2, dplyr, purrr, etc.
+theme_set(theme_bw(base_size = 14)) # setting ggplot2 theme
+
+library(mvtnorm)
+
+set.seed(12407) # for reproducibility
+
+# unstandardized means and sds
+real_mean_y &lt;- 4.25
+real_mean_x &lt;- 3.25
+real_sd_y &lt;- 0.45
+real_sd_x &lt;- 0.54
+
+N &lt;- 30 # number of people
+n_days &lt;- 7 # number of days
+total_obs &lt;- N * n_days
+
+sigma &lt;- 1 # population sd
+beta &lt;- c(0, 0.15) # average intercept and slope
+sigma_p &lt;- c(1, 1) # intercept and slope sds
+rho &lt;- -0.36 # covariance between intercepts and slopes
+
+cov_mat &lt;- matrix(c(sigma_p[1]^2, sigma_p[1] * sigma_p[2] * rho, sigma_p[1] * sigma_p[2] * rho, sigma_p[2]^2), nrow = 2)
+beta_p &lt;- rmvnorm(N, mean = beta, sigma = cov_mat) # participant intercepts and slopes
+
+x &lt;- matrix(c(rep(1, N * n_days), rnorm(N * n_days, 0, 1)), ncol = 2) # model matrix
+pid &lt;- rep(1:N, each = n_days) # participant id
+
+sim_dat &lt;- map_dfr(.x = 1:(N * n_days), ~data.frame(
+  mu = x[.x, 1] * beta_p[pid[.x], 1] + x[.x, 2] * beta_p[pid[.x], 2],
+  pid = pid[.x],
+  x = x[.x, 2]
+))
+
+sim_dat$y &lt;- rnorm(210, sim_dat$mu, sigma) # creating observed y from mu and sigma
+
+dat &lt;- sim_dat %&gt;%
+  select(-mu) %&gt;% # removing mu
+  mutate(y = real_mean_y + (y * real_sd_y), # unstandardize
+         x = real_mean_x + (x * real_sd_x)) # unstandardize</code></pre>
+<p>We now have a data frame that is very much like something you would come across in psychology research. Let’s perform a quick check on the data to see that the simulation did what we wanted it to.</p>
+<pre class="r"><code>dat %&gt;%
+  ggplot(aes(x = x, y = y, group = pid)) +
+  geom_point(color = &quot;cadetblue4&quot;, alpha = 0.80) +
+  geom_smooth(method = &#39;lm&#39;, se = FALSE, color = &quot;black&quot;) +
+  facet_wrap(~pid)</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can see a good amount of clustering at the participant level. Ok, so we have our data, now let’s analyze it.</p>
+</div>
+<div id="bayesian-workflow" class="section level1">
+<h1>Bayesian Workflow</h1>
+<p>A good Bayesian analysis includes the following steps:</p>
+<ol style="list-style-type: decimal">
+<li>Prior predictive checks.</li>
+<li>Model execution using Markov Chain Monte Carlo.</li>
+<li>Posterior predictive checks.</li>
+<li>Model comparison</li>
+</ol>
+<p>We’ll focus in this post of the first three, saving model comparison for another day. For the models in this post, I’ll give examples of each of the three steps. Steps 1 and 3 strongly leverage plotting techniques, so we’ll make good use of ggplot2.</p>
+<div id="example-with-simple-linear-regression" class="section level2">
+<h2>Example with Simple Linear Regression</h2>
+<p>It’s been said that linear regression is the ‘Hello World’ of statistics. To see the Bayesian workflow in action and get comfortable, we’ll start with a simple (albeit inappropriate) model for this data - one in which we completely ignore the grouping of the data within participants and instead treat each observation as completely independent from the others. This is <strong>not</strong> the way to analyze this data, but I use it as a simple demonstration of how to construct Stan code.</p>
+<p>In mathematical notation, here is our simple linear regression model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+  y_i \sim \text{Normal}(\mu, \sigma) \\
+  \mu_i= \beta_0 + \beta_1 x_i \\
+  \beta_0 \sim \text{Normal}(0, 1) \\
+  \beta_1 \sim \text{Normal}(0, 1) \\
+  \sigma \sim \text{Exponential}(1)
+\end{aligned}
+\]</span></p>
+<p>I give full credit to McElreath’s brilliant <em>Statistical Rethinking</em> (2020) for introducing me to this way of writing out models. It’s a bit jarring at first; myself having become accustomed to model formulas as one-liners. But once you understand it it’s a really elegant way of expressing the model. We start by expressing how the outcome variable, <span class="math inline">\(y\)</span>, is distributed: it has a <strong>deterministic</strong> part, <span class="math inline">\(\mu\)</span> (the mean), and an error, <span class="math inline">\(\sigma\)</span> (the standard deviation). <span class="math inline">\(\mu_i\)</span> is the expected value for each observation, and if you have encountered regressions before, you know that the expected value for a given observation is the intercept, <span class="math inline">\(\beta_0\)</span> + <span class="math inline">\(\beta_1\)</span> times the predictor <span class="math inline">\(x_i\)</span>.</p>
+<p>We then assign priors to the parameters. Priors encode our knowledge and uncertainty about the data <em>before</em> we run the model. We don’t use priors to get a desired result, we use priors because it makes sense. Without priors, our model initially ‘thinks’ that the data is just as likely to come from a normal distribution with a mean of 0 and sigma of 1 as it is to come from a distribution with a mean of 1,000 and a sigma of 400. True, the likelihood function (i.e., the probability of the data given the model) will sort things out when we have sufficient data, but we’ll see that priors play a particularly important role when we move on to varying effects models.</p>
+<p>The model formula above includes priors for <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\sigma\)</span>. But how do we know these are reasonable priors? (True, these are conventional priors and pose little threat, but let’s assume we don’t know that.). We’re going to perform some visual checks on our priors to ensure they are sensible.</p>
+<div id="prior-predictive-checks" class="section level3">
+<h3>Prior Predictive Checks</h3>
+<p>First, let’s see what different prior distributions look like. We’ll use conventional normal priors on <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. We’ll try out three different normal distributions.</p>
+<p>We create a grid of evenly spaced values. We then want to see the likelihood of these <code class="R">x</code>s in the context of three normal distributions with the same mean but different standard deviations. We use the <code class="R">map_dfr</code> function from the purrr package to iterate over the three different distributions and store the result in a data frame.</p>
+<pre class="r"><code>grid &lt;- seq(-3, 3, length.out = 1000) # evenly spaced values from -3 to 3
+
+b0_prior &lt;- map_dfr(.x = c(0.5, 1, 2), ~ data.frame( # .x represents the three sigmas
+  grid = grid,
+  b0 = dnorm(grid, mean = 0, sd = .x)),
+  .id = &quot;sigma_id&quot;)
+
+# create friendlier labels
+b0_prior &lt;- b0_prior %&gt;%
+  mutate(sigma_id = factor(sigma_id, labels = c(&quot;normal(0, 0.5)&quot;,
+                                                &quot;normal(0, 1)&quot;,
+                                                &quot;normal(0, 2)&quot;)))
+
+ggplot(b0_prior, aes(x = grid, y = b0)) +
+  geom_area(fill = &quot;cadetblue4&quot;, color = &quot;black&quot;, alpha = 0.90) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 0.85)) +
+  labs(x = NULL,
+       y = &quot;probability density&quot;,
+       title = latex2exp::TeX(&quot;Possible $\\beta_0$ (intercept) priors&quot;)) +
+  facet_wrap(~sigma_id, nrow = 3)</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We can see that the three distributions vary in terms of how spread out they are. We might say that the top distribution with mean 0 and sd 0.5 is more “confident” about the probability of values close to zero, or that it is more skeptical about extreme values. Flatter distributions allocate probability more evenly and are therefore more open to extreme values.</p>
+<p>This is all well and good, but looking at the raw probability densities doesn’t tell us much about what the priors assume about the data. We need to look at what kind of data is <em>compatible</em> with the priors. So this time we’ll generate regression lines from the <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> priors. Remember, all you need to create a line is an intercept and a slope!</p>
+<p>The trick this time is to generate intercepts and slopes from the different normal distributions. Again, we’ll stick with three different distributions, but now we use <code class="R">map2_dfr</code> to iterate over a <span class="math inline">\(\beta_0\)</span> prior and a <span class="math inline">\(\beta_1\)</span> prior.</p>
+<pre class="r"><code>b0b1 &lt;- map2_df(.x = c(0.5, 1, 2), .y = c(0.25, 0.5, 1), ~ data.frame(
+  b0 = rnorm(100, mean = 0, sd = .x), 
+  b1 = rnorm(100, mean = 0, sd = .y)), .id = &quot;sigma_id&quot;
+)
+
+# create friendlier labels
+b0b1 &lt;- b0b1 %&gt;%
+  mutate(sigma_id = factor(sigma_id, labels = c(&quot;b0 ~ normal(0, 0.5); b1 ~ normal(0, 0.25)&quot;,
+                                                &quot;b0 ~ normal(0, 1); b1 ~ normal(0, 0.50)&quot;,
+                                                &quot;b0 ~ normal(0, 2); b1 ~ normal(0, 1)&quot;)))
+
+ggplot(b0b1) +
+  geom_abline(aes(intercept = b0, slope = b1), color = &quot;cadetblue4&quot;, alpha = 0.75) +
+  scale_x_continuous(limits = c(-2, 2)) +
+  scale_y_continuous(limits = c(-3, 3)) +
+  labs(x = &quot;x&quot;,
+       y = &quot;y&quot;,
+       title = latex2exp::TeX(&quot;Sampling of lines from $\\beta_0$ and $\\beta_1$ priors&quot;)) +
+  facet_wrap(~sigma_id, nrow = 3)</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The more restrictive set of priors on the top constrains the lines to have intercepts and slopes close to zero, and you can see that the lines vary little from one another. In contrast, the weaker priors allow a much greater variety of intercept/slope combinations.</p>
+<p>Later we’ll see how to generate actual data from the priors, but for now let’s go ahead with the priors I’ve provided in the model formula and begin coding the model in Stan!</p>
+</div>
+</div>
+<div id="stan-basics" class="section level2">
+<h2>Stan Basics</h2>
+<p>Every Stan model code must contain the following three blocks:</p>
+<ol style="list-style-type: decimal">
+<li>Data - where you define the data and the dimensions of the data.</li>
+<li>Parameters - where you describe the unknown parameters that you want to estimate.</li>
+<li>Model - where you list the priors and define the likelihood function for the model.</li>
+</ol>
+<p>For an R user, the best way to write Stan code is to use RStudio’s built-in Stan file editor. If you have Stan installed, when you select the drop down options for a new file in RStudio, you can select ‘Stan file’. This lets you take advantage of autocompletion and syntax error detection.</p>
+<p>In the examples to follow I’ll make it clear which code snippets are in Stan code with a <code class="stan">// STAN CODE</code> marker at the beginning of the block (<code class="stan">//</code> denotes a comment and is not evaluated). For each model, I’ll explain each code block separately and then give the model code as a whole. Note that unlike in R, you cannot run Stan code lines one by one and see their output - a Stan file is only evaluated (compiled) when you execute the <code class="R">rstan</code> function in R, which we’ll see later.</p>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<p>The data block is where we define our observed variables. We also need to define lengths/dimensions of stuff, which can seem strange if you’re used to R or Python. We first declare an integer variable <code class="stan">N</code> to be the number of observations: <code class="stan">int N;</code> (note the use of semicolon to denote the end of a line). I’m also declaring an integer <code class="stan">K</code>, which is the number of predictors in our model. Note that I’m including the intercept in this count, so we end up with 2 predictors (2 columns in the model matrix).</p>
+<p>Now we supply actual data. We write <code class="stan">matrix[N, K]</code> to tell Stan that <code class="stan">x</code> is a <span class="math inline">\(N \times K\)</span> matrix. <code class="stan">y</code> is easier - just a vector of length <span class="math inline">\(N\)</span>.</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N; // number of observations
+  int K; // number of predictors + intercept
+  matrix[N, K] x; // x vector
+  vector[N] y; // y vector
+}</code></pre>
+</div>
+<div id="parameters" class="section level3">
+<h3>Parameters</h3>
+<p>Now we tell Stan the parameters in our model. These are the unobserved variables that we want to estimate. In this example, we have 3 parameters: <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma\)</span>. Like before, we first tell Stan the type of data this parameter will contain - in this case, <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are contained in a vector of length <span class="math inline">\(K\)</span> that we will sensibly call <code class="stan">beta</code>. <span class="math inline">\(\sigma\)</span> will just be a single <code class="stan">real</code> value (“real” means that the number can have a decimal point). We use <code class="stan">&lt;lower=0&gt;</code> to constrain it to be positive because it is impossible to have negative standard deviation.</p>
+<pre class="stan"><code>// STAN CODE
+parameters {
+  vector[K] beta; // intercept and slope parameters
+  real&lt;lower=0&gt; sigma; // constrained to be positive
+}</code></pre>
+</div>
+<div id="model" class="section level3">
+<h3>Model</h3>
+<p>The model block is where the action is at. We start with our priors. There should be a prior for each parameter declared above.</p>
+<pre class="stan"><code>// STAN CODE
+model {
+  vector[N] mu; // declaring a mu vector
+  
+  // priors
+  beta ~ normal(0, 1); // declares the same prior for intercept and slope
+  sigma ~ exponential(1); // using an exponential prior on sigma
+  
+  // likelihood
+  for(i in 1:N) {
+    mu[i] = x[i] * beta; // * is matrix multiplication in this context, where x[i] is the first row of x
+  }
+  
+  y ~ normal(mu, sigma);
+}
+</code></pre>
+<p>The part above where we define <span class="math inline">\(\mu\)</span> (<code class="stan">mu[i]</code>) can seem a bit strange. You may be wondering how the intercept and slope factor into this calculation. The compact notation hides some of the magic, which really isn’t very magical since it’s just a dot product. In matrix form, it looks like this:</p>
+<p><span class="math display">\[\mu_i=\begin{bmatrix}
+1&amp;x_i\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_0\\
+\beta_1
+\end{bmatrix}\]</span></p>
+<p>where <span class="math inline">\(1\)</span> is the intercept and <span class="math inline">\(x_i\)</span> is the <span class="math inline">\(i^{th}\)</span> value of the variable <span class="math inline">\(x\)</span>. Computing this dot product for each participant <code class="stan">i</code> gives you an expected value <code class="stan">mu</code> for each participant.</p>
+</div>
+<div id="full-stan-code" class="section level3">
+<h3>Full Stan Code</h3>
+<p>The full Stan code looks like this:</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N; // number of observations
+  int K; // number of predictors + intercept
+  matrix[N, K] x; // matrix of predictors
+  vector[N] y; // y vector
+}
+
+parameters {
+  vector[K] beta; // intercept and slope parameters
+  real&lt;lower=0&gt; sigma; // constrained to be positive
+}
+
+model {
+  vector[N] mu; // declaring a mu vector
+  
+  // priors
+  beta ~ normal(0, 1); // declares the same prior for intercept and slope
+  sigma ~ exponential(1); // using an exponential prior on sigma
+  
+  // likelihood
+  for(i in 1:N) {
+    mu[i] = x[i] * beta; // * is matrix multiplication in this context
+  }
+  
+  y ~ normal(mu, sigma);
+}
+</code></pre>
+<p>Saving this file will give it a .stan file extension. It’s a good idea to save it in your project directory. I’ll name this model <code class="R">"mod1.stan"</code>.</p>
+</div>
+<div id="running-the-model" class="section level3">
+<h3>Running the Model</h3>
+<p>Now we go back to R to run the model. If you haven’t already, load up <code class="R">rstan</code>.</p>
+<pre class="r"><code>library(rstan)</code></pre>
+<p>We need to put the data in a <strong>list</strong> for Stan. Everything that we declared in the data block of our Stan code should be entered into this list. We’ll also standardize the variables, so that they match up with our priors.</p>
+<pre class="r"><code>stan_dat &lt;- list(
+  N = nrow(dat), # using nrow() to get the number of rows (observations)
+  K = 2, # (1) intercept, (2) slope
+  x = matrix(c(rep(1, nrow(dat)), scale(dat$x)), ncol = 2), # model matrix (x standardized)
+  y = as.vector(scale(dat$y)) # standardized outcome. convert to vector to avoid issues with scale function
+)</code></pre>
+<p>Finally, we use the function <code class="R">stan</code> to run the model. We set <code class="R">chains</code> and <code class="R">cores</code> to 4, which will allow us to run 4 Markov chains in parallel.</p>
+<pre class="r"><code>stan_fit1 &lt;- stan(file = &quot;mod1.stan&quot;,
+                  data = stan_dat,
+                  chains = 4, cores = 4)</code></pre>
+</div>
+<div id="evaluating-the-model" class="section level3">
+<h3>Evaluating the Model</h3>
+<p>We can take a look at the parameters in the console by printing the model fit. We get posterior means, standard errors, and quantiles for each parameter. We also get things called <code class="R">n_eff</code> and <code class="R">Rhat</code>. These are indicators of how well Stan’s engine explored the parameter space (if this is cryptic, that’s ok), It’s enough for now to know that when <code>Rhat</code> is 1, things are good.</p>
+<pre class="r"><code>stan_fit1</code></pre>
+<pre><code>## Inference for Stan model: mod1.
+## 4 chains, each with iter=2000; warmup=1000; thin=1; 
+## post-warmup draws per chain=1000, total post-warmup draws=4000.
+## 
+##            mean se_mean   sd    2.5%     25%     50%     75%   97.5% n_eff Rhat
+## beta[1]    0.00    0.00 0.07   -0.13   -0.05    0.00    0.05    0.13  4608    1
+## beta[2]    0.09    0.00 0.07   -0.05    0.04    0.09    0.14    0.22  4188    1
+## sigma      1.00    0.00 0.05    0.91    0.97    1.00    1.03    1.10  3928    1
+## lp__    -106.17    0.03 1.22 -109.31 -106.75 -105.88 -105.27 -104.74  2311    1
+## 
+## Samples were drawn using NUTS(diag_e) at Sun Mar 21 15:40:57 2021.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).</code></pre>
+<p>But really, the best way to interpret the model is to <em>see</em> it. There are many ways to plot the samples produced in the model. One of the simplest ways is to use the <code class="R">bayesplot</code> library.</p>
+<pre class="r"><code>library(bayesplot)
+
+color_scheme_set(&quot;teal&quot;)
+
+mcmc_areas(stan_fit1, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;, &quot;sigma&quot;), prob = 0.89) +
+  scale_y_discrete(expand = c(0, 0))</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>For regression problems, it’s also good to see the regression lines in the posterior distribution. This tells us what kind of lines are compatible with the data and the priors. We use rstan’s <code class="R">extract</code> function to get samples from the posterior.</p>
+<pre class="r"><code>samples &lt;- as.data.frame(rstan::extract(stan_fit1, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;))) %&gt;%
+  rename(intercept = beta.1., slope = beta.2.) # friendlier variable names
+
+ggplot(samples) +
+  geom_abline(aes(intercept = intercept, slope = slope), color = &quot;cadetblue4&quot;, alpha = 0.20) +
+  geom_abline(aes(intercept = mean(intercept), slope = mean(slope)), color = &quot;black&quot;, size = 2) +
+  scale_x_continuous(limits = c(-1, 1)) +
+  scale_y_continuous(limits = c(-0.45, 0.45)) +
+  labs(x = &quot;x&quot;,
+       y = &quot;y&quot;,
+       title = &quot;Samples from beta posteriors&quot;,
+       subtitle = latex2exp::TeX(&quot;$N_{samples} = 4000$&quot;))</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Although the average posterior regression line has positive slope, it’s clear that many lines, even some with negative slope, are compatible.</p>
+<p>It doesn’t matter anyway because we know this model is bad - it ignores the clustering. Dealing with the clustering will be the objective for the remainder of this post.</p>
+</div>
+</div>
+</div>
+<div id="varying-intercepts-and-slopes" class="section level1">
+<h1>Varying Intercepts and Slopes</h1>
+<p>Now we’re going to repent for our previous sins and acknowledge that there is shared information among observations of the same participant. What exactly is meant by “shared information”? It means that observations should vary systematically within people as well as across people. The model above makes biased inferences about the effect of x on y because it pools (averages) information greedily.</p>
+<p>So our alternative is to assign each participant their own intercept and slope. But we don’t just want to treat participants as completely independent factors - there should be some common variability across all participants in the sample. So we need to walk a fine balance between pooling all the information and considering each participant as independent. This is where we use <strong>regularization</strong>. Regularization essentially keeps model parameters from getting too large or too certain. In the case of multilevel models, regularization uses some information from the population-level parameters (e.g., the grand mean) to estimate the cluster-specific parameters (e.g., individual participant intercepts and slopes).</p>
+<p>It may help to see the model formula:</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_i \sim \text{Normal}(\mu, \sigma) \\
+\mu_i = \beta_{0,\text{pid}} + \beta_{1, \text{pid}}x_i\\
+\begin{bmatrix}
+\beta_{0,\text{pid}}\\
+\beta_{1, \text{pid}}
+\end{bmatrix}
+\sim \text{MVNormal}\bigg(
+\begin{bmatrix}
+\beta_0\\
+\beta_1
+\end{bmatrix}
+, \Sigma
+\bigg)\\
+\Sigma = 
+\left(\begin{array}{cc}
+\sigma_{\beta_0}&amp;0\\
+0&amp;\sigma_{\beta_1}
+\end{array}\right)\Omega
+\left(\begin{array}{cc}
+\sigma_{\beta_0}&amp;0\\
+0&amp;\sigma_{\beta_1}
+\end{array}\right)
+\\
+\beta_0 \sim \text{Normal}(0, 1)\\
+\beta_1 \sim \text{Normal}(0, 1)\\
+\sigma_{\beta_0} \sim \text{Exponential}(1)\\
+\sigma_{\beta_1} \sim \text{Exponential}(1)\\
+\sigma \sim \text{Exponential}(1)\\
+\Omega \sim \text{LKJcorr(2)}
+\end{aligned}
+\]</span></p>
+<p>This is nightmare inducing. I’ll go through this slowly, but just know that it really takes time for this stuff to sink it. Don’t expect it to make perfect sense the first (or tenth) time.</p>
+<p>The definition of <span class="math inline">\(\mu\)</span> is thankfully familiar-ish. We now allow each participant (again, denoted by <span class="math inline">\(\text{pid}\)</span>) to have their own intercept and slope. But think for a moment… these intercepts and slopes don’t just come from nowhere. No, they come from a <strong>common distribution</strong> of intercepts and slopes. In other words, they come from a <strong>multivariate normal distribution</strong>!</p>
+<p>Aha! So that’s this unpleasant <span class="math inline">\(\text{MVNormal}\)</span> thing. A multivariate normal distribution takes a <em>vector</em> of mean parameters and a <em>covariance matrix</em> of standard deviations. (Contrast this with the standard normal distribution which takes a single mean parameter and a single SD).</p>
+<p>So then what’s this bizarre definition of <span class="math inline">\(\Sigma\)</span>? We want <span class="math inline">\(\Sigma\)</span> to be a covariance matrix, but how do we assign a prior to a covariance matrix, which has arbitrary scale and location? The trick is to assign the prior to a <em>correlation matrix</em> instead. This may make intuitive sense to you if you think of a correlation matrix as a standardized version of a covariance matrix. The prior for a correlation matrix is called an LKJ prior (you can see it at the bottom there, <span class="math inline">\(\text{LKJcorr}\)</span>). Values closer to 1 are less skeptical of strong correlations (-1, +1), whereas higher values (e.g., 2, 4) are more skeptical of strong correlation coefficients.</p>
+<p>Ok, so what’s this business with <span class="math inline">\(\Omega\)</span> sandwiched between these other matrices? These are copies of the same diagonal matrix, containing variances of the <span class="math inline">\(\beta\)</span> parameters on the diagonal. When you perform this weird-looking matrix multiplication you get a covariance matrix.</p>
+<p>What remain are the <strong>hyper-priors</strong>. This is where the adaptive regularization that I mentioned earlier happens. Take, for example, the prior <span class="math inline">\(\beta_0 \sim \text{Normal}(0, 1)\)</span>. This is the population-level intercept. But note (and this is super important!) that <span class="math inline">\(\beta_0\)</span> is a multinormal prior for <span class="math inline">\(\beta_{0, \text{pid}}\)</span>. So you can think of it as saying that the individual <span class="math inline">\(\beta_{0, \text{pid}}\)</span>s come from a common distribution defined by the hyper-prior <span class="math inline">\(\beta_0\)</span> (and its covariance with <span class="math inline">\(\beta_1\)</span>). By assigning a prior to <span class="math inline">\(\beta_0\)</span> we make the model somewhat skeptical of individual intercepts that vary strongly from the average.</p>
+<p>You can see similar patterns in the remaining hyper-priors. Now let’s move on to coding the model.</p>
+<div id="prior-predictive-simulation" class="section level3">
+<h3>Prior Predictive Simulation</h3>
+<p>Like we did with the simple linear regression, we should check that my choice of priors is reasonable. I chose conventional priors so we could probably get away without checking them. But it’s good to get into the practice of checking your priors, because there may be times that you have theoretical reasons to choose unconventional priors. Also, prior predictive checking makes it seem like you know what you’re doing and am I’m all for that.</p>
+<p>Things unfortunately get more complicated when we simulate data from a varying slopes model. Remember that we’re running the Bayesian inference process <em>in reverse</em>, so we start by simulating hyper-priors and then use those hyper-priors to generate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>. If you want to run this code yourself, you’ll need to install and load the <code class="R">rethinking</code> package to use <code class="R">rlkjcorr</code>. As of writing, it’s not on CRAN, so you’ll need to install it from GitHub (just uncomment the first couple of lines).</p>
+<pre class="r"><code>#library(devtools)
+#install_github(&quot;rmcelreath/rethinking&quot;)
+
+beta &lt;- rnorm(2, mean = 0, sd = 1) # b0 and b1
+sigma &lt;- rexp(1, 1) # population error
+sigma_p &lt;- rexp(2, 1) # sigma0 and sigma1
+Omega &lt;- rethinking::rlkjcorr(n = 1, K = 2, eta = 4) # from McElreath&#39;s rethinking package
+
+Sigma &lt;- diag(sigma_p) %*% Omega %*% diag(sigma_p)
+beta_p &lt;- rmvnorm(N, mean = beta, sigma = Sigma)
+
+x &lt;- matrix(c(rep(1, N * n_days), rnorm(N * n_days, mean = 0, sd = 1)), ncol = 2)
+pid &lt;- rep(1:30, each = 7)
+
+sim_dat &lt;- map_dfr(.x = 1:(N * n_days), ~data.frame(
+  mu = x[.x, 1] * beta_p[pid[.x], 1] + x[.x, 2] * beta_p[pid[.x], 2],
+  pid = pid[.x],
+  x = x[.x, 2]
+))
+
+sim_dat$y &lt;- rnorm(210, sim_dat$mu, sigma) # creating observed y from mu and sigma
+
+sim_dat &lt;- sim_dat %&gt;%
+  mutate(y = real_mean_y + (y * real_sd_y), # unstandardize
+         x = real_mean_x + (x * real_sd_x)) # unstandardize</code></pre>
+<p>After running this code, you will have an artificial dataset that was generated from one realization of the priors. We want to ensure that our choice of priors is reasonable - that they don’t result in wildly unexpected datasets. So we’ll visualize the scatter of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> variables.</p>
+<pre class="r"><code>library(gghighlight)
+
+sim_dat %&gt;%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 3, color = &quot;cadetblue4&quot;) +
+  gghighlight(pid == 4, use_group_by = FALSE, max_highlight = Inf, use_direct_label = FALSE) +
+  labs(title = &quot;Data simulated from priors&quot;,
+       subtitle = &quot;Green points are from a random participant.\nGrey points are from all other participants.&quot;)</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Note that I’ve highlighted one participant. We should see some degree of clustering of the highlighted points, but not always. Rerun the simulation and visualization several times to see how the priors can produce different datasets - some of which seem slightly implausible. If we saw anything truly bizarre, it would be cause to change our priors before analyzing the data for real.</p>
+</div>
+<div id="coding-the-model-in-stan" class="section level2">
+<h2>Coding the Model in Stan</h2>
+<p>We return to Stan to code the model. Now is a good time to revisit the model formula because those characters will make an appearance here. The Stan code can be highly discomforting - I know, I’ve been there (and still am to some degree). But I’ll walk through it slowly.</p>
+<div id="data-1" class="section level3">
+<h3>Data</h3>
+<p>The data block shouldn’t look too daunting compared to before. What’s new is that we have a number of observations <code class="stan">int N_obs</code> and a number of participants <code class="stan">int N_pts</code>. We also have a vector of participant ids <code class="stan">int pid[N_obs]</code>.</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N_obs; // number of observations
+  int N_pts; // number of participants
+  int K; // number of predictors + intercept
+  int pid[N_obs]; // participant id vector
+  matrix[N_obs, K] x; // matrix of predictors
+  real y[N_obs]; // y vector
+}</code></pre>
+<p>At first it may seem weird that <code class="stan">pid</code> has a length of <code class="stan">N_obs</code>; you may wonder why it’s not the length of <code class="stan">N_pts</code>. This is because this vector will have the participant identifier <em>for each</em> participant in the dataset. (Look at the column <code class="R">pid</code> in actual data to see what I mean).</p>
+</div>
+<div id="parameters-1" class="section level3">
+<h3>Parameters</h3>
+<p>Plenty different here. We start with <code class="stan">vector[K] beta_p[N_pts]</code>, which describes a vector of vectors. Specifically, we’re declaring an intercept and slope for each participant (<code class="stan">N_pts</code>). We then have <code class="stan">vector&lt;lower=0&gt;[K] sigma_p</code> which describes the SD for the participant intercepts and slopes. Now for the hyper-priors, <code class="stan">vector[K] beta</code> will hold the means for our intercept and slope hyper-priors and <code>corr_matrix[K] Omega</code> is the <span class="math inline">\(2 \times 2\)</span> correlation matrix that will be in the multivariate normal prior. Finally, <code>real&lt;lower=0&gt; sigma</code> is the population error that will be in the likelihood of <span class="math inline">\(y\)</span>.</p>
+<pre class="stan"><code>// STAN CODE
+parameters {
+  vector[K] beta_p[N_pts]; // ind participant intercept and slope coefficients by group
+  vector&lt;lower=0&gt;[K] sigma_p; // sd for intercept and slope
+  vector[K] beta; // intercept and slope hyper-priors
+  corr_matrix[K] Omega; // correlation matrix
+  real&lt;lower=0&gt; sigma; // population sigma
+}</code></pre>
+</div>
+<div id="model-1" class="section level3">
+<h3>Model</h3>
+<p>There are two novelties in this model compared to the simple regression. First, assigning a multivariate normal prior to <code class="stan">beta_p</code>, our participant intercepts and slopes, requires some unfamiliar notation. We use the <code class="stan">multi_normal</code> command. The first argument is <code class="stan">beta</code> because beta is our hyper-prior vector for the mean intercept and slope. What’s this <code class="stan">quad_form_diag</code> thing? It is a compact and efficient way of expressing <code>diag(sigma_p) * Omega * diag(sigma_p)</code>.</p>
+<p>The likelihood looks more or less the same as before. The main difference is that we multiply <code class="stan">x</code> by the <code class="stan">beta_p</code> parameter. The bracket indexing can be a bit confusing. The expression <code>beta_p[pid[i]]</code> is like saying “the intercept and slope for the <span class="math inline">\(i^{th}\)</span> participant id”.</p>
+<pre class="stan"><code>// STAN CODE
+model {
+  vector[N_obs] mu;
+  
+  // priors
+  beta ~ normal(0, 1);
+  Omega ~ lkj_corr(2);
+  sigma_p ~ exponential(1);
+  sigma ~ exponential(1);
+  beta_p ~ multi_normal(beta, quad_form_diag(Omega, sigma_p));
+  
+  // likelihood
+  for(i in 1:N_obs) {
+    mu[i] = x[i] * (beta_p[pid[i]]); // * is matrix multiplication in this context
+  }
+  
+  y ~ normal(mu, sigma);
+}</code></pre>
+</div>
+<div id="full-stan-code-1" class="section level3">
+<h3>Full Stan Code</h3>
+<p>Here is the full Stan code. I’ll save the file as “mod2.stan”.</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N_obs; // number of observations
+  int N_pts; // number of participants
+  int K; // number of predictors + intercept
+  int pid[N_obs]; // participant id vector
+  matrix[N_obs, K] x; // matrix of predictors
+  real y[N_obs]; // y vector
+}
+
+parameters {
+  vector[K] beta_p[N_pts]; // ind participant intercept and slope coefficients by group
+  vector&lt;lower=0&gt;[K] sigma_p; // sd for intercept and slope
+  vector[K] beta; // intercept and slope hyper-priors
+  corr_matrix[K] Omega; // correlation matrix
+  real&lt;lower=0&gt; sigma; // population sigma
+}
+
+model {
+  vector[N_obs] mu;
+  
+  // priors
+  beta ~ normal(0, 1);
+  Omega ~ lkj_corr(2);
+  sigma_p ~ exponential(1);
+  sigma ~ exponential(1);
+  beta_p ~ multi_normal(beta, quad_form_diag(Omega, sigma_p));
+  
+  // likelihood
+  for(i in 1:N_obs) {
+    mu[i] = x[i] * (beta_p[pid[i]]); // * is matrix multiplication in this context
+  }
+  
+  y ~ normal(mu, sigma);
+}</code></pre>
+</div>
+</div>
+<div id="running-the-model-1" class="section level2">
+<h2>Running the Model</h2>
+<p>Running the model is the same as before. We put the data in a list and point Stan to the model file.</p>
+<pre class="r"><code>stan_dat2 &lt;- list(
+  N_obs = nrow(dat),
+  N_pts = max(as.numeric(dat$pid)),
+  K = 2, # intercept + slope
+  pid = as.numeric(dat$pid),
+  x = matrix(c(rep(1, nrow(dat)), (dat$x - mean(dat$x)) / sd(dat$x)), ncol = 2), # z-score for x
+  y = (dat$y - mean(dat$y)) / sd(dat$y) # z-score for y
+)
+
+stan_fit2 &lt;- stan(file = &quot;mod2.stan&quot;,
+                  data = stan_dat2,
+                  chains = 4, cores = 4)
+
+stan_fit2</code></pre>
+<pre><code>## Inference for Stan model: mod2.
+## 4 chains, each with iter=2000; warmup=1000; thin=1; 
+## post-warmup draws per chain=1000, total post-warmup draws=4000.
+## 
+##               mean se_mean   sd   2.5%   25%   50%   75% 97.5% n_eff Rhat
+## beta_p[1,1]   0.00    0.00 0.23  -0.44 -0.15  0.00  0.15  0.43  7192    1
+## beta_p[1,2]  -0.86    0.00 0.21  -1.27 -1.00 -0.86 -0.71 -0.44  6184    1
+## beta_p[2,1]   0.04    0.00 0.21  -0.38 -0.11  0.04  0.18  0.45  6547    1
+## beta_p[2,2]  -0.31    0.00 0.25  -0.78 -0.47 -0.31 -0.14  0.17  6936    1
+## beta_p[3,1]  -0.91    0.00 0.22  -1.35 -1.06 -0.92 -0.77 -0.48  5747    1
+## beta_p[3,2]   0.58    0.00 0.28   0.01  0.40  0.59  0.77  1.12  6403    1
+## beta_p[4,1]  -0.19    0.00 0.23  -0.64 -0.34 -0.19 -0.04  0.27  6079    1
+## beta_p[4,2]   0.39    0.00 0.19   0.02  0.26  0.39  0.51  0.76  6798    1
+## beta_p[5,1]  -0.22    0.00 0.22  -0.66 -0.37 -0.22 -0.08  0.23  6051    1
+## beta_p[5,2]   0.66    0.00 0.30   0.06  0.46  0.65  0.85  1.25  6424    1
+## beta_p[6,1]   0.06    0.00 0.27  -0.46 -0.12  0.07  0.25  0.61  5440    1
+## beta_p[6,2]   0.17    0.00 0.36  -0.54 -0.07  0.17  0.41  0.88  5303    1
+## beta_p[7,1]   0.28    0.00 0.21  -0.13  0.14  0.28  0.43  0.68  6853    1
+## beta_p[7,2]  -0.38    0.00 0.18  -0.75 -0.51 -0.38 -0.26 -0.02  7162    1
+## beta_p[8,1]   0.84    0.00 0.23   0.38  0.68  0.84  1.00  1.28  5857    1
+## beta_p[8,2]  -0.25    0.00 0.25  -0.75 -0.42 -0.25 -0.09  0.24  5643    1
+## beta_p[9,1]  -0.15    0.00 0.21  -0.56 -0.30 -0.15  0.00  0.26  6594    1
+## beta_p[9,2]   0.36    0.00 0.22  -0.09  0.21  0.36  0.51  0.80  6256    1
+## beta_p[10,1]  0.44    0.00 0.22   0.01  0.30  0.44  0.59  0.87  6533    1
+## beta_p[10,2]  0.43    0.00 0.35  -0.25  0.19  0.42  0.65  1.12  6982    1
+## beta_p[11,1]  0.80    0.00 0.23   0.35  0.65  0.80  0.96  1.26  5670    1
+## beta_p[11,2] -0.27    0.00 0.27  -0.77 -0.45 -0.27 -0.08  0.27  6466    1
+## beta_p[12,1]  0.42    0.00 0.22   0.01  0.27  0.42  0.57  0.85  6607    1
+## beta_p[12,2] -0.28    0.00 0.19  -0.67 -0.41 -0.27 -0.14  0.10  7727    1
+## beta_p[13,1] -0.13    0.00 0.21  -0.55 -0.28 -0.14  0.01  0.28  6268    1
+## beta_p[13,2]  0.80    0.00 0.22   0.35  0.65  0.80  0.95  1.23  6691    1
+## beta_p[14,1] -0.10    0.00 0.26  -0.61 -0.28 -0.10  0.07  0.39  4745    1
+## beta_p[14,2] -0.20    0.00 0.23  -0.65 -0.35 -0.20 -0.04  0.26  5791    1
+## beta_p[15,1] -0.39    0.00 0.21  -0.80 -0.54 -0.39 -0.25  0.03  7142    1
+## beta_p[15,2]  0.04    0.00 0.18  -0.31 -0.08  0.04  0.17  0.40  7628    1
+## beta_p[16,1]  0.70    0.00 0.21   0.28  0.56  0.70  0.85  1.11  6007    1
+## beta_p[16,2]  0.05    0.00 0.28  -0.50 -0.14  0.05  0.24  0.59  5859    1
+## beta_p[17,1] -0.03    0.00 0.21  -0.46 -0.18 -0.03  0.11  0.38  6024    1
+## beta_p[17,2] -0.52    0.00 0.25  -1.04 -0.69 -0.52 -0.36 -0.04  6341    1
+## beta_p[18,1] -0.02    0.00 0.21  -0.41 -0.16 -0.03  0.12  0.38  5754    1
+## beta_p[18,2]  0.16    0.00 0.19  -0.22  0.03  0.16  0.29  0.54  6008    1
+## beta_p[19,1] -0.18    0.00 0.21  -0.57 -0.32 -0.18 -0.04  0.22  6106    1
+## beta_p[19,2]  0.28    0.00 0.28  -0.28  0.09  0.28  0.47  0.85  8208    1
+## beta_p[20,1]  0.70    0.00 0.21   0.29  0.56  0.70  0.85  1.14  6148    1
+## beta_p[20,2] -0.95    0.00 0.28  -1.48 -1.13 -0.95 -0.76 -0.40  6646    1
+## beta_p[21,1] -0.88    0.00 0.23  -1.34 -1.03 -0.88 -0.73 -0.44  5747    1
+## beta_p[21,2]  0.66    0.00 0.29   0.09  0.47  0.67  0.85  1.23  6673    1
+## beta_p[22,1] -0.14    0.00 0.21  -0.55 -0.27 -0.13  0.00  0.26  6794    1
+## beta_p[22,2] -0.41    0.00 0.17  -0.74 -0.52 -0.41 -0.30 -0.08  7402    1
+## beta_p[23,1] -0.71    0.00 0.21  -1.13 -0.85 -0.70 -0.56 -0.29  6476    1
+## beta_p[23,2]  1.48    0.00 0.19   1.10  1.34  1.48  1.61  1.84  6717    1
+## beta_p[24,1] -0.02    0.00 0.20  -0.43 -0.16 -0.02  0.11  0.37  6629    1
+## beta_p[24,2]  0.57    0.00 0.20   0.19  0.44  0.57  0.70  0.96  6941    1
+## beta_p[25,1]  0.39    0.00 0.23  -0.06  0.24  0.39  0.54  0.84  6162    1
+## beta_p[25,2] -0.25    0.00 0.24  -0.72 -0.41 -0.25 -0.09  0.22  6687    1
+## beta_p[26,1] -0.24    0.00 0.22  -0.68 -0.39 -0.23 -0.08  0.19  7480    1
+## beta_p[26,2]  0.00    0.00 0.23  -0.47 -0.15  0.00  0.15  0.46  6449    1
+## beta_p[27,1] -0.27    0.00 0.22  -0.69 -0.42 -0.27 -0.12  0.17  5913    1
+## beta_p[27,2] -0.18    0.00 0.16  -0.50 -0.29 -0.18 -0.07  0.13  5767    1
+## beta_p[28,1]  0.84    0.00 0.22   0.41  0.69  0.84  0.98  1.26  6404    1
+## beta_p[28,2] -0.50    0.00 0.21  -0.90 -0.65 -0.50 -0.36 -0.10  7346    1
+## beta_p[29,1] -0.03    0.00 0.21  -0.45 -0.17 -0.03  0.12  0.40  6808    1
+## beta_p[29,2]  0.56    0.00 0.26   0.04  0.38  0.55  0.74  1.07  6434    1
+## beta_p[30,1] -0.19    0.00 0.21  -0.61 -0.33 -0.19 -0.05  0.24  6488    1
+## beta_p[30,2]  1.10    0.00 0.28   0.55  0.90  1.09  1.29  1.65  6733    1
+## sigma_p[1]    0.53    0.00 0.09   0.38  0.47  0.52  0.58  0.72  4388    1
+## sigma_p[2]    0.63    0.00 0.10   0.46  0.56  0.62  0.69  0.85  4487    1
+## beta[1]       0.02    0.00 0.10  -0.19 -0.04  0.02  0.09  0.23  5047    1
+## beta[2]       0.10    0.00 0.12  -0.14  0.02  0.10  0.18  0.34  5232    1
+## Omega[1,1]    1.00     NaN 0.00   1.00  1.00  1.00  1.00  1.00   NaN  NaN
+## Omega[1,2]   -0.45    0.00 0.18  -0.75 -0.58 -0.46 -0.33 -0.07  4125    1
+## Omega[2,1]   -0.45    0.00 0.18  -0.75 -0.58 -0.46 -0.33 -0.07  4125    1
+## Omega[2,2]    1.00    0.00 0.00   1.00  1.00  1.00  1.00  1.00  4165    1
+## sigma         0.62    0.00 0.04   0.56  0.60  0.62  0.64  0.69  3513    1
+## lp__          0.02    0.17 6.54 -13.60 -4.06  0.26  4.52 11.79  1411    1
+## 
+## Samples were drawn using NUTS(diag_e) at Sun Mar 21 15:41:38 2021.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).</code></pre>
+<p>We get a warning about some NA R-hat values and low Effective Samples Size. In this case, these are false alarms - they are merely artifacts of the correlation matrix <span class="math inline">\(\Omega\)</span> having values that are invariably 1 (like a good correlation matrix should).</p>
+<pre class="r"><code>mcmc_areas(stan_fit2, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;, &quot;sigma_p[1]&quot;, &quot;sigma_p[2]&quot;, &quot;sigma&quot;), prob = 0.89) +
+  scale_y_discrete(expand = c(0, 0))</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>When we look at the posterior densities of some of the parameters. We can see that the overall error, sigma, is lower than in the simple regression. This is because the variance in <span class="math inline">\(y\)</span> is now shared across population <em>and</em> participant-level error. It’s also worth noting that the model is less certain about the population intercept and slope. The means are roughly the same, but the distribution is more spread out. Because there is participant-level variation in the intercepts and slopes, the model views the population estimates with greater uncertainty.</p>
+<div id="visualizing-correlated-slopes-and-intercepts" class="section level3">
+<h3>Visualizing Correlated Slopes and Intercepts</h3>
+<p>If you look further down the list of parameters in the model output, you’ll see the four <span class="math inline">\(\Omega\)</span>, <code class="stan">Omega</code> parameters. These describe the correlation matrix for participant intercepts and slopes. A negative correlation here, tells us that as a participant’s intercept increases, their slope decreases. Let’s plot the participant-specific intercepts and slopes to see this.</p>
+<p>We use <code class="R">extract</code> to get the <code class="R">beta_p</code> parameters from the model. Then, using the <code class="R">apply</code> function, we calculate the average of the samples for each <code>beta_p</code>.</p>
+<pre class="r"><code>beta_p_samples &lt;- rstan::extract(stan_fit2, pars = &quot;beta_p&quot;)
+beta_p &lt;- as.data.frame(apply(beta_p_samples$beta_p, 2:3, mean)) %&gt;%
+  rename(intercept = V1, slope = V2)
+
+beta_p %&gt;%
+  ggplot(aes(x = intercept, y = slope)) +
+  geom_point(color = &quot;cadetblue4&quot;, alpha = 0.75, size = 3) +
+  labs(title = &quot;Participant intercept and slope are negatively correlated&quot;)</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>We want to infer beyond the participants in our sample though, so let’s look at the posterior samples for our <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> parameters. Like with the simple linear regression, we’re going to visualize all the regression lines in the posterior distribution - only now partitioned by intercept. We’ll split the samples into three equal groups based on their intercept. This is of course an arbitrary choice and we’re not implying that there are three distinct groups here. We just want to see how the slope varies by intercept and it’s a lot easier to do this by splitting the samples.</p>
+<pre class="r"><code>beta_sim &lt;- as.data.frame(rstan::extract(stan_fit2, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;))) %&gt;%
+  rename(intercept = beta.1., slope = beta.2.)
+
+beta_sim %&gt;%
+  mutate(int_grp = factor(ntile(intercept, 3), labels = c(&quot;[0-33%)&quot;, &quot;[33%-66%)&quot;, &quot;[66%-100%)&quot;))) %&gt;%
+  group_by(int_grp) %&gt;%
+  mutate(av_int = mean(intercept),
+         av_slope = mean(slope)) %&gt;%
+  ungroup() %&gt;%
+  ggplot() +
+  geom_abline(aes(intercept = intercept, slope = slope), color = &quot;cadetblue4&quot;, alpha = 0.20) +
+  geom_abline(aes(intercept = av_int, slope = av_slope), color = &quot;black&quot;, size = 2) +
+  scale_x_continuous(limits = c(-1, 1)) +
+  scale_y_continuous(limits = c(-0.75, 0.75)) +
+  labs(x = &quot;x&quot;,
+       y = &quot;y&quot;,
+       title = &quot;Relation between x and y as a function of intercept.&quot;,
+       subtitle = &quot;Intercept percentile&quot;) +
+  facet_wrap(~int_grp) +
+  theme(plot.subtitle = element_text(hjust = 0.5))</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Yes, the slope seems to be getting shallower as the intercept increases.</p>
+<p>Although I find the ‘many lines’ approach to be appealing, it is more common to present figures displaying means and <strong>compatibility intervals</strong> (Bayesian equivalent of a confidence interval). We start by creating a sequence of <code class="R">x</code> values over a specified range. Since we’re dealing in standardized units, we’ll make it from -1 to 1. Then for each value of <code class="R">x</code> in this sequence we calculate the expected value of y using the <code class="R">beta</code> samples.</p>
+<p>I again make use of dplyr’s <code class="R">map_dfr</code> function to iterate over each value of <code class="R">x</code> and I also bin the intercept into the three groups from before. After this step, we have a large dataframe of 100 <code class="R">x</code> values for each of 4000 samples. Then again for each value of <code class="R">x</code> we calculate the mean (mu) of the samples and its lower and upper bound for the compatiblity interval. Here I adopt McElreath’s convention of 89% compatability interval, but there’s nothing more special about this value than, say, 95%.</p>
+<pre class="r"><code>seq(-1, 1, length.out = 100) %&gt;% # create a sequence of evenly spaced numbers from -1 to 1
+  map_dfr(~ data.frame(y = beta_sim$intercept + .x * beta_sim$slope,
+                       x = .x,
+                       int = factor(ntile(beta_sim$intercept, 3), levels = c(1, 2, 3),
+                                    labels = c(&quot;[0-33%)&quot;, &quot;[33%-66%)&quot;, &quot;[66%-100%)&quot;)))) %&gt;%
+  group_by(x, int) %&gt;%
+  summarise(mu = mean(y),
+            lower = quantile(y, probs = 0.055),
+            upper = quantile(y, probs = 0.945)) %&gt;%
+  ungroup() %&gt;%
+  ggplot() +  
+  geom_ribbon(aes(x = x, ymin = lower, ymax = upper), fill = &quot;cadetblue4&quot;, alpha = 0.50) +
+  geom_line(aes(x = x, y = mu), color = &quot;black&quot;, size = 2) +
+  labs(title = &quot;Relation between x and mu as a function of intercept&quot;,
+       subtitle = &quot;Intercept percentile&quot;,
+       caption = &quot;Shaded area = 89% compatibility interval&quot;) +
+  facet_wrap(~int) +
+  theme(plot.subtitle = element_text(hjust = 0.5))</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Now that’s a publishable figure!</p>
+</div>
+</div>
+<div id="a-more-efficient-varying-slopes-model" class="section level2">
+<h2>A More Efficient Varying Slopes Model</h2>
+<p>Our toy data played nicely with us, but this is rarely the case in the real world. Chances are if you perform the varying slopes model on your own data you’ll encounter efficiency issues and errors. Namely, you’ll be confronted with <strong>divergent transitions</strong>. These occur when the Hamiltonian Monte Carlo simulation (Stan’s engine) sort of “falls off the track”, so to speak. I won’t elaborate on the math behind divergent transitions (you can find out more <a href="https://stats.stackexchange.com/questions/432479/divergent-transitions-in-stan#:~:text=1%20Answer&amp;text=A%20divergent%20transition%20in%20Stan,is%20geometrically%20difficult%20to%20explore.">here</a>), but I will show how to avoid them by rewriting the model.</p>
+<p>You’ll hear people say <strong>re-parameterization</strong> when they’re talking about this. The more efficient, so-called <strong>non-centered parameterization</strong> is certainly more efficient, but has some features that initially seem arbitrary. Although the model has different parameters, it is still mathematically the same model. Let’s walk through the Stan code, highlighting the new features.</p>
+<p>The data block is the same. In the parameters block we’re going to create a matrix, <code class="stan">z_p</code>, that will hold our standardized intercepts and slopes (that’s what the z stands for). The big novelty though is that we’re expressing the correlation matrix as a <code class="stan">cholesky_factor_corr</code>. Without going deep into the weeds, a <strong>Cholesky factorization</strong> of a matrix takes a positive definite matrix (like a correlation matrix) and decomposes it into a product of a lower triangular matrix and its transpose. For linear algebraic reasons, this speeds up the efficiency.</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N_obs; // number of observations
+  int N_pts; // number of participants
+  int K; // number of predictors + intercept
+  int pid[N_obs]; // participant id vector
+  matrix[N_obs, K] x; // matrix of predictors
+  real y[N_obs]; // y vector
+}
+
+parameters {
+  matrix[K, N_pts] z_p; // matrix of intercepts and slope
+  vector&lt;lower=0&gt;[K] sigma_p; // sd for intercept and slope
+  vector[K] beta; // intercept and slope hyper-priors
+  cholesky_factor_corr[K] L_p; // Cholesky correlation matrix
+  real&lt;lower=0&gt; sigma; // population sigma
+}</code></pre>
+<p>We have to add a new block called <code class="stan">transformed parameters</code>. In this block we can apply transformations to our parameters before calculating the likelihood. What I’m doing here is creating a new matrix of intercepts and slopes called <code class="stan">z</code> and then performing some matrix algebra. <code class="stan">diag_pre_multiply</code> is an efficient way of doing <code class="stan">diag(sigma_p) * L_p</code>.</p>
+<pre class="stan"><code>// STAN CODE
+transformed parameters {
+  matrix[K, N_pts] z; // non-centered version of beta_p
+  z = diag_pre_multiply(sigma_p, L_p) * z_p; 
+}</code></pre>
+<p>For the model block we don’t need to change very much. We use a <code class="stan">lkj_corr_cholesky(2)</code> prior for <code class="stan">L_p</code>. The likelihood itself is less elegantly expressed than before. Again, the bracket indexing can be confusing. Just remember that <code class="stan">z</code> is a matrix where column 1 has the participant intercepts and column 2 has the participant slopes. We still have <code class="stan">x</code> as a model matrix but we’re only using the second column, so if we wanted to just have it as a vector in the data that would be fine.</p>
+<pre class="stan"><code>// STAN CODE
+model {
+  vector[N_obs] mu;
+  
+  // priors
+  beta ~ normal(0, 1);
+  sigma ~ exponential(1);
+  sigma_p ~ exponential(1);
+  L_p ~ lkj_corr_cholesky(2);
+  to_vector(z_p) ~ normal(0, 1);
+  
+  // likelihood
+  for(i in 1:N_obs) {
+    mu[i] = beta[1] + z[1, pid[i]] + (beta[2] + z[2, pid[i]]) * x[i, 2];
+  }
+  y ~ normal(mu, sigma);
+}</code></pre>
+<p>Finally, to get back the correlation matrix for the intercepts and slopes, we add one more block to the code: <code class="stan">generated quantities</code>. We want to get back <code>Omega</code>, so we use <code>multiply_lower_tri_self_transpose(L_p)</code> to ‘multiply the lower triangular matrix by itself transposed’ (remember what I said about Cholesky factorization).</p>
+<pre class="stan"><code>// STAN CODE
+generated quantities {
+  matrix[2, 2] Omega;
+  Omega = multiply_lower_tri_self_transpose(L_p);
+}</code></pre>
+<div id="full-stan-code-2" class="section level3">
+<h3>Full Stan Code</h3>
+<p>Here’s the full non-centered parameterization code.</p>
+<pre class="stan"><code>// STAN CODE
+data {
+  int N_obs; // number of observations
+  int N_pts; // number of participants
+  int K; // number of predictors + intercept
+  int pid[N_obs]; // participant id vector
+  matrix[N_obs, K] x; // matrix of predictors
+  real y[N_obs]; // y vector
+}
+
+parameters {
+  matrix[K, N_pts] z_p; // matrix of intercepts and slope
+  vector&lt;lower=0&gt;[K] sigma_p; // sd for intercept and slope
+  vector[K] beta; // intercept and slope hyper-priors
+  cholesky_factor_corr[K] L_p; // Cholesky correlation matrix
+  real&lt;lower=0&gt; sigma; // population sigma
+}
+
+transformed parameters {
+  matrix[K, N_pts] z; // non-centered version of beta_p
+  z = diag_pre_multiply(sigma_p, L_p) * z_p; 
+}
+
+model {
+  vector[N_obs] mu;
+  
+  // priors
+  beta ~ normal(0, 1);
+  sigma ~ exponential(1);
+  sigma_p ~ exponential(1);
+  L_p ~ lkj_corr_cholesky(2);
+  to_vector(z_p) ~ normal(0, 1);
+  
+  // likelihood
+  for(i in 1:N_obs) {
+    mu[i] = beta[1] + z[1, pid[i]] + (beta[2] + z[2, pid[i]]) * x[i, 2];
+  }
+  y ~ normal(mu, sigma);
+}
+
+generated quantities {
+  matrix[2, 2] Omega;
+  Omega = multiply_lower_tri_self_transpose(L_p);
+}
+</code></pre>
+<p>I’ll save it to the working directory as “mod2-nc.stan”.</p>
+</div>
+</div>
+<div id="running-the-model-2" class="section level2">
+<h2>Running the Model</h2>
+<p>Running the model is the same as before. The data is exactly the same, but for symmetry I’ve renamed it <code class="R">stan_dat3</code>.</p>
+<pre class="r"><code>stan_dat3 &lt;- list(
+  N_obs = nrow(dat),
+  N_pts = max(as.numeric(dat$pid)),
+  K = 2, # intercept + slope
+  pid = as.numeric(dat$pid),
+  x = matrix(c(rep(1, nrow(dat)), (dat$x - mean(dat$x)) / sd(dat$x)), ncol = 2), # z-score for x
+  y = (dat$y - mean(dat$y)) / sd(dat$y) # z-score for y
+)
+
+stan_fit3 &lt;- stan(file = &quot;mod2-nc.stan&quot;,
+                  data = stan_dat3,
+                  chains = 4, cores = 4)
+
+stan_fit3</code></pre>
+<p><img src="/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p>Looking at the posterior densities for the population betas, sigma, and participant sigmas, they are same as the previous model with only minor differences in sampling error.</p>
+<p>In summary, use the non-centered parameterization (the one with the Cholesky factorization) when you find your varying effects models misbehaving.</p>
+</div>
+</div>
+<div id="resources" class="section level1">
+<h1>Resources</h1>
+<p>I couldn’t end this post without recommending Richard McElreath’s <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical Rethinking</em></a>. It is a bastion of Bayesian knowledge and truly a joy to read. There are also several blog posts that I recommend if you’re looking for more multilevel Stan fun:</p>
+<ul>
+<li><a href="https://www.alexpghayes.com/blog/some-things-ive-learned-about-stan/">SOME THINGS I’VE LEARNED ABOUT STAN</a></li>
+<li><a href="https://mlisi.xyz/post/bayesian-multilevel-models-r-stan/">Bayesian multilevel models using R and Stan (part 1)</a></li>
+</ul>
+</div>

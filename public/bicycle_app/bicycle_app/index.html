@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Building a Shiny App for Cycling in Ottawa - Will Hipson </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="Will Hipson" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://willhipson.netlify.app/bicycle_app/bicycle_app/" />
+    <meta property="og:title" content="Building a Shiny App for Cycling in Ottawa" />
+    <meta property="og:image" content="https://willhipson.netlify.app" />
+    <meta property="og:description" content="" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="Building a Shiny App for Cycling in Ottawa" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app" />
+
+    <link rel="canonical" href="https://willhipson.netlify.app/bicycle_app/bicycle_app/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://willhipson.netlify.appcss/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://willhipson.netlify.app/images/favicon.png">
+
+    
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    
+</head>
+
+<body>
+    
+    <div class="mt-xl header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="https://willhipson.netlify.app">
+                    <h1 class="name">whipson blogs</h1>
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <ul class="nav nav-primary">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
+                        
+                        Home
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
+                        
+                        About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/whipson">
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://twitter.com/whipson3">
+                        
+                        Twitter
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/index.xml">
+                        
+                        Subscribe
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-8">
+                    <h1 class="mx-0 mx-md-4">Building a Shiny App for Cycling in Ottawa</h1>
+                    <div class="markdown">
+                        
+    
+<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="https://willhipson.netlify.app/rmarkdown-libs/leaflet/leaflet.css" rel="stylesheet" />
+<script src="https://willhipson.netlify.app/rmarkdown-libs/leaflet/leaflet.js"></script>
+<link href="https://willhipson.netlify.app/rmarkdown-libs/leafletfix/leafletfix.css" rel="stylesheet" />
+<script src="https://willhipson.netlify.app/rmarkdown-libs/proj4/proj4.min.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/Proj4Leaflet/proj4leaflet.js"></script>
+<link href="https://willhipson.netlify.app/rmarkdown-libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+<script src="https://willhipson.netlify.app/rmarkdown-libs/leaflet-binding/leaflet.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/leaflet-providers/leaflet-providers_1.9.0.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/leaflet-providers-plugin/leaflet-providers-plugin.js"></script>
+
+
+<p>This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don’t know, is the capital city of Canada. For a capital city, it’s fairly small, but it’s increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day. What’s great is that this <a href="https://open.ottawa.ca/datasets/bicycle-trip-counters">data is shared publicly</a> by the city.</p>
+<p>I started looking into this data, <a href="https://github.com/whipson/Ottawa_Bicycles/blob/master/cleaning.R">cleaned it up</a>, and eventually put it together in an <a href="https://whipson.shinyapps.io/Ottawa_Bike_Counters/">interactive web app</a>:</p>
+<div class="figure">
+<img src="https://willhipson.netlify.app/post/bicycle_app/Bicycle_App_files/ottawa%20bike%20counters.png" alt="" />
+<p class="caption">Click <a href="https://whipson.shinyapps.io/Ottawa_Bike_Counters/">here</a> to go the app.</p>
+</div>
+<pre class="r"><code>library(tidyverse)
+library(leaflet)
+library(leafpop)</code></pre>
+<p>We’ll start by reading in the data from the GitHub repositiory. There’s a lot of missing data, so much that R gets confused about the data structure of some of the columns. We need to add another argument to <em>read_csv</em> telling it the type of data in each column. The <em>col_types</em> argument takes a letter for each column, with <em>?</em> meaning that we let R decide what the data is and <em>n</em> meaning ‘numeric’.</p>
+<pre class="r"><code>bikes &lt;- read_csv(&quot;https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/bikes_app.csv&quot;, col_types = c(&quot;?nnnnnnnnnnnnnn&quot;))
+
+bikes</code></pre>
+<pre><code>## # A tibble: 3,560 x 15
+##    date                alexandra_bridge eastern_canal ottawa_river western_canal
+##    &lt;dttm&gt;                         &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+##  1 2010-01-01 00:00:00                0             0            0            NA
+##  2 2010-01-02 00:00:00                0             0            0            NA
+##  3 2010-01-03 00:00:00                0             0            0            NA
+##  4 2010-01-04 00:00:00                0             0            0            NA
+##  5 2010-01-05 00:00:00                0             0            0            NA
+##  6 2010-01-06 00:00:00                0             0            0            NA
+##  7 2010-01-07 00:00:00                0             0            0            NA
+##  8 2010-01-08 00:00:00                0             0            0            NA
+##  9 2010-01-09 00:00:00                0             0            0            NA
+## 10 2010-01-10 00:00:00                0             0            0            NA
+## # … with 3,550 more rows, and 10 more variables: laurier_bay &lt;dbl&gt;,
+## #   laurier_lyon &lt;dbl&gt;, laurier_metcalfe &lt;dbl&gt;, somerset_bridge &lt;dbl&gt;,
+## #   otrain_young &lt;dbl&gt;, otrain_gladstone &lt;dbl&gt;, otrain_bayview &lt;dbl&gt;,
+## #   portage_bridge &lt;dbl&gt;, adawe_crossing_a &lt;dbl&gt;, adawe_crossing_b &lt;dbl&gt;</code></pre>
+<p>Each row is a day and the columns are bicycle counters spread across the city. Let’s start by creating the graphs we want in the Shiny app. It’s easier to do this outside of the Shiny framework first. We’ll start by plotting total bicycle counts over time.</p>
+<pre class="r"><code>bikes_total &lt;- bikes %&gt;%
+  pivot_longer(names_to = &quot;counter&quot;, values_to = &quot;count&quot;, -date) %&gt;%
+  group_by(date) %&gt;%
+  mutate(daily_total = sum(count, na.rm = TRUE))
+
+bikes_total</code></pre>
+<pre><code>## # A tibble: 49,840 x 4
+## # Groups:   date [3,560]
+##    date                counter          count daily_total
+##    &lt;dttm&gt;              &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt;
+##  1 2010-01-01 00:00:00 alexandra_bridge     0           0
+##  2 2010-01-01 00:00:00 eastern_canal        0           0
+##  3 2010-01-01 00:00:00 ottawa_river         0           0
+##  4 2010-01-01 00:00:00 western_canal       NA           0
+##  5 2010-01-01 00:00:00 laurier_bay         NA           0
+##  6 2010-01-01 00:00:00 laurier_lyon        NA           0
+##  7 2010-01-01 00:00:00 laurier_metcalfe    NA           0
+##  8 2010-01-01 00:00:00 somerset_bridge     NA           0
+##  9 2010-01-01 00:00:00 otrain_young        NA           0
+## 10 2010-01-01 00:00:00 otrain_gladstone    NA           0
+## # … with 49,830 more rows</code></pre>
+<p>And now to plot it over time:</p>
+<pre class="r"><code>bikes_total %&gt;%
+  ggplot(aes(x = date, y = daily_total)) +
+  geom_line(size = .5, alpha = .80, color = &quot;#36648B&quot;) +
+  scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+  labs(x = NULL,
+       y = &quot;Count&quot;,
+       title = &quot;Total Bicycle Crossings in Ottawa&quot;,
+       subtitle = &quot;Jan 2010 - Sep 2019&quot;) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_text(size = 16))</code></pre>
+<p><img src="https://willhipson.netlify.app/bicycle_app/Bicycle_App_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>There’s clear seasonality, with bicycle crossings peaking in the summer months and troughing in the winter. There also appears to be a trend, increasing from 2010 to 2017, then leveling out. Does this mean that bicycling is leveling off in Ottawa? We may want to look at specific counters to get a better sense of this.</p>
+<pre class="r"><code>bikes %&gt;%
+  pivot_longer(names_to = &quot;counter&quot;, values_to = &quot;count&quot;, -date) %&gt;% 
+  ggplot(aes(x = date, y = count)) +
+  geom_line(size = .5, alpha = .80, color = &quot;#36648B&quot;) +
+  labs(x = NULL,
+       y = &quot;Count&quot;,
+       title = &quot;Bicycle Crossings in Ottawa by Location&quot;,
+       subtitle = &quot;Jan 2010 - Sep 2019&quot;) +
+  facet_wrap(~counter) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_blank())</code></pre>
+<pre><code>## Warning: Removed 2191 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="https://willhipson.netlify.app/bicycle_app/Bicycle_App_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>This graph tells us that we have to be a bit careful about interpreting the total count because some counters are introduced later or go out of commission. The drop in total counts for 2018 could be due to the Western Canal counter going offline that year. What about average counts over time?</p>
+<pre class="r"><code>bikes %&gt;%
+  pivot_longer(names_to = &quot;counter&quot;, values_to = &quot;count&quot;, -date) %&gt;%
+  group_by(date) %&gt;%
+  mutate(daily_average = mean(count, na.rm = TRUE)) %&gt;%
+  ggplot(aes(x = date, y = daily_average)) +
+  geom_line(size = .5, alpha = .80, color = &quot;#36648B&quot;) +
+  scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+  labs(x = NULL,
+       y = &quot;Count&quot;,
+       title = &quot;Average Bicycle Crossings in Ottawa&quot;,
+       subtitle = &quot;Jan 2010 - Sep 2019&quot;) +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = .5),
+        axis.text.x = element_text(size = 16))</code></pre>
+<p><img src="https://willhipson.netlify.app/bicycle_app/Bicycle_App_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>There may be an upward trend, but it’s less clear compared to the total count. We again have to be careful because earlier years have fewer counters online so the average is based on less data. However, knowing both the total and the average counts gives us a pretty clear picture of how cycling is changing over time in Ottawa.</p>
+<div id="maps-with-leaflet" class="section level2">
+<h2>Maps with Leaflet</h2>
+<p>Now we’ll add the functionality of an interactive map - one that shows where the counters are located geographically and allows the user to select specific counters. Earlier we loaded up the <em>leaflet</em> and <em>leafpop</em> packages. These will help us construct our map of Ottawa.</p>
+<p>We’ll also need the latitude and longitude coordinates of the counters. Using information from the <a href="https://open.ottawa.ca/datasets/bicycle-trip-counters">Open Data Ottawa</a>, I found the location of each counter and obtained its latitude and longitude using Google Maps. I also added a bit of descriptive information for each counter. We can put all of this in a dataframe as follows:</p>
+<pre class="r"><code>coords &lt;- data.frame(counter = names(bikes[,2:15]),
+                     name = c(&quot;Alexandra Bridge&quot;, &quot;Eastern Canal Pathway&quot;, &quot;Ottawa River Pathway&quot;, &quot;Western Canal Pathway&quot;,
+                              &quot;Laurier at Bay&quot;, &quot;Laurier at Lyon&quot;, &quot;Laurier at Metcalfe&quot;, &quot;Somerset Bridge&quot;, &quot;OTrain at Young&quot;,
+                              &quot;OTrain at Gladstone&quot;, &quot;OTrain at Bayview&quot;, &quot;Portage Bridge&quot;, &quot;Adawe Crossing A&quot;, &quot;Adawe Crossing B&quot;),
+                     lat = c(45.430366, 45.420924, 45.411959, 45.406280,
+                             45.415893, 45.417036, 45.419790, 45.420512,
+                             45.402859, 45.404599, 45.408636, 45.421980, 
+                             45.426282, 45.426575),
+                     long = c(-75.704761, -75.685060, -75.723424, -75.681814,
+                              -75.705328, -75.702613, -75.697623, -75.684625,
+                              -75.712760, -75.714812, -75.723644, -75.713324,
+                              -75.670234, -75.669765),
+                     desc = c(&quot;Ottawa approach to the NCC Alexandra Bridge Bikeway. This counter was not operational for most of 2010
+                              due to bridge construction. This is one of the more consistent counters, until the internal battery
+                              failed in August 2019.&quot;,
+                              &quot;NCC Eastern Canal Pathway approximately 100m north of the Corktown Bridge.&quot;,
+                              &quot;NCC Ottawa River Pathway approximately 100m east of the Prince of Wales Bridge. Canada Day in 2011
+                              boasts the highest single day count of any counter.&quot;,
+                              &quot;NCC Western Canal Pathway approximately 200m north of “The Ritz”. Out of operation for much of 2018.
+                              MEC Bikefest on May 17, 2015 accounts for the large spike that day.&quot;,
+                              &quot;Laurier Segregated Bike lane just west of Bay. Minimal data available due to inactivity after 2014.&quot;,
+                              &quot;Laurier Segregated Bike lane just east of Lyon. No longer in operation since 2016.&quot;,
+                              &quot;Laurier Segregated Bike lane just west of Metcalfe. Construction in late 2012 accounts for unusual dip
+                              in counts.&quot;,
+                              &quot;Somerset bridge over O-Train west-bound direction only. Inexplicably large spike in 2012 followed by a
+                              typical seasonal pattern. Inactive since late 2018.&quot;,
+                              &quot;O-Train Pathway just north of Young Street. Minimal data available due to inactivity after 2016. See
+                              O-Train at Gladstone counter for a better estimate.&quot;,
+                              &quot;O-Train Pathway just north of Gladstone Avenue. In operation since mid-2013. Shows unusual spike in
+                              November of 2017.&quot;,
+                              &quot;O-Train Pathway just north of Bayview Station. In operation since mid-2013. Trending upward.&quot;,
+                              &quot;Portage Bridge connecting Gatineau to Ottawa. Installed in late 2013, this counter registered
+                              relatively high traffic but seems to have experienced outages during Winter months. Inactive since early
+                              2016.&quot;,
+                              &quot;Adàwe Crossing Bridge bike lane. This counter is one of a pair on this pedestrian bridge. Installed in
+                              2016, it seems to have experienced an outage during the Winter of its inaugural year.&quot;,
+                              &quot;The second of two counters on the Adàwe Crossing Bridge. This counter may pick up more pedestrian than
+                              bike traffic, as suggested by the trend over time.&quot;))</code></pre>
+<p>Now we just pipe the coordinate data into leaflet.</p>
+<pre class="r"><code>leaflet(data = coords) %&gt;%
+  addTiles() %&gt;%
+  addMarkers(~long, ~lat)</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[45.430366,45.420924,45.411959,45.40628,45.415893,45.417036,45.41979,45.420512,45.402859,45.404599,45.408636,45.42198,45.426282,45.426575],[-75.704761,-75.68506,-75.723424,-75.681814,-75.705328,-75.702613,-75.697623,-75.684625,-75.71276,-75.714812,-75.723644,-75.713324,-75.670234,-75.669765],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[45.402859,45.430366],"lng":[-75.723644,-75.669765]}},"evals":[],"jsHooks":[]}</script>
+<p>Leaflet automatically generates a map of size to fit all the markers. There are a few modifications to make though. One is to have it so that when the user hovers the mouse over a marker a label pops up with the name of that counter. Another is to make the map more aesthetically pleasing. Finally, we may want to add some bounds so that the user can’t scroll too far away from the markers.</p>
+<pre class="r"><code>leaflet(data = coords) %&gt;%
+  addTiles() %&gt;%
+  addMarkers(~long, ~lat, label = ~name) %&gt;%
+  setMaxBounds(-75.65, 45.38, -75.75, 45.46) %&gt;%
+  addProviderTiles(providers$CartoDB.Positron)</code></pre>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[45.430366,45.420924,45.411959,45.40628,45.415893,45.417036,45.41979,45.420512,45.402859,45.404599,45.408636,45.42198,45.426282,45.426575],[-75.704761,-75.68506,-75.723424,-75.681814,-75.705328,-75.702613,-75.697623,-75.684625,-75.71276,-75.714812,-75.723644,-75.713324,-75.670234,-75.669765],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Alexandra Bridge","Eastern Canal Pathway","Ottawa River Pathway","Western Canal Pathway","Laurier at Bay","Laurier at Lyon","Laurier at Metcalfe","Somerset Bridge","OTrain at Young","OTrain at Gladstone","OTrain at Bayview","Portage Bridge","Adawe Crossing A","Adawe Crossing B"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"setMaxBounds","args":[45.38,-75.65,45.46,-75.75]},{"method":"addProviderTiles","args":["CartoDB.Positron",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"limits":{"lat":[45.402859,45.430366],"lng":[-75.723644,-75.669765]}},"evals":[],"jsHooks":[]}</script>
+<p>Great. So we now have the two components of the app: the time plots and the map. Time to bring in Shiny and put it all together. Now, if you have never used Shiny before, this probably isn’t the easiest example to start with. I’d highly recommend this <a href="https://shiny.rstudio.com/tutorial/">set of tutorial videos by Garrett Grolemund</a> to get started.</p>
+</div>
+<div id="creating-the-shiny-app" class="section level2">
+<h2>Creating the Shiny App</h2>
+<p>There are two parts to every Shiny app: the <em>UI</em> or User Interface and the <em>Server</em>. The UI is like the look and feel of the app, it’s where we tell Shiny what kinds of inputs and outputs we want, how we want to organize the panels, and so on. In contrast, the Server is the engine of the app. We’ll start by constructing the UI. It’s important to note that it’s easier to build a Shiny app in a new R script. So we’re basically going to start over in a new script, which means we’ll reload the packages and the data as if we were starting new:</p>
+<div id="create-a-new-r-script" class="section level3">
+<h3>Create a new R script</h3>
+<p>We’ll start with the packages and data. We haven’t done anything with the UI or Server yet. We usually want to keep the data outside the UI. We’ll also transform our data as we did earlier to generate the total and average time plots.</p>
+<pre class="r"><code>library(tidyverse)
+library(leaflet)
+library(leafpop)
+library(shiny)
+library(shinythemes)
+library(shinyWidgets)
+
+bikes &lt;- read_csv(&quot;https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/bikes_app.csv&quot;, col_types = c(&quot;?nnnnnnnnnnnnnn&quot;))
+
+#For ease, I&#39;ve put the coordinates in a separate file, but you could just as easily rerun the &#39;coords&#39; object above
+
+coords &lt;- read_csv(&quot;https://raw.githubusercontent.com/whipson/Ottawa_Bicycles/master/coords.csv&quot;)
+
+bikes_plot &lt;- bikes %&gt;%
+  pivot_longer(names_to = &quot;counter&quot;, values_to = &quot;count&quot;, -date) %&gt;%
+  left_join(coords, by = &quot;counter&quot;)
+
+bikes_total &lt;- bikes_plot %&gt;%
+  group_by(date) %&gt;%
+  summarize(count = sum(count, na.rm = TRUE))
+
+bikes_mean &lt;- bikes_plot %&gt;%
+  group_by(date) %&gt;%
+  summarize(count = mean(count, na.rm = TRUE))</code></pre>
+<p>Now, still in the same R script, we can build the UI. It’s going to look a bit strange with parentheses all over the place. It’s just customary Shiny scripting to use hanging parentheses.</p>
+</div>
+<div id="specifying-the-ui" class="section level3">
+<h3>Specifying the UI</h3>
+<pre class="r"><code>ui &lt;- fluidPage(theme = shinytheme(&quot;flatly&quot;),
+
+  sidebarLayout(  #Layout
+    
+    sidebarPanel(id = &quot;Sidebar&quot;,  #Side panel
+                 h2(&quot;Ottawa Bicycle Counters&quot;, align = &quot;center&quot;, tags$style(&quot;#Sidebar{font-family: Verdana;}&quot;)),
+                 fluidRow(  # Row 1 of side panel
+                   htmlOutput(&quot;caption&quot;),  # Caption output, provides descriptive text
+                   tags$style(&quot;#caption{font-size: 16px; height: 200px; font-family: Verdana;}&quot;)
+                 ),
+                 fluidRow(  # Row 2 of side panel
+                   htmlOutput(&quot;stats&quot;),  # Statistics output, provides descriptive statistics 
+                   tags$style(&quot;#stats{font-size: 16px; height: 125px; font-family: Verdana;}&quot;)
+                 ),
+                 fluidRow(  # Row 3 of side panel
+                   switchInput(&quot;average&quot;,  # User input, allows the user to turn a switch to display the average
+                               &quot;Display Average&quot;,
+                               value = FALSE)
+                 ),
+                 fluidRow(  # Row 4 of side panel
+                   htmlOutput(&quot;caption2&quot;),  # More caption output
+                   tags$style(&quot;#caption2{font-size: 12px; height: 80px; font-family: Verdana;}&quot;)
+                   ),
+                 fluidRow(  # Row 5 of side panel 
+                   downloadButton(&quot;download&quot;, &quot;Download Data&quot;)  # A button so that users can download the data
+                   )
+                 ),
+    mainPanel(id = &quot;Main&quot;,  # Main panel (this is where the plots and map go)
+              fluidRow(  # Row 1 of main panel
+                leafletOutput(&quot;map&quot;, height = 400)  # Here&#39;s the output for the map
+                ),
+              fluidRow(  # Row 2 of main panel
+                plotOutput(&quot;timeplot&quot;, height = 300)  # Here&#39;s the output for the time plots
+                )
+              )
+    )
+)</code></pre>
+<p>There’s the code for the UI. Starting from the top, we use the <em>FluidPage</em> function and here I’m using the theme <em>flatly</em>. Then I say that I want to use a <em>sidebarLayout</em>. From here, I split the code into a <em>sidebarPanel</em> and a <em>mainPanel</em>. I further split things into <em>fluidRows</em> which just helps to organize the layout. All of the #s are notes, of course, and will not actually be run.</p>
+<p>The big thing to notice is that there are inputs and outputs. The only input is a <em>switchInput</em> which lets the user choose whether to display totals or averages. Everything else is an output. Each of these gets a name, for example, I’m calling the leafletOutput <em>map</em>. These names are important, as they will correspond with what we provide in the server part.</p>
+</div>
+<div id="specifying-the-server" class="section level3">
+<h3>Specifying the Server</h3>
+<pre class="r"><code>server &lt;- function(input, output) {
+  
+  output$map &lt;- renderLeaflet({  # Map output
+      leaflet(data = coords) %&gt;%
+         addTiles() %&gt;%
+         addMarkers(~long, ~lat, label = ~name) %&gt;%
+         setMaxBounds(-75.65, 45.38, -75.75, 45.46) %&gt;%
+         addProviderTiles(providers$CartoDB.Positron)
+    })
+  
+  output$caption2 &lt;- renderUI({  # Lower caption output
+    str1 &lt;- paste(&quot;Created by &quot;, a(&quot;Will Hipson.&quot;, href = &quot;https://willhipson.netlify.com/&quot;))
+    str2 &lt;- paste(&quot;Data courtesy of &quot;, a(&quot;Open Data Ottawa.&quot;, href = &quot;https://open.ottawa.ca/datasets/bicycle-trip-counters&quot;))
+    str3 &lt;- &quot;2010-01-01 - 2019-09-30&quot;
+    str4 &lt;- &quot;Updated on 2019-10-24&quot;
+    HTML(paste(str1, str2, str3, str4, sep = &#39;&lt;br/&gt;&#39;))
+  })
+  
+  observeEvent(input$map_marker_click, { # If the user clicks a marker, this line is run.
+    output$timeplot &lt;- renderPlot({
+      if(input$average == TRUE) { # if average is selected we get average overlayed
+        ggplot() +
+          geom_line(data = bikes_plot[bikes_plot$lat == input$map_marker_click$lat, ], 
+                    aes(x = date, y = count), size = .5, alpha = .70, color = &quot;#36648B&quot;) +
+          geom_line(data = bikes_mean, aes(x = date, y = count), alpha = .50, color = &quot;#9F79EE&quot;) +
+          scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+          scale_y_continuous(limits = c(0, 6000)) +
+          labs(x = NULL,
+               y = &quot;Count&quot;,
+               title = paste(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$name)) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = &quot;Verdana&quot;))
+      } else { # if average is not selected, then it&#39;s just the total
+        ggplot() +
+          geom_line(data = bikes_plot[bikes_plot$lat == input$map_marker_click$lat, ], 
+                    aes(x = date, y = count), size = .5, alpha = .70, color = &quot;#36648B&quot;) +
+          scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+          scale_y_continuous(limits = c(0, 6000)) +
+          labs(x = NULL,
+               y = &quot;Count&quot;,
+               title = paste(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$name)) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = &quot;Verdana&quot;))
+      }
+    })
+    
+    output$caption &lt;- renderUI({ # counter specific description
+      str1 &lt;- coords[coords$lat == input$map_marker_click$lat, ]$desc
+      HTML(str1)
+    })
+    
+    output$stats &lt;- renderUI({ # counter specific statistics
+      str1 &lt;- &quot;&lt;b&gt;Statistics&lt;/b&gt;&quot;
+      str2 &lt;- paste(&quot;Total count: &quot;, format(round(sum(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count, na.rm = TRUE)), big.mark = &quot;,&quot;))
+      str3 &lt;- paste(&quot;Average count: &quot;, format(round(mean(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count, na.rm = TRUE), 1), big.mark = &quot;,&quot;))
+      str4 &lt;- paste(&quot;Busiest day: &quot;, bikes_plot[which.max(bikes_plot[bikes_plot$lat == input$map_marker_click$lat,]$count),]$date)
+      HTML(paste(str1, str2, str3, str4, sep = &#39;&lt;br/&gt;&#39;))
+      })
+  })
+    
+  observeEvent(input$map_click, ignoreNULL = FALSE, {  # If the user clicks on the map it goes back to the cumulative data
+    output$timeplot &lt;- renderPlot({
+      if(input$average == TRUE) {  # if the average is selected, it displays average
+      ggplot(data = bikes_mean, aes(x = date, y = count)) +
+          geom_line(size = .5, alpha = .70, color = &quot;#36648B&quot;) +
+          scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+          labs(x = NULL,
+               y = &quot;Count&quot;) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = &quot;Verdana&quot;))
+      } else { # if average is not selected it is the total
+        ggplot(data = bikes_total, aes(x = date, y = count)) +
+          geom_line(size = .5, alpha = .70, color = &quot;#36648B&quot;) +
+          scale_x_datetime(date_breaks = &quot;2 years&quot;, date_labels = &quot;%Y&quot;) +
+          labs(x = NULL,
+               y = &quot;Count&quot;) +
+          theme_minimal(base_size = 16) +
+          theme(plot.title = element_text(hjust = .5),
+                axis.text.x = element_text(size = 16),
+                text = element_text(family = &quot;Verdana&quot;))
+      }
+    })
+    
+    output$caption &lt;- renderUI({  # the default caption
+      str1 &lt;- &quot;Presenting data from bicycle counters across Ottawa. There are 14 counters spread across the city. The graph below displays how daily counts change over time. Click on a map marker to select a specific counter.&quot;
+      HTML(str1)
+    })
+    
+    output$stats &lt;- renderUI({  # Statistics output
+      str1 &lt;- &quot;&lt;b&gt;Statistics&lt;/b&gt;&quot;
+      str2 &lt;- paste(&quot;Total count: &quot;, format(round(sum(bikes_total$count, na.rm = TRUE)), big.mark = &quot;,&quot;))
+      str3 &lt;- paste(&quot;Average count: &quot;, format(round(mean(bikes_total$count, na.rm = TRUE), 1), big.mark = &quot;,&quot;))
+      str4 &lt;- paste(&quot;Busiest day: &quot;, bikes_total[which.max(bikes_total$count),]$date)
+      HTML(paste(str1, str2, str3, str4, sep = &#39;&lt;br/&gt;&#39;))
+    })
+  })
+  
+  output$download &lt;- downloadHandler( # download button. Will turn &#39;bikes&#39; object into a csv file.
+    filename = function() {
+      paste(&quot;ottawa_bikes&quot;, &quot;.csv&quot;, sep = &quot;&quot;)
+    },
+    
+    content = function(file) {
+      write.csv(bikes, file)
+    }
+  )
+}</code></pre>
+<p>The code for the server is much busier and it can be overwhelming. Essentially we’re just saying what we want to do with the inputs and outputs. We generate a little code chunk for each output. Look at the first one for <em>map</em>. This is where we generate the map. We say we want to <em>renderLeaflet</em> and then we just copy the code that we made earlier into this block.</p>
+<p>Where things get a bit more complicated is when we want our output to change based on user input. If the user selects the switch that converts the data to averages, for example. I used if and else statements to modulate the output based on whether ‘average’ is selected. What happens, is when the user clicks on the switch, the value of input$average changes to TRUE. Using if and else functions, I just say what I want to happen when ‘average’ is TRUE and what happens if it’s FALSE.</p>
+<p>Finally, we want the user to be able to click on specific markers and have the output change to that specific marker. We use the <em>observeEvent</em> function and specify the input, ‘map_marker_click’. We also want the user to be able to click off the marker to go back to the default output. Again, we use <em>observeEvent</em> but now with ‘click_map’.</p>
+<p>Once we have all the other outputs in place for the downloads and the captions, we put it all together using the <em>shinyApp</em> function.</p>
+<pre class="r"><code>shinyApp(ui, server)</code></pre>
+<p>And there it is, a user-friendly app for exploring bicycling data in Ottawa. Future avenues include building in some time-series forecasting. It would be cool to show the user how the trend is expected to change over time.</p>
+<p>One last shout out to <a href="https://open.ottawa.ca/datasets/bicycle-trip-counters">Open Data Ottawa</a> for sharing this data!</p>
+</div>
+</div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-8">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo=""
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js" defer></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/python.min.js" defer></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/stan.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.initHighlighting();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+<script src="https://willhipson.netlify.app/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+</body>
+
+</html>
