@@ -23,6 +23,7 @@ params:
     - stan
   progressively: no
   sitename: bLog likelihood
+  signature: Will Hipson, PhD
   subheader: Musings on data science, statistics, and programming
   uselatex: yes
 markup:
