@@ -9,6 +9,12 @@
         </div>
 
         <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="subheader">{{ .Site.Params.subheader }}</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
             <ul class="nav nav-primary">
                 {{ range .Site.Menus.primary.ByWeight }}
                 <li class="nav-item">
@@ -22,3 +28,4 @@
         </div>
     </div>
 </div>
+

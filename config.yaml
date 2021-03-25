@@ -22,7 +22,8 @@ params:
     - python
     - stan
   progressively: no
-  sitename: whipson blogs
+  sitename: bLog likelihood
+  subheader: Musings on data science, statistics, and programming
   uselatex: yes
 markup:
   goldmark:
