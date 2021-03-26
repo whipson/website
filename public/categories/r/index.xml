@@ -6,110 +6,106 @@
     <description>Recent content in R on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-<<<<<<< HEAD
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
-=======
-    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Why I love dplyr&#39;s across</title>
-      <link>https://willhipson.netlify.app/dplyr_across/dplyr_across/</link>
+      <link>https://bloglikelihood.netlify.app/post/dplyr_across/dplyr_across/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/dplyr_across/dplyr_across/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/dplyr_across/dplyr_across/</guid>
       <description>Very often I find myself in a situation where I need to perform the same operation on multiple columns in a data set. For this, I turn to none other than dplyr’s across function. But as we’ll see, not only does across help when we are interactively wrangling data, it also operates seamlessly within R functions. Here, I’ll showcase a few simple use cases for across.
 How to use across Let’s look at the most basic usage of across.</description>
     </item>
     
->>>>>>> new-theme
     <item>
       <title>Bayesian Varying Effects Models in R and Stan</title>
-      <link>https://bloglikelihood.netlify.app/stan-random-slopes/varying_effects_stan/</link>
+      <link>https://bloglikelihood.netlify.app/post/stan-random-slopes/varying_effects_stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/stan-random-slopes/varying_effects_stan/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/stan-random-slopes/varying_effects_stan/</guid>
       <description>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the varying effects approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole.</description>
     </item>
     
     <item>
       <title>Visualizing a Markov Chain</title>
-      <link>https://bloglikelihood.netlify.app/markov-sim/markov_chain/</link>
+      <link>https://bloglikelihood.netlify.app/post/markov-sim/markov_chain/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/markov-sim/markov_chain/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/markov-sim/markov_chain/</guid>
       <description>A Markov Chain describes a sequence of states where the probability of transitioning from states depends only the current state. Markov chains are useful in a variety of computer science, mathematics, and probability contexts, also featuring prominently in Bayesian computation as Markov Chain Monte Carlo. Here, we’re going to look at a relatively simple breed of Markov chain and build up some intuition using simulations and animations (two of my favorite things).</description>
     </item>
     
     <item>
       <title>An Intuitive Look at Binomial Probability in a Bayesian Context</title>
-      <link>https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/</link>
+      <link>https://bloglikelihood.netlify.app/post/bayesian_intro/binomial_gold/</link>
       <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/bayesian_intro/binomial_gold/</guid>
       <description>Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example.</description>
     </item>
     
     <item>
       <title>Building a Shiny App for Cycling in Ottawa</title>
-      <link>https://bloglikelihood.netlify.app/bicycle_app/bicycle_app/</link>
+      <link>https://bloglikelihood.netlify.app/post/bicycle_app/bicycle_app/</link>
       <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/bicycle_app/bicycle_app/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/bicycle_app/bicycle_app/</guid>
       <description>This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don’t know, is the capital city of Canada. For a capital city, it’s fairly small, but it’s increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day.</description>
     </item>
     
     <item>
       <title>Modeling Motivation and Emotion using Feedback Loops</title>
-      <link>https://bloglikelihood.netlify.app/feedback_loops/feedback_loops/</link>
+      <link>https://bloglikelihood.netlify.app/post/feedback_loops/feedback_loops/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/feedback_loops/feedback_loops/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/feedback_loops/feedback_loops/</guid>
       <description>If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to do something. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts.</description>
     </item>
     
     <item>
       <title>A Model and Simulation of Emotion Dynamics</title>
-      <link>https://bloglikelihood.netlify.app/emotion-simulation1/emotion_sim/</link>
+      <link>https://bloglikelihood.netlify.app/post/emotion-simulation1/emotion_sim/</link>
       <pubDate>Wed, 26 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/emotion-simulation1/emotion_sim/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/emotion-simulation1/emotion_sim/</guid>
       <description>Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment.</description>
     </item>
     
     <item>
       <title>Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</title>
-      <link>https://bloglikelihood.netlify.app/basketball_sim/basketball_sim/</link>
+      <link>https://bloglikelihood.netlify.app/post/basketball_sim/basketball_sim/</link>
       <pubDate>Wed, 05 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/basketball_sim/basketball_sim/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/basketball_sim/basketball_sim/</guid>
       <description>Sporting events host witness to a wide range of human emotion. The emotional ups and downs are especially clear among invested fans. Fans experience the joy and excitement of a triumphant comeback, or the anxiety and disappointment of a loss. It is particularly interesting to see how emotions differ from two opposing fan groups watching the same match.
 I decided to perform some simulations on how a crowd of fans would react during a basketball game.</description>
     </item>
     
     <item>
       <title>Quick Example of Latent Profile Analysis in R</title>
-      <link>https://bloglikelihood.netlify.app/latent-profile/latent-profile/</link>
+      <link>https://bloglikelihood.netlify.app/post/latent-profile/latent-profile/</link>
       <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/latent-profile/latent-profile/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/latent-profile/latent-profile/</guid>
       <description>Latent Profile Analysis (LPA) tries to identify clusters of individuals (i.e., latent profiles) based on responses to a series of continuous variables (i.e., indicators). LPA assumes that there are unobserved latent profiles that generate patterns of responses on indicator items.
 Here, I will go through a quick example of LPA to identify groups of people based on their interests/hobbies. The data comes from the Young People Survey, available freely on Kaggle.</description>
     </item>
     
     <item>
       <title>Network Analysis of Emotions</title>
-      <link>https://bloglikelihood.netlify.app/emotion-network/emotion-network/</link>
+      <link>https://bloglikelihood.netlify.app/post/emotion-network/emotion-network/</link>
       <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/emotion-network/emotion-network/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/emotion-network/emotion-network/</guid>
       <description>In this month’s post, I set out to create a visual network of emotions. Emotion Dynamics tells us that different emotions are highly interconnected, such that one emotion morphs into another and so on. I’ll be using a large dataset from an original study published in PLOS ONE by Trampe, Quoidbach, and Taquet (2015). Thanks to Google Dataset Search, I was able to locate this data.</description>
     </item>
     
     <item>
       <title>Plotting the Affect Circumplex in R</title>
-      <link>https://bloglikelihood.netlify.app/circumplex/circumplex/</link>
+      <link>https://bloglikelihood.netlify.app/post/circumplex/circumplex/</link>
       <pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/circumplex/circumplex/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/circumplex/circumplex/</guid>
       <description>I’m a strong adherent to the circumplex model of emotions introduced by James Russell in the late 1980s. Russell argued that all emotional experience can be boiled down to two dimensions: valence and arousal, with valence being how positive or negative you feel and arousal being how sluggish or emotionally activated you feel. The emotions we commonly label as anger, sadness, joy, etc. can be mapped within this affective two-dimensional space, such that joy is a high valence, high arousal emotion, whereas boredom is a moderately low valence and low arousal emotion.</description>
     </item>
     

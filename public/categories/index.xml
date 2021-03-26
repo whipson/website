@@ -6,47 +6,43 @@
     <description>Recent content in Categories on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-<<<<<<< HEAD
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
-=======
-    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Data Wrangling</title>
-      <link>https://willhipson.netlify.app/categories/data-wrangling/</link>
+      <link>https://bloglikelihood.netlify.app/categories/data-wrangling/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/categories/data-wrangling/</guid>
+      <guid>https://bloglikelihood.netlify.app/categories/data-wrangling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>dplyr</title>
-      <link>https://willhipson.netlify.app/categories/dplyr/</link>
+      <link>https://bloglikelihood.netlify.app/categories/dplyr/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/categories/dplyr/</guid>
+      <guid>https://bloglikelihood.netlify.app/categories/dplyr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>https://willhipson.netlify.app/categories/r/</link>
+      <link>https://bloglikelihood.netlify.app/categories/r/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/categories/r/</guid>
+      <guid>https://bloglikelihood.netlify.app/categories/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tidyverse</title>
-      <link>https://willhipson.netlify.app/categories/tidyverse/</link>
+      <link>https://bloglikelihood.netlify.app/categories/tidyverse/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/categories/tidyverse/</guid>
+      <guid>https://bloglikelihood.netlify.app/categories/tidyverse/</guid>
       <description></description>
     </item>
     
->>>>>>> new-theme
     <item>
       <title>Bayesian</title>
       <link>https://bloglikelihood.netlify.app/categories/bayesian/</link>
@@ -75,18 +71,6 @@
     </item>
     
     <item>
-<<<<<<< HEAD
-      <title>R</title>
-      <link>https://bloglikelihood.netlify.app/categories/r/</link>
-      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://bloglikelihood.netlify.app/categories/r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-=======
->>>>>>> new-theme
       <title>Stan</title>
       <link>https://bloglikelihood.netlify.app/categories/stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>

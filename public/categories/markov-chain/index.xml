@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/markov-chain/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Visualizing a Markov Chain</title>
-      <link>https://bloglikelihood.netlify.app/markov-sim/markov_chain/</link>
+      <link>https://bloglikelihood.netlify.app/post/markov-sim/markov_chain/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://bloglikelihood.netlify.app/markov-sim/markov_chain/</guid>
+      <guid>https://bloglikelihood.netlify.app/post/markov-sim/markov_chain/</guid>
       <description>A Markov Chain describes a sequence of states where the probability of transitioning from states depends only the current state. Markov chains are useful in a variety of computer science, mathematics, and probability contexts, also featuring prominently in Bayesian computation as Markov Chain Monte Carlo. Here, we’re going to look at a relatively simple breed of Markov chain and build up some intuition using simulations and animations (two of my favorite things).</description>
     </item>
     
