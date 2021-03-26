@@ -2,7 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+<<<<<<< HEAD
     <loc>https://bloglikelihood.netlify.app/about/</loc>
+=======
+    <loc>https://willhipson.netlify.app/categories/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/tags/data-wrangling/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/categories/data-wrangling/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/tags/dplyr/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/categories/dplyr/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/dplyr_across/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/tags/r/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/categories/r/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/tags/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/tags/tidyverse/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/categories/tidyverse/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/dplyr_across/dplyr_across/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/</loc>
+    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://willhipson.netlify.app/about/</loc>
+>>>>>>> new-theme
     <lastmod>2021-03-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/tags/bayesian/</loc>
@@ -14,10 +57,14 @@
     <loc>https://bloglikelihood.netlify.app/stan-random-slopes/varying_effects_stan/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
+<<<<<<< HEAD
     <loc>https://bloglikelihood.netlify.app/categories/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/tags/linear-mixed-models/</loc>
+=======
+    <loc>https://willhipson.netlify.app/tags/linear-mixed-models/</loc>
+>>>>>>> new-theme
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/categories/linear-mixed-models/</loc>
@@ -29,6 +76,7 @@
     <loc>https://bloglikelihood.netlify.app/categories/multilevel-modeling/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
+<<<<<<< HEAD
     <loc>https://bloglikelihood.netlify.app/tags/r/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
@@ -36,6 +84,9 @@
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/tags/stan/</loc>
+=======
+    <loc>https://willhipson.netlify.app/tags/stan/</loc>
+>>>>>>> new-theme
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/categories/stan/</loc>
@@ -44,19 +95,27 @@
     <loc>https://bloglikelihood.netlify.app/stan-random-slopes/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
+<<<<<<< HEAD
     <loc>https://bloglikelihood.netlify.app/tags/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/tags/tutorial/</loc>
+=======
+    <loc>https://willhipson.netlify.app/tags/tutorial/</loc>
+>>>>>>> new-theme
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/categories/tutorial/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
+<<<<<<< HEAD
     <loc>https://bloglikelihood.netlify.app/</loc>
     <lastmod>2020-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/tags/animation/</loc>
+=======
+    <loc>https://willhipson.netlify.app/tags/animation/</loc>
+>>>>>>> new-theme
     <lastmod>2020-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://bloglikelihood.netlify.app/categories/animation/</loc>
