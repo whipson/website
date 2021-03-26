@@ -15,7 +15,7 @@ ignoreFiles:
   - \.knit\.md$
   - \.utf8\.md$
 params:
-  faviconfile: images/favicon.png
+  faviconfile: themes/hugo-tanka/static/img
   highlightjs: yes
   highlightjslanguages:
     - r
