@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dplyr on Will Hipson</title>
+    <link>https://willhipson.netlify.app/categories/dplyr/</link>
+    <description>Recent content in dplyr on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/categories/dplyr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Why I love dplyr&#39;s across</title>
+      <link>https://willhipson.netlify.app/dplyr_across/dplyr_across/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/dplyr_across/dplyr_across/</guid>
+      <description>Very often I find myself in a situation where I need to perform the same operation on multiple columns in a data set. For this, I turn to none other than dplyr’s across function. But as we’ll see, not only does across help when we are interactively wrangling data, it also operates seamlessly within R functions. Here, I’ll showcase a few simple use cases for across.
+How to use across Let’s look at the most basic usage of across.</description>
+    </item>
+    
+  </channel>
+</rss>

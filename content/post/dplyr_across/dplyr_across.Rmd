@@ -1,0 +1,136 @@
+---
+title: "Why I love dplyr's across"
+author: "null"
+date: '2021-03-25'
+slug: dplyr_across
+math: true
+categories:
+- R
+- dplyr
+- tidyverse
+- Data Wrangling
+tags:
+- R
+- dplyr
+- tidyverse
+- Data Wrangling
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Very often I find myself in a situation where I need to perform the same operation on multiple columns in a data set. For this, I turn to none other than `dplyr`'s `across` function. But as we'll see, not only does `across` help when we are interactively wrangling data, it also operates seamlessly within R functions. Here, I'll showcase a few simple use cases for `across`.
+
+## How to use `across`
+
+Let's look at the most basic usage of `across`. For this post I'll use the **animal crossing items** data set featured on [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md) week 19 of 2020. We get the packages we
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr) # for across and other data wrangling functions
+library(readr) # for read_csv
+
+ac_items <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/items.csv')
+
+ac_items
+```
+
+There are two columns related to currency: `sell_value` and `buy_value`. I want to quickly get the mean of these columns for each category. First, here's how I might do this without `across`:
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(sell_value = mean(sell_value, na.rm = TRUE),
+            buy_value = mean(buy_value, na.rm = TRUE))
+```
+
+Which works fine. But imagine if instead of two columns there were 10 or 20 or 100! It would quickly get tedious to add a new line for each column. Here's where `across` comes in:
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(across(c(sell_value, buy_value), mean, na.rm = TRUE))
+```
+
+Much more efficient. We give `across` a vector of column names followed by the function (in this case `mean`) followed by any other arguments we want to apply to the function.
+
+### Using `~` and `.x`
+
+If we want to provide a *lambda* function, we use what's called `purrr` syntax. In this example, let's say we want to divide each price by the maximum price in each category. We'll use `~` to indicate that we're supplying a lambda function and use `.x` to indicate where the variable in `across` is used.
+
+```{r, warning=FALSE}
+ac_items %>%
+  group_by(category) %>%
+  mutate(across(c(sell_value, buy_value), ~ .x / max(.x, na.rm = TRUE),
+                .names = "{col}_prop")) %>%
+  select(category, ends_with("prop")) # to show new cols
+```
+
+## Changing column names
+
+What if we want to change the names of our new columns? We can do this using the `.names` argument.
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(across(c(sell_value, buy_value), mean, na.rm = TRUE, .names = "{col}_mean"))
+```
+
+`.names` uses `glue` syntax, whereby anything inside the curly braces is a variable. In the case, the name of each column we provide is substituted in `{col}`.
+
+## Multiple functions
+
+What if we want not just the mean, but the standard deviation? `across` can take multiple functions as a list. See here:
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(across(c(sell_value, buy_value),
+                   list(mean = mean, sd = sd), na.rm = TRUE, .names = "{col}_{fn}"))
+```
+
+## Match column names with `tidyselect`
+
+If we have lots of columns to operate over, it can be cumbersome to spell out each name. We can leverage `tidyselect` helpers to match columns by name or type. Continuing with our example, let's again calculate the mean sell and buy value by category, but we'll use `contains` to fetch columns containing *value*.
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(across(contains("value"), mean, na.rm = TRUE, .names = "{col}_"))
+```
+
+Similarly, if we wanted to do this for *any* numeric column in the data, we use `where(is.numeric)`.
+
+```{r}
+ac_items %>%
+  group_by(category) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE, .names = "{col}_"))
+```
+
+## Using `across` programmatically
+
+The above examples highlight why `across` is so useful in day-to-day analytic work flows. But the real reason I love `across` is so it makes programming with `dplyr` so much easier. Here we're going to quite literally *embrace* `across` - and by 'embrace' I mean use `{{}}`.
+
+In this example, we'll create a function that asks the user to supply any number of numeric columns in their data, and the function will calculate the mean, standard deviation, and 0.05%-95% quantiles. We'll also allow the user to supply a grouping variable if they want.
+
+```{r}
+summarizer <- function(data, numeric_cols = NULL, ...) {
+  data %>%
+    group_by(...) %>%
+    summarise(across({{numeric_cols}}, list(
+      mean = ~mean(.x, na.rm = TRUE),
+      sd = ~sd(.x, na.rm = TRUE),
+      q05 = ~quantile(.x, 0.05, na.rm = TRUE),
+      q95 = ~quantile(.x, 0.95, na.rm = TRUE)
+    ), .names = "{col}_{fn}"))
+}
+```
+
+Now we test the function.
+
+```{r}
+summarizer(ac_items, numeric_cols = c(sell_value, buy_value),
+           category)
+```
+
+There's our quick look at `across`. I hope you can appreciate the versatility it offers. Not only does it cut back on typing, but it makes for a more principled approach to data wrangling and can make programming much easier. Also check out `c_across` which is useful for performing an operation that involves multiple columns.

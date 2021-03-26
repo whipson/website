@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Why I love dplyr&#39;s across - Will Hipson </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="Will Hipson" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://willhipson.netlify.app/dplyr_across/dplyr_across/" />
+    <meta property="og:title" content="Why I love dplyr&#39;s across" />
+    <meta property="og:image" content="https://willhipson.netlify.app" />
+    <meta property="og:description" content="" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="Why I love dplyr&#39;s across" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app" />
+
+    <link rel="canonical" href="https://willhipson.netlify.app/dplyr_across/dplyr_across/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://willhipson.netlify.appcss/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://willhipson.netlify.app/images/favicon.png">
+
+    
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    
+</head>
+
+<body>
+    
+    <div class="mt-xl header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="https://willhipson.netlify.app">
+                    <h1 class="name">bLog likelihood</h1>
+                </a>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="signature">Will Hipson, PhD</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="subheader">Musings on data science, statistics, and programming</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <ul class="nav nav-primary">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
+                        
+                        Home
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
+                        
+                        About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/whipson">
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://twitter.com/whipson3">
+                        
+                        Twitter
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/index.xml">
+                        
+                        Subscribe
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-8">
+                    <h1 class="mx-0 mx-md-4">Why I love dplyr&#39;s across</h1>
+                    <div class="markdown">
+                        
+    
+<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Very often I find myself in a situation where I need to perform the same operation on multiple columns in a data set. For this, I turn to none other than <code>dplyr</code>’s <code>across</code> function. But as we’ll see, not only does <code>across</code> help when we are interactively wrangling data, it also operates seamlessly within R functions. Here, I’ll showcase a few simple use cases for <code>across</code>.</p>
+<div id="how-to-use-across" class="section level2">
+<h2>How to use <code>across</code></h2>
+<p>Let’s look at the most basic usage of <code>across</code>. For this post I’ll use the <strong>animal crossing items</strong> data set featured on <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md">TidyTuesday</a> week 19 of 2020. We get the packages we</p>
+<pre class="r"><code>library(dplyr) # for across and other data wrangling functions
+library(readr) # for read_csv
+
+ac_items &lt;- read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/items.csv&#39;)
+
+ac_items</code></pre>
+<pre><code>## # A tibble: 4,565 x 16
+##    num_id id       name    category orderable sell_value sell_currency buy_value
+##     &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;lgl&gt;          &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+##  1     12 3d-glas… 3D Gla… Accesso… NA               122 bells               490
+##  2     14 a-tee    A Tee   Tops     NA               140 bells               560
+##  3     17 abstrac… Abstra… Wallpap… TRUE             390 bells              1560
+##  4     19 academy… Academ… Dresses  NA               520 bells              2080
+##  5     20 acantho… Acanth… Fossils  FALSE           2000 bells                NA
+##  6     21 accesso… Access… Furnitu… TRUE             375 bells              1500
+##  7     23 acid-wa… Acid-w… Tops     TRUE             420 bells              1680
+##  8     24 acid-wa… Acid-w… Bottoms  TRUE             330 bells              1320
+##  9     26 acnh-ni… Acnh N… Furnitu… TRUE            8990 bells             35960
+## 10     26 acnh-ni… Acnh N… Furnitu… TRUE            8990 bells             35960
+## # … with 4,555 more rows, and 8 more variables: buy_currency &lt;chr&gt;,
+## #   sources &lt;chr&gt;, customizable &lt;lgl&gt;, recipe &lt;dbl&gt;, recipe_id &lt;chr&gt;,
+## #   games_id &lt;chr&gt;, id_full &lt;chr&gt;, image_url &lt;chr&gt;</code></pre>
+<p>There are two columns related to currency: <code>sell_value</code> and <code>buy_value</code>. I want to quickly get the mean of these columns for each category. First, here’s how I might do this without <code>across</code>:</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(sell_value = mean(sell_value, na.rm = TRUE),
+            buy_value = mean(buy_value, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 21 x 3
+##    category    sell_value buy_value
+##    &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Accessories       637.     1912.
+##  2 Bottoms           298.     1198.
+##  3 Bugs             2220.    10511.
+##  4 Dresses          1114.     3804.
+##  5 Fish             3809.      NaN 
+##  6 Flooring         1275.     3833.
+##  7 Flowers           121.      160 
+##  8 Fossils          3503.      NaN 
+##  9 Fruit             125       400 
+## 10 Furniture        5387.    20256.
+## # … with 11 more rows</code></pre>
+<p>Which works fine. But imagine if instead of two columns there were 10 or 20 or 100! It would quickly get tedious to add a new line for each column. Here’s where <code>across</code> comes in:</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(across(c(sell_value, buy_value), mean, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 21 x 3
+##    category    sell_value buy_value
+##    &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Accessories       637.     1912.
+##  2 Bottoms           298.     1198.
+##  3 Bugs             2220.    10511.
+##  4 Dresses          1114.     3804.
+##  5 Fish             3809.      NaN 
+##  6 Flooring         1275.     3833.
+##  7 Flowers           121.      160 
+##  8 Fossils          3503.      NaN 
+##  9 Fruit             125       400 
+## 10 Furniture        5387.    20256.
+## # … with 11 more rows</code></pre>
+<p>Much more efficient. We give <code>across</code> a vector of column names followed by the function (in this case <code>mean</code>) followed by any other arguments we want to apply to the function.</p>
+<div id="using-and-.x" class="section level3">
+<h3>Using <code>~</code> and <code>.x</code></h3>
+<p>If we want to provide a <em>lambda</em> function, we use what’s called <code>purrr</code> syntax. In this example, let’s say we want to divide each price by the maximum price in each category. We’ll use <code>~</code> to indicate that we’re supplying a lambda function and use <code>.x</code> to indicate where the variable in <code>across</code> is used.</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  mutate(across(c(sell_value, buy_value), ~ .x / max(.x, na.rm = TRUE),
+                .names = &quot;{col}_prop&quot;))</code></pre>
+<pre><code>## # A tibble: 4,565 x 18
+## # Groups:   category [21]
+##    num_id id       name    category orderable sell_value sell_currency buy_value
+##     &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;lgl&gt;          &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+##  1     12 3d-glas… 3D Gla… Accesso… NA               122 bells               490
+##  2     14 a-tee    A Tee   Tops     NA               140 bells               560
+##  3     17 abstrac… Abstra… Wallpap… TRUE             390 bells              1560
+##  4     19 academy… Academ… Dresses  NA               520 bells              2080
+##  5     20 acantho… Acanth… Fossils  FALSE           2000 bells                NA
+##  6     21 accesso… Access… Furnitu… TRUE             375 bells              1500
+##  7     23 acid-wa… Acid-w… Tops     TRUE             420 bells              1680
+##  8     24 acid-wa… Acid-w… Bottoms  TRUE             330 bells              1320
+##  9     26 acnh-ni… Acnh N… Furnitu… TRUE            8990 bells             35960
+## 10     26 acnh-ni… Acnh N… Furnitu… TRUE            8990 bells             35960
+## # … with 4,555 more rows, and 10 more variables: buy_currency &lt;chr&gt;,
+## #   sources &lt;chr&gt;, customizable &lt;lgl&gt;, recipe &lt;dbl&gt;, recipe_id &lt;chr&gt;,
+## #   games_id &lt;chr&gt;, id_full &lt;chr&gt;, image_url &lt;chr&gt;, sell_value_prop &lt;dbl&gt;,
+## #   buy_value_prop &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="changing-column-names" class="section level2">
+<h2>Changing column names</h2>
+<p>What if we want to change the names of our new columns? We can do this using the <code>.names</code> argument.</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(across(c(sell_value, buy_value), mean, na.rm = TRUE, .names = &quot;{col}_mean&quot;))</code></pre>
+<pre><code>## # A tibble: 21 x 3
+##    category    sell_value_mean buy_value_mean
+##    &lt;chr&gt;                 &lt;dbl&gt;          &lt;dbl&gt;
+##  1 Accessories            637.          1912.
+##  2 Bottoms                298.          1198.
+##  3 Bugs                  2220.         10511.
+##  4 Dresses               1114.          3804.
+##  5 Fish                  3809.           NaN 
+##  6 Flooring              1275.          3833.
+##  7 Flowers                121.           160 
+##  8 Fossils               3503.           NaN 
+##  9 Fruit                  125            400 
+## 10 Furniture             5387.         20256.
+## # … with 11 more rows</code></pre>
+<p><code>.names</code> uses <code>glue</code> syntax, whereby anything inside the curly braces is a variable. In the case, the name of each column we provide is substituted in <code>{col}</code>.</p>
+</div>
+<div id="multiple-functions" class="section level2">
+<h2>Multiple functions</h2>
+<p>What if we want not just the mean, but the standard deviation? <code>across</code> can take multiple functions as a list. See here:</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(across(c(sell_value, buy_value),
+                   list(mean = mean, sd = sd), na.rm = TRUE, .names = &quot;{col}_{fn}&quot;))</code></pre>
+<pre><code>## # A tibble: 21 x 5
+##    category    sell_value_mean sell_value_sd buy_value_mean buy_value_sd
+##    &lt;chr&gt;                 &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Accessories            637.        1192.           1912.        4384.
+##  2 Bottoms                298.         116.           1198.         463.
+##  3 Bugs                  2220.        3209.          10511.       14240.
+##  4 Dresses               1114.        5247.           3804.       21159.
+##  5 Fish                  3809.        4586.            NaN           NA 
+##  6 Flooring              1275.        3506.           3833.       10975.
+##  7 Flowers                121.         188.            160            0 
+##  8 Fossils               3503.        1413.            NaN           NA 
+##  9 Fruit                  125           58.4           400            0 
+## 10 Furniture             5387.       17604.          20256.       40411.
+## # … with 11 more rows</code></pre>
+</div>
+<div id="match-column-names-with-tidyselect" class="section level2">
+<h2>Match column names with <code>tidyselect</code></h2>
+<p>If we have lots of columns to operate over, it can be cumbersome to spell out each name. We can leverage <code>tidyselect</code> helpers to match columns by name or type. Continuing with our example, let’s again calculate the mean sell and buy value by category, but we’ll use <code>contains</code> to fetch columns containing <em>value</em>.</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(across(contains(&quot;value&quot;), mean, na.rm = TRUE, .names = &quot;{col}_&quot;))</code></pre>
+<pre><code>## # A tibble: 21 x 3
+##    category    sell_value_ buy_value_
+##    &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Accessories        637.      1912.
+##  2 Bottoms            298.      1198.
+##  3 Bugs              2220.     10511.
+##  4 Dresses           1114.      3804.
+##  5 Fish              3809.       NaN 
+##  6 Flooring          1275.      3833.
+##  7 Flowers            121.       160 
+##  8 Fossils           3503.       NaN 
+##  9 Fruit              125        400 
+## 10 Furniture         5387.     20256.
+## # … with 11 more rows</code></pre>
+<p>Similarly, if we wanted to do this for <em>any</em> numeric column in the data, we use <code>where(is.numeric)</code>.</p>
+<pre class="r"><code>ac_items %&gt;%
+  group_by(category) %&gt;%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE, .names = &quot;{col}_&quot;))</code></pre>
+<pre><code>## # A tibble: 21 x 5
+##    category    num_id_ sell_value_ buy_value_ recipe_
+##    &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Accessories   3520.        637.      1912.    4.25
+##  2 Bottoms       3541.        298.      1198.    7   
+##  3 Bugs          3592.       2220.     10511.  NaN   
+##  4 Dresses       3583.       1114.      3804.    4.47
+##  5 Fish          3024.       3809.       NaN   NaN   
+##  6 Flooring      3799.       1275.      3833.    4.41
+##  7 Flowers       4946.        121.       160   NaN   
+##  8 Fossils       3468.       3503.       NaN   NaN   
+##  9 Fruit         2809.        125        400   NaN   
+## 10 Furniture     3686.       5387.     20256.    5.01
+## # … with 11 more rows</code></pre>
+</div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-8">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo=""
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js" defer></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/python.min.js" defer></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/stan.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.initHighlighting();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+
+    
+</body>
+
+</html>
