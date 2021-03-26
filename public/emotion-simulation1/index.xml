@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emotion-simulation1s on Will Hipson</title>
+    <link>https://willhipson.netlify.app/emotion-simulation1/</link>
+    <description>Recent content in Emotion-simulation1s on Will Hipson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 26 Jun 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/emotion-simulation1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Model and Simulation of Emotion Dynamics</title>
+      <link>https://willhipson.netlify.app/emotion-simulation1/emotion_sim/</link>
+      <pubDate>Wed, 26 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/emotion-simulation1/emotion_sim/</guid>
+      <description>Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment.</description>
+    </item>
+    
+  </channel>
+</rss>

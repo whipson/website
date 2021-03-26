@@ -1,23 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stan on Will Hipson</title>
-    <link>/tags/stan/</link>
+    <link>https://willhipson.netlify.app/tags/stan/</link>
     <description>Recent content in Stan on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/stan/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/tags/stan/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bayesian Varying Effects Models in R and Stan</title>
-      <link>/post/stan-random-slopes/varying_effects_stan/</link>
+      <link>https://willhipson.netlify.app/stan-random-slopes/varying_effects_stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/stan-random-slopes/varying_effects_stan/</guid>
+      <guid>https://willhipson.netlify.app/stan-random-slopes/varying_effects_stan/</guid>
       <description>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the varying effects approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole.</description>
     </item>
     

@@ -1,0 +1,49 @@
+baseurl: https://willhipson.netlify.app
+title: Will Hipson
+author: Will Hipson
+canonifyurls: yes
+languagecode: en
+theme: hugo-tanka
+enableEmoji: yes
+hasCJKLanguage: no
+pygmentsstyle: vs
+pygmentscodefences: yes
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _cache$
+  - \.knit\.md$
+  - \.utf8\.md$
+params:
+  faviconfile: images/favicon.png
+  highlightjs: yes
+  highlightjslanguages:
+    - r
+    - python
+    - stan
+  progressively: no
+  sitename: bLog likelihood
+  signature: Will Hipson, PhD
+  subheader: Musings on data science, statistics, and programming
+  uselatex: yes
+markup:
+  goldmark:
+    renderer:
+      unsafe: yes
+menu:
+  primary:
+    - name: Home
+      url: /
+      weight: 1
+    - name: About
+      url: /about/
+      weight: 2
+    - name: GitHub
+      url: https://github.com/whipson
+      weight: 3
+    - name: Twitter
+      url: https://twitter.com/whipson3
+      weight: 4
+    - name: Subscribe
+      url: /index.xml
+      weight: 5

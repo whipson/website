@@ -1,170 +1,102 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>R on Will Hipson</title>
-    <link>/tags/r/</link>
+    <link>https://willhipson.netlify.app/tags/r/</link>
     <description>Recent content in R on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/tags/r/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bayesian Varying Effects Models in R and Stan</title>
-      <link>/post/stan-random-slopes/varying_effects_stan/</link>
+      <link>https://willhipson.netlify.app/stan-random-slopes/varying_effects_stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/stan-random-slopes/varying_effects_stan/</guid>
+      <guid>https://willhipson.netlify.app/stan-random-slopes/varying_effects_stan/</guid>
       <description>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the varying effects approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole.</description>
     </item>
     
     <item>
-      <title>PoKi: A large dataset of poems by children</title>
-      <link>/publication/hipson-mohammad.-2020/</link>
-      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
-      
-      <guid>/publication/hipson-mohammad.-2020/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SOLO: A corpus of tweets for examining the state of being alone</title>
-      <link>/publication/kiritchenko-et-al.-2020/</link>
-      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
-      
-      <guid>/publication/kiritchenko-et-al.-2020/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Visualizing a Markov Chain</title>
-      <link>/post/markov-sim/markov_chain/</link>
+      <link>https://willhipson.netlify.app/markov-sim/markov_chain/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/markov-sim/markov_chain/</guid>
+      <guid>https://willhipson.netlify.app/markov-sim/markov_chain/</guid>
       <description>A Markov Chain describes a sequence of states where the probability of transitioning from states depends only the current state. Markov chains are useful in a variety of computer science, mathematics, and probability contexts, also featuring prominently in Bayesian computation as Markov Chain Monte Carlo. Here, we’re going to look at a relatively simple breed of Markov chain and build up some intuition using simulations and animations (two of my favorite things).</description>
     </item>
     
     <item>
       <title>An Intuitive Look at Binomial Probability in a Bayesian Context</title>
-      <link>/post/bayesian_intro/binomial_gold/</link>
+      <link>https://willhipson.netlify.app/bayesian_intro/binomial_gold/</link>
       <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/bayesian_intro/binomial_gold/</guid>
+      <guid>https://willhipson.netlify.app/bayesian_intro/binomial_gold/</guid>
       <description>Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example.</description>
     </item>
     
     <item>
       <title>Building a Shiny App for Cycling in Ottawa</title>
-      <link>/post/bicycle_app/bicycle_app/</link>
+      <link>https://willhipson.netlify.app/bicycle_app/bicycle_app/</link>
       <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/bicycle_app/bicycle_app/</guid>
+      <guid>https://willhipson.netlify.app/bicycle_app/bicycle_app/</guid>
       <description>This is a different kind of post, but one that I think is kind of fun. I currently live in Ottawa, which for those who don’t know, is the capital city of Canada. For a capital city, it’s fairly small, but it’s increasingly urbanizing (we just got lightrail transit). Segregated bicycle lanes and paths are becoming more common too and many of these paths have trackers on them that count how many bicycles cross a particular street or path each day.</description>
     </item>
     
     <item>
-      <title>Bayesian Linear Mixed Models: Random Intercepts, Slopes, and Missing Data</title>
-      <link>/post/bayesian_mlm/bayesian_mlm/</link>
-      <pubDate>Thu, 05 Sep 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/bayesian_mlm/bayesian_mlm/</guid>
-      <description>This past summer, I watched a brilliant lecture series by Richard McElreath on Bayesian statistics. It honestly changed my whole outlook on statistics, so I couldn’t recommend it more (plus, McElreath is an engaging instructor). One of the most compelling cases for using Bayesian statistics is with a collection of statistical tools called linear mixed models or multilevel/hierarchical models. It’s common that data are grouped or clustered in some way.</description>
-    </item>
-    
-    <item>
       <title>Modeling Motivation and Emotion using Feedback Loops</title>
-      <link>/post/feedback_loops/feedback_loops/</link>
+      <link>https://willhipson.netlify.app/feedback_loops/feedback_loops/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/feedback_loops/feedback_loops/</guid>
+      <guid>https://willhipson.netlify.app/feedback_loops/feedback_loops/</guid>
       <description>If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to do something. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts.</description>
     </item>
     
     <item>
       <title>A Model and Simulation of Emotion Dynamics</title>
-      <link>/post/emotion-simulation1/emotion_sim/</link>
+      <link>https://willhipson.netlify.app/emotion-simulation1/emotion_sim/</link>
       <pubDate>Wed, 26 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/emotion-simulation1/emotion_sim/</guid>
+      <guid>https://willhipson.netlify.app/emotion-simulation1/emotion_sim/</guid>
       <description>Emotion dynamics is the study of how emotions change over time. Sometimes our feelings are quite stable, but other times capricious. Measuring and predicting these patterns for different people is somewhat of a Holy Grail for emotion researchers. In particular, some researchers are aspiring to discover mathematical laws that capture the complexity of our inner emotional experiences - much like physicists divining the laws that govern objects in the natural environment.</description>
     </item>
     
     <item>
       <title>Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd</title>
-      <link>/post/basketball_sim/basketball_sim/</link>
+      <link>https://willhipson.netlify.app/basketball_sim/basketball_sim/</link>
       <pubDate>Wed, 05 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/basketball_sim/basketball_sim/</guid>
+      <guid>https://willhipson.netlify.app/basketball_sim/basketball_sim/</guid>
       <description>Sporting events host witness to a wide range of human emotion. The emotional ups and downs are especially clear among invested fans. Fans experience the joy and excitement of a triumphant comeback, or the anxiety and disappointment of a loss. It is particularly interesting to see how emotions differ from two opposing fan groups watching the same match.
 I decided to perform some simulations on how a crowd of fans would react during a basketball game.</description>
     </item>
     
     <item>
       <title>Quick Example of Latent Profile Analysis in R</title>
-      <link>/post/latent-profile/latent-profile/</link>
+      <link>https://willhipson.netlify.app/latent-profile/latent-profile/</link>
       <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/latent-profile/latent-profile/</guid>
+      <guid>https://willhipson.netlify.app/latent-profile/latent-profile/</guid>
       <description>Latent Profile Analysis (LPA) tries to identify clusters of individuals (i.e., latent profiles) based on responses to a series of continuous variables (i.e., indicators). LPA assumes that there are unobserved latent profiles that generate patterns of responses on indicator items.
 Here, I will go through a quick example of LPA to identify groups of people based on their interests/hobbies. The data comes from the Young People Survey, available freely on Kaggle.</description>
     </item>
     
     <item>
       <title>Network Analysis of Emotions</title>
-      <link>/post/emotion-network/emotion-network/</link>
+      <link>https://willhipson.netlify.app/emotion-network/emotion-network/</link>
       <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/emotion-network/emotion-network/</guid>
-      <description>In this month’s post, I set out to create a visual network of emotions. Emotion Dynamics tells us that different emotions are highly interconnected, such that one emotion morphs into another and so on. I’ll be using a large dataset from an original study published in PLOS ONE by Trampe, Quoidbach, and Taquet (2015). Thanks to Google Dataset Search, I was able to locate this data. The data is collected from 11,000 participants who completed daily questionnaires on the emotions they felt at a given moment.</description>
-    </item>
-    
-    <item>
-      <title>Using sentiment analysis to detect affect in children’s and adolescents’ poetry</title>
-      <link>/publication/hipson-2019/</link>
-      <pubDate>Sat, 23 Feb 2019 00:00:00 -0500</pubDate>
-      
-      <guid>/publication/hipson-2019/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>The Face of (Dis)Agreement - Intraclass Correlations</title>
-      <link>/post/emotion-expression-icc/emotion-expression/</link>
-      <pubDate>Mon, 04 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/emotion-expression-icc/emotion-expression/</guid>
-      <description>I was recently introduced to Google Dataset Search, an extension that searches for open access datasets. There I stumbled upon this dataset on childrens’ and adult’s ratings of facial expressions. The data comes from a published article by Vesker et al. (2018). Briefly, this study involved having adults and 9-year-old children rate a series of 48 faces on two dimensions of emotion, valence (positive vs. negative) and arousal (activated vs.</description>
+      <guid>https://willhipson.netlify.app/emotion-network/emotion-network/</guid>
+      <description>In this month’s post, I set out to create a visual network of emotions. Emotion Dynamics tells us that different emotions are highly interconnected, such that one emotion morphs into another and so on. I’ll be using a large dataset from an original study published in PLOS ONE by Trampe, Quoidbach, and Taquet (2015). Thanks to Google Dataset Search, I was able to locate this data.</description>
     </item>
     
     <item>
       <title>Plotting the Affect Circumplex in R</title>
-      <link>/post/circumplex/circumplex/</link>
+      <link>https://willhipson.netlify.app/circumplex/circumplex/</link>
       <pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/circumplex/circumplex/</guid>
+      <guid>https://willhipson.netlify.app/circumplex/circumplex/</guid>
       <description>I’m a strong adherent to the circumplex model of emotions introduced by James Russell in the late 1980s. Russell argued that all emotional experience can be boiled down to two dimensions: valence and arousal, with valence being how positive or negative you feel and arousal being how sluggish or emotionally activated you feel. The emotions we commonly label as anger, sadness, joy, etc. can be mapped within this affective two-dimensional space, such that joy is a high valence, high arousal emotion, whereas boredom is a moderately low valence and low arousal emotion.</description>
-    </item>
-    
-    <item>
-      <title>A New Way to Handle Multivariate Outliers</title>
-      <link>/post/outliers/outliers/</link>
-      <pubDate>Thu, 10 Jan 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/outliers/outliers/</guid>
-      <description>Psychologists often have a standoffish attitude toward outliers. Developmental psychologists, in particular, seem uncomfortable with removing cases because of the challenges inherent in obtaining data in the first place. However, the process of identifying and (sometimes) removing outliers is not a witch hunt to cleanse datasets of “weird” cases; rather, dealing with outliers is an important step toward solid, reproducible science. As I’ll demonstrate in this simulated example, a few outliers can completely reverse the conclusions derived from statistical analyses.</description>
-    </item>
-    
-    <item>
-      <title>R</title>
-      <link>/project/r/</link>
-      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
-      
-      <guid>/project/r/</guid>
-      <description>R is a powerful tool for data science, which is why more and more researchers are turning to R for their analyses. I&amp;rsquo;m interested in using R for a variety of purposes, including (but not limited to) text analysis, linear mixed models, Monte Carlo simulations, and data visualization. I blog relatively frequently about using R to solve analytical problems in psychology.</description>
     </item>
     
   </channel>

@@ -1,176 +1,144 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Will Hipson</title>
-    <link>/tags/</link>
+    <link>https://willhipson.netlify.app/tags/</link>
     <description>Recent content in Tags on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2020</copyright>
-    <lastBuildDate>Mon, 23 Mar 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Animation</title>
-      <link>/tags/animation/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/animation/</guid>
-      <description></description>
-    </item>
-    
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bayesian</title>
-      <link>/tags/bayesian/</link>
+      <link>https://willhipson.netlify.app/tags/bayesian/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/bayesian/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Binomial</title>
-      <link>/tags/binomial/</link>
-      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/binomial/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Computational Linguistics</title>
-      <link>/tags/computational-linguistics/</link>
-      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
-      
-      <guid>/tags/computational-linguistics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Emotion Dynamics</title>
-      <link>/tags/emotion-dynamics/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/emotion-dynamics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Feedback Loops</title>
-      <link>/tags/feedback-loops/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/feedback-loops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Latent Profile Analysis</title>
-      <link>/tags/latent-profile-analysis/</link>
-      <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/latent-profile-analysis/</guid>
+      <guid>https://willhipson.netlify.app/tags/bayesian/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linear Mixed Models</title>
-      <link>/tags/linear-mixed-models/</link>
+      <link>https://willhipson.netlify.app/tags/linear-mixed-models/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/linear-mixed-models/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Markov Chain</title>
-      <link>/tags/markov-chain/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/markov-chain/</guid>
+      <guid>https://willhipson.netlify.app/tags/linear-mixed-models/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Multilevel Modeling</title>
-      <link>/tags/multilevel-modeling/</link>
+      <link>https://willhipson.netlify.app/tags/multilevel-modeling/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/multilevel-modeling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Probability</title>
-      <link>/tags/probability/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/probability/</guid>
+      <guid>https://willhipson.netlify.app/tags/multilevel-modeling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>/tags/r/</link>
+      <link>https://willhipson.netlify.app/tags/r/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Sentiment Analysis</title>
-      <link>/tags/sentiment-analysis/</link>
-      <pubDate>Fri, 01 May 2020 00:00:00 -0400</pubDate>
-      
-      <guid>/tags/sentiment-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Shiny</title>
-      <link>/tags/shiny/</link>
-      <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/shiny/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Simulation</title>
-      <link>/tags/simulation/</link>
-      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/simulation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Social Development</title>
-      <link>/tags/social-development/</link>
-      <pubDate>Wed, 09 Jan 2019 00:00:00 -0500</pubDate>
-      
-      <guid>/tags/social-development/</guid>
+      <guid>https://willhipson.netlify.app/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Stan</title>
-      <link>/tags/stan/</link>
+      <link>https://willhipson.netlify.app/tags/stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/stan/</guid>
+      <guid>https://willhipson.netlify.app/tags/stan/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tutorial</title>
-      <link>/tags/tutorial/</link>
+      <link>https://willhipson.netlify.app/tags/tutorial/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tutorial/</guid>
+      <guid>https://willhipson.netlify.app/tags/tutorial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Animation</title>
+      <link>https://willhipson.netlify.app/tags/animation/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/animation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Markov Chain</title>
+      <link>https://willhipson.netlify.app/tags/markov-chain/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/markov-chain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Probability</title>
+      <link>https://willhipson.netlify.app/tags/probability/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/probability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Simulation</title>
+      <link>https://willhipson.netlify.app/tags/simulation/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/simulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Binomial</title>
+      <link>https://willhipson.netlify.app/tags/binomial/</link>
+      <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/binomial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Shiny</title>
+      <link>https://willhipson.netlify.app/tags/shiny/</link>
+      <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/shiny/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Emotion Dynamics</title>
+      <link>https://willhipson.netlify.app/tags/emotion-dynamics/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/emotion-dynamics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Feedback Loops</title>
+      <link>https://willhipson.netlify.app/tags/feedback-loops/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/feedback-loops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Latent Profile Analysis</title>
+      <link>https://willhipson.netlify.app/tags/latent-profile-analysis/</link>
+      <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://willhipson.netlify.app/tags/latent-profile-analysis/</guid>
       <description></description>
     </item>
     
