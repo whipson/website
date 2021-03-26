@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Latent Profile Analysis on Will Hipson</title>
-    <link>https://willhipson.netlify.app/categories/latent-profile-analysis/</link>
+    <link>https://bloglikelihood.netlify.app/categories/latent-profile-analysis/</link>
     <description>Recent content in Latent Profile Analysis on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 20 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/categories/latent-profile-analysis/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/categories/latent-profile-analysis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Quick Example of Latent Profile Analysis in R</title>
-      <link>https://willhipson.netlify.app/latent-profile/latent-profile/</link>
+      <link>https://bloglikelihood.netlify.app/latent-profile/latent-profile/</link>
       <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/latent-profile/latent-profile/</guid>
+      <guid>https://bloglikelihood.netlify.app/latent-profile/latent-profile/</guid>
       <description>Latent Profile Analysis (LPA) tries to identify clusters of individuals (i.e., latent profiles) based on responses to a series of continuous variables (i.e., indicators). LPA assumes that there are unobserved latent profiles that generate patterns of responses on indicator items.
 Here, I will go through a quick example of LPA to identify groups of people based on their interests/hobbies. The data comes from the Young People Survey, available freely on Kaggle.</description>
     </item>

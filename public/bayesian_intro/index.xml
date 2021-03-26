@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Bayesian_introes on Will Hipson</title>
-    <link>https://willhipson.netlify.app/bayesian_intro/</link>
+    <link>https://bloglikelihood.netlify.app/bayesian_intro/</link>
     <description>Recent content in Bayesian_introes on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 28 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/bayesian_intro/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/bayesian_intro/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>An Intuitive Look at Binomial Probability in a Bayesian Context</title>
-      <link>https://willhipson.netlify.app/bayesian_intro/binomial_gold/</link>
+      <link>https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/</link>
       <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/bayesian_intro/binomial_gold/</guid>
+      <guid>https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/</guid>
       <description>Binomial probability is the relatively simple case of estimating the proportion of successes in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example.</description>
     </item>
     

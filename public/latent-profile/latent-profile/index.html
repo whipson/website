@@ -12,22 +12,22 @@
     <meta property="og:site_name" content="Will Hipson" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://willhipson.netlify.app/latent-profile/latent-profile/" />
+    <meta property="og:url" content="https://bloglikelihood.netlify.app/latent-profile/latent-profile/" />
     <meta property="og:title" content="Quick Example of Latent Profile Analysis in R" />
-    <meta property="og:image" content="https://willhipson.netlify.app" />
+    <meta property="og:image" content="https://bloglikelihood.netlify.app" />
     <meta property="og:description" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
     
     <meta name="twitter:title" content="Quick Example of Latent Profile Analysis in R" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://willhipson.netlify.app" />
+    <meta name="twitter:image" content="https://bloglikelihood.netlify.app" />
 
-    <link rel="canonical" href="https://willhipson.netlify.app/latent-profile/latent-profile/">
+    <link rel="canonical" href="https://bloglikelihood.netlify.app/latent-profile/latent-profile/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://willhipson.netlify.appcss/custom.css" />
+    <link rel="stylesheet" href="https://bloglikelihood.netlify.appcss/custom.css" />
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
@@ -36,10 +36,10 @@
     
 
     <link rel="shortcut icon"
-        href="https://willhipson.netlify.app/images/favicon.png">
+        href="https://bloglikelihood.netlify.app/images/favicon.png">
 
     
-    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    <link href="https://bloglikelihood.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
 </head>
 
@@ -49,24 +49,36 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <a href="https://willhipson.netlify.app">
-                    <h1 class="name">whipson blogs</h1>
+                <a href="https://bloglikelihood.netlify.app">
+                    <h1 class="name">bLog likelihood</h1>
                 </a>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="signature">Will Hipson, PhD</p>
             </div>
         </div>
 
         <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="subheader">Musings on data science, statistics, and programming</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
             <ul class="nav nav-primary">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/">
                         
                         Home
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/about/">
                         
                         About
                     </a>
@@ -87,7 +99,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/index.xml">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/index.xml">
                         
                         Subscribe
                     </a>
@@ -98,6 +110,8 @@
     </div>
 </div>
 
+
+
     <div class="content">
         <div class="container">
             <div class="row justify-content-center">
@@ -106,21 +120,21 @@
                     <div class="markdown">
                         
     
-<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="https://willhipson.netlify.app/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="https://willhipson.netlify.app/rmarkdown-libs/plotly-binding/plotly.js"></script>
-<script src="https://willhipson.netlify.app/rmarkdown-libs/typedarray/typedarray.min.js"></script>
-<script src="https://willhipson.netlify.app/rmarkdown-libs/jquery/jquery.min.js"></script>
-<link href="https://willhipson.netlify.app/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
-<script src="https://willhipson.netlify.app/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="https://willhipson.netlify.app/rmarkdown-libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="https://willhipson.netlify.app/rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/plotly-binding/plotly.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/typedarray/typedarray.min.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="https://bloglikelihood.netlify.app/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="https://bloglikelihood.netlify.app/rmarkdown-libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
 
 
 <p>Latent Profile Analysis (LPA) tries to identify clusters of individuals (i.e., latent profiles) based on responses to a series of continuous variables (i.e., indicators). LPA assumes that there are unobserved latent profiles that generate patterns of responses on indicator items.</p>
 <p>Here, I will go through a quick example of LPA to identify groups of people based on their interests/hobbies. The data comes from the <a href="https://www.kaggle.com/miroslavsabo/young-people-survey">Young People Survey</a>, available freely on Kaggle.com.</p>
 <p>Here’s a sneak peek at what we’re going for:</p>
-<p><img src="https://willhipson.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Terminology note: People use the terms <em>clusters</em>, <em>profiles</em>, <em>classes</em>, and <em>groups</em> interchangeably, but there are subtle differences. I’ll mostly stick to <em>profile</em> to refer to a grouping of cases, in keeping with LPA terminology. We should note that LPA is a branch of <em>Gaussian Finite Mixture Modeling</em>, which includes Latent Class Analysis (LCA). The difference between LPA and LCA is conceptual, not computational: LPA uses continuous indicators and LCA uses binary indicators. LPA is a probabilistic model, which means that it models the probability of case belonging to a profile. This is superior to an approach like <em>K-means</em> that uses distance algorithms.</p>
 <p>With that aside, let’s load in the data.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
@@ -151,7 +165,7 @@ interests_clustering &lt;- interests_clean %&gt;%
 BIC &lt;- mclustBIC(interests_clustering)</code></pre>
 <p>We’ll start by plotting Bayesian Information Criteria for all the models with profiles ranging from 1 to 9.</p>
 <pre class="r"><code>plot(BIC)</code></pre>
-<p><img src="https://willhipson.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>It’s not immediately clear which model is the best since the y-axis is so large and many of the models score close together. summary(BIC) shows the top three models based on BIC.</p>
 <pre class="r"><code>summary(BIC)</code></pre>
 <pre><code>## Best BIC values:
@@ -180,7 +194,7 @@ summary(mod1)</code></pre>
 <pre class="r"><code>ICL &lt;- mclustICL(interests_clustering)
 
 plot(ICL)</code></pre>
-<p><img src="https://willhipson.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>summary(ICL)</code></pre>
 <pre><code>## Best ICL values:
 ##              VVE,3        VEE,3      EVE,3
@@ -225,7 +239,7 @@ plot(ICL)</code></pre>
   labs(x = NULL, y = &quot;Standardized mean interest&quot;) +
   theme_bw(base_size = 14) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;top&quot;)</code></pre>
-<p><img src="https://willhipson.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>We have a lot of indicators (more than typical for LPA), but we see some interesting differences. Clearly the red group is interested in science and the blue group shows greater interest in arts and humanities. The green group seems disinterested in both science and art, but moderately interested in other things.</p>
 <p>We can make this plot more informative by plugging in profile names and proportions. I’m also going to save this plot as an object so that we can do something really cool with it!</p>
 <pre class="r"><code>p &lt;- means %&gt;%
@@ -248,7 +262,7 @@ plot(ICL)</code></pre>
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = &quot;top&quot;)
 
 p</code></pre>
-<p><img src="https://willhipson.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/latent-profile/Latent_Profile_Interests_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>The something <em>really cool</em> that I want to do is make an interactive plot. Why would I want to do this? Well, one of the problems with the static plot is that with so many indicators it’s tough to read the values for each indicator. An interactive plot lets the reader narrow in on specific indicators or profiles of interest. We’ll use <em>plotly</em> to turn our static plot into an interactive one.</p>
 <pre class="r"><code>library(plotly)
 
@@ -314,7 +328,7 @@ ggplotly(p, tooltip = c(&quot;Interest&quot;, &quot;Mean&quot;)) %&gt;%
     
     
         
-<script src="https://willhipson.netlify.app/js/math-code.js"></script>
+<script src="https://bloglikelihood.netlify.app/js/math-code.js"></script>
 <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 

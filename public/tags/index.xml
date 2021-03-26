@@ -2,143 +2,143 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Will Hipson</title>
-    <link>https://willhipson.netlify.app/tags/</link>
+    <link>https://bloglikelihood.netlify.app/tags/</link>
     <description>Recent content in Tags on Will Hipson</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://willhipson.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bloglikelihood.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bayesian</title>
-      <link>https://willhipson.netlify.app/tags/bayesian/</link>
+      <link>https://bloglikelihood.netlify.app/tags/bayesian/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/bayesian/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/bayesian/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linear Mixed Models</title>
-      <link>https://willhipson.netlify.app/tags/linear-mixed-models/</link>
+      <link>https://bloglikelihood.netlify.app/tags/linear-mixed-models/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/linear-mixed-models/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/linear-mixed-models/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Multilevel Modeling</title>
-      <link>https://willhipson.netlify.app/tags/multilevel-modeling/</link>
+      <link>https://bloglikelihood.netlify.app/tags/multilevel-modeling/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/multilevel-modeling/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/multilevel-modeling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>https://willhipson.netlify.app/tags/r/</link>
+      <link>https://bloglikelihood.netlify.app/tags/r/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/r/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Stan</title>
-      <link>https://willhipson.netlify.app/tags/stan/</link>
+      <link>https://bloglikelihood.netlify.app/tags/stan/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/stan/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/stan/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tutorial</title>
-      <link>https://willhipson.netlify.app/tags/tutorial/</link>
+      <link>https://bloglikelihood.netlify.app/tags/tutorial/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/tutorial/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/tutorial/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Animation</title>
-      <link>https://willhipson.netlify.app/tags/animation/</link>
+      <link>https://bloglikelihood.netlify.app/tags/animation/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/animation/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/animation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Markov Chain</title>
-      <link>https://willhipson.netlify.app/tags/markov-chain/</link>
+      <link>https://bloglikelihood.netlify.app/tags/markov-chain/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/markov-chain/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/markov-chain/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Probability</title>
-      <link>https://willhipson.netlify.app/tags/probability/</link>
+      <link>https://bloglikelihood.netlify.app/tags/probability/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/probability/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/probability/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Simulation</title>
-      <link>https://willhipson.netlify.app/tags/simulation/</link>
+      <link>https://bloglikelihood.netlify.app/tags/simulation/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/simulation/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/simulation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Binomial</title>
-      <link>https://willhipson.netlify.app/tags/binomial/</link>
+      <link>https://bloglikelihood.netlify.app/tags/binomial/</link>
       <pubDate>Tue, 28 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/binomial/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/binomial/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Shiny</title>
-      <link>https://willhipson.netlify.app/tags/shiny/</link>
+      <link>https://bloglikelihood.netlify.app/tags/shiny/</link>
       <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/shiny/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/shiny/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Emotion Dynamics</title>
-      <link>https://willhipson.netlify.app/tags/emotion-dynamics/</link>
+      <link>https://bloglikelihood.netlify.app/tags/emotion-dynamics/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/emotion-dynamics/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/emotion-dynamics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Loops</title>
-      <link>https://willhipson.netlify.app/tags/feedback-loops/</link>
+      <link>https://bloglikelihood.netlify.app/tags/feedback-loops/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/feedback-loops/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/feedback-loops/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Latent Profile Analysis</title>
-      <link>https://willhipson.netlify.app/tags/latent-profile-analysis/</link>
+      <link>https://bloglikelihood.netlify.app/tags/latent-profile-analysis/</link>
       <pubDate>Sat, 20 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://willhipson.netlify.app/tags/latent-profile-analysis/</guid>
+      <guid>https://bloglikelihood.netlify.app/tags/latent-profile-analysis/</guid>
       <description></description>
     </item>
     

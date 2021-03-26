@@ -12,22 +12,22 @@
     <meta property="og:site_name" content="Will Hipson" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://willhipson.netlify.app/bayesian_intro/binomial_gold/" />
+    <meta property="og:url" content="https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/" />
     <meta property="og:title" content="An Intuitive Look at Binomial Probability in a Bayesian Context" />
-    <meta property="og:image" content="https://willhipson.netlify.app" />
+    <meta property="og:image" content="https://bloglikelihood.netlify.app" />
     <meta property="og:description" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
     
     <meta name="twitter:title" content="An Intuitive Look at Binomial Probability in a Bayesian Context" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://willhipson.netlify.app" />
+    <meta name="twitter:image" content="https://bloglikelihood.netlify.app" />
 
-    <link rel="canonical" href="https://willhipson.netlify.app/bayesian_intro/binomial_gold/">
+    <link rel="canonical" href="https://bloglikelihood.netlify.app/bayesian_intro/binomial_gold/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://willhipson.netlify.appcss/custom.css" />
+    <link rel="stylesheet" href="https://bloglikelihood.netlify.appcss/custom.css" />
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
@@ -36,10 +36,10 @@
     
 
     <link rel="shortcut icon"
-        href="https://willhipson.netlify.app/images/favicon.png">
+        href="https://bloglikelihood.netlify.app/images/favicon.png">
 
     
-    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    <link href="https://bloglikelihood.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
 </head>
 
@@ -49,24 +49,36 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <a href="https://willhipson.netlify.app">
-                    <h1 class="name">whipson blogs</h1>
+                <a href="https://bloglikelihood.netlify.app">
+                    <h1 class="name">bLog likelihood</h1>
                 </a>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="signature">Will Hipson, PhD</p>
             </div>
         </div>
 
         <div class="row justify-content-center">
+            <div class="col-auto">
+                <p class="subheader">Musings on data science, statistics, and programming</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
             <ul class="nav nav-primary">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/">
                         
                         Home
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/about/">
                         
                         About
                     </a>
@@ -87,7 +99,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://willhipson.netlify.app/index.xml">
+                    <a class="nav-link" href="https://bloglikelihood.netlify.app/index.xml">
                         
                         Subscribe
                     </a>
@@ -98,6 +110,8 @@
     </div>
 </div>
 
+
+
     <div class="content">
         <div class="container">
             <div class="row justify-content-center">
@@ -106,7 +120,7 @@
                     <div class="markdown">
                         
     
-<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>Binomial probability is the relatively simple case of estimating the proportion of <em>successes</em> in a series of yes/no trials. The perennial example is estimating the proportion of heads in a series of coin flips where each trial is independent and has possibility of heads or tails. Because of its relative simplicity, the binomial case is a great place to start when learning about Bayesian analysis. In this post, I will provide a gentle introduction to Bayesian analysis using binomial probability as an example. Instead of coin flips, we’ll imagine a scenario where we are mining for gold!</p>
@@ -118,7 +132,7 @@
 <div id="simulating-the-problem" class="section level2">
 <h2>Simulating the Problem</h2>
 <p>For this example, we will simulate the entire landscape as a 100 x 100 grid. We will allow each of the 10,000 points on the grid to have a probability of .10 (10%) of containing gold. This is our chosen value of <span class="math inline">\(\theta\)</span> for the simulation. We’ll also identify a sample 10 x 10 grid. Here’s a plot of the simulated landscape identifying the location of gold and the sample area.</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Remember we are omniscient but our merchant knows nothing about where the gold is and how much there truly is. Bayesian statistics is all about dealing with uncertainty by incorporating information from new data <em>and</em> prior sources of information.</p>
 </div>
 <div id="bayes-theorem" class="section level2">
@@ -135,11 +149,11 @@
 <p><span class="math display">\[p(y|\theta)=\theta^y(1-\theta)^{n-y}\]</span></p>
 <p>where <span class="math inline">\(y\)</span> is the number of successes and <span class="math inline">\(n\)</span> is the number of trials.</p>
 <p>Let’s return to our gold merchant and see how we can express the likelihood in terms of the data the merchant observes. Imagine our merchant collects data by digging each of the 10 x 10 squares in the sample. The merchant finds that 14 out of 100 spaces in the sample contain gold:</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Here’s how we express the data in terms of the binomial likelihood function:</p>
 <p><span class="math display">\[p(y|\theta)=\theta^{14}(1-\theta)^{100-14}\]</span></p>
 <p>If we compute <span class="math inline">\(p(y|\theta)\)</span> across the grid of <span class="math inline">\(\theta\)</span> values from 0 to 1, we get the following probability density:</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Reproducing this in R is fairly simple - we could substitute the values into the binomial formula, or just use the built-in <em>dbinom</em> function. We then create a dataframe containing the likelihood for each theta and use <em>ggplot2</em> from the <em>tidyverse</em> to draw the plot:</p>
 <pre class="r"><code>library(tidyverse)
 
@@ -175,7 +189,7 @@ ggplot(df, aes(x = theta, y = likelihood)) +
 <p><span class="math display">\[\text{beta}(a,b)=\theta^{a-1}(1-\theta)^{b-1}\]</span></p>
 <p>where <span class="math inline">\(a\)</span> can represent successes and <span class="math inline">\(b\)</span> can represent failures.</p>
 <p>Notice the similarity between the formulas for the binomial and beta functions. They have identical data structures, which makes the beta a conjugate prior for the binomial likelihood. Let’s use a <span class="math inline">\(\text{beta}(2,8)\)</span> as a prior, representing our knowledge of a rumored 20% probability of gold.</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Similarly, you can reproduce this using the <em>dbeta</em> function in R:</p>
 <pre class="r"><code># here we use x as a sequence from .01-1
 b_likelihood &lt;- dbeta(x = seq(.01, 1, .01), shape1 = 2, shape2 = 8)
@@ -201,7 +215,7 @@ df %&gt;%
 <div id="getting-the-posterior" class="section level3">
 <h3>Getting the Posterior</h3>
 <p>The posterior probability, <span class="math inline">\(p(\theta|y)\)</span> takes into account the data and the prior. It is often viewed as a <em>compromise</em> between the data likelihood and the prior probability. This is more easily understood graphically:</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Here’s how to produce this figure:</p>
 <pre class="r"><code>theta &lt;- seq(.01, 1, .01)
 prior &lt;- dbeta(x = theta, shape1 = 2, shape2 = 8)
@@ -241,7 +255,7 @@ data_long %&gt;%
 <h2>An Animated Example</h2>
 <p>I’m a huge proponent of using animations to illustrate complicated topics (if you haven’t yet, you should consider watching <a href="https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw">3Blue1Brown’s videos</a> covering mathematics concepts). So I want to end by bringing to life our example of a gold miner estimating the proportion of gold in a section of land. We’ll use the same information as before, but the difference this time is that the gold miner will investigate each 1 x 1 section of land at a time and update the likelihood.</p>
 <p>The animation begins with our merchant-miner (indicated by the red square) on square 1,1. As the merchant covers the sample, the influence of the likelihood over the prior increases and there is more certainty in the estimate. If we expanded our sample to cover more of the territory, our estimate would get even closer to the true value of <span class="math inline">\(\theta\)</span> and we’d be more certain about it.</p>
-<p><img src="https://willhipson.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-10-1.gif" /><!-- --></p>
+<p><img src="https://bloglikelihood.netlify.app/bayesian_intro/Bayesian_Intro_files/figure-html/unnamed-chunk-10-1.gif" /><!-- --></p>
 </div>
 <div id="conclusions" class="section level2">
 <h2>Conclusions</h2>
@@ -299,7 +313,7 @@ data_long %&gt;%
     
     
         
-<script src="https://willhipson.netlify.app/js/math-code.js"></script>
+<script src="https://bloglikelihood.netlify.app/js/math-code.js"></script>
 <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 

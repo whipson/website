@@ -1,9 +1,9 @@
 /* Global styles */
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Athena", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: DejaVu Sans Mono, monospace;
     font-feature-settings: "liga", "kern";
-    background-color: #F5E5C9;
+    background-color: #FFF;
 }
 
 /* Fix jumping scrollbar when switching to long pages */
@@ -32,7 +32,7 @@ a:active, a:hover {
 }
 
 a:hover, a:focus {
-    color: #333333;
+    color: #18A576;
     text-decoration: underline;
 }
 
@@ -64,8 +64,13 @@ hr {
     color: #333333;
 }
 
+.header p.signature {
+    color: #18A576;
+}
+
 .header ul.nav li {
     font-size: 1rem;
+    color: #18A576;
 }
 
 .header ul.nav {
