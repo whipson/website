@@ -22,7 +22,7 @@ params:
     - python
     - stan
   progressively: no
-  sitename: bLog likelihood
+  sitename: bloglikelihood
   signature: Will Hipson, PhD
   subheader: Musings on data science, statistics, and programming
   uselatex: yes
