@@ -12,22 +12,22 @@
     <meta property="og:site_name" content="Will Hipson" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://bloglikelihood.netlify.app/post/stan-random-slopes/varying_effects_stan/" />
+    <meta property="og:url" content="https://willhipson.netlify.app/post/stan-random-slopes/varying_effects_stan/" />
     <meta property="og:title" content="Bayesian Varying Effects Models in R and Stan" />
-    <meta property="og:image" content="https://bloglikelihood.netlify.app/" />
+    <meta property="og:image" content="https://willhipson.netlify.app/" />
     <meta property="og:description" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
     
     <meta name="twitter:title" content="Bayesian Varying Effects Models in R and Stan" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://bloglikelihood.netlify.app/" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app/" />
 
-    <link rel="canonical" href="https://bloglikelihood.netlify.app/post/stan-random-slopes/varying_effects_stan/">
+    <link rel="canonical" href="https://willhipson.netlify.app/post/stan-random-slopes/varying_effects_stan/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://bloglikelihood.netlify.app/css/custom.css" />
+    <link rel="stylesheet" href="https://willhipson.netlify.app/css/custom.css" />
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
@@ -36,10 +36,10 @@
     
 
     <link rel="shortcut icon"
-        href="https://bloglikelihood.netlify.app/img/favicon.ico">
+        href="https://willhipson.netlify.app/img/favicon.ico">
 
     
-    <link href="https://bloglikelihood.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
 </head>
 
@@ -49,7 +49,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <a href="https://bloglikelihood.netlify.app/">
+                <a href="https://willhipson.netlify.app/">
                     <h1 class="name">βLog likelihood</h1>
                 </a>
             </div>
@@ -71,16 +71,23 @@
             <ul class="nav nav-primary">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
                         
                         Home
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/about/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
                         
                         About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/publications/">
+                        
+                        Publications
                     </a>
                 </li>
                 
@@ -95,13 +102,6 @@
                     <a class="nav-link" href="https://twitter.com/whipson3">
                         
                         Twitter
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/index.xml">
-                        
-                        Subscribe
                     </a>
                 </li>
                 
@@ -120,12 +120,12 @@
                     <div class="markdown">
                         
     
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>In psychology, we increasingly encounter data that is nested. It is to the point now where any quantitative psychologist worth their salt must know how to analyze multilevel data. A common approach to multilevel modeling is the <strong>varying effects</strong> approach, where the relation between a predictor and an outcome variable is modeled both within clusters of data (e.g., observations within people, or children within schools) and across the sample as a whole. And there is no better way to analyze this kind of data than with Bayesian statistics. Not only does Bayesian statistics give solutions that are directly interpretable in the language of probability, but Bayesian models can be infinitely more complex than Frequentist ones. This is crucial when dealing with multilevel models, which get complex quickly.</p>
 <p>A preview of what’s to come:</p>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p><a href="https://mc-stan.org/">Stan</a> is the <em>lingua franca</em> for programming Bayesian models. You code your model using the Stan language and then run the model using a data science language like R or Python. Stan is extremely powerful, but it is also intimidating even for an experienced programmer. In this post, I’ll demonstrate how to code, run, and evaluate multilevel models in Stan.</p>
 <p>I assume a basic grasp of Bayesian logic (i.e., you understand priors, likelihoods, and posteriors). I’ve written some content introducing these terms <a href="https://willhipson.netlify.app/post/bayesian_intro/binomial_gold/">here</a> if you want to check that out first. I also assume familiarity with R and the <em>tidyverse</em> packages (in particular, ggplot2, dplyr, and purrr).</p>
 <p>You’ll need to install the <em>rstan</em> package to follow along. This installation is more involved than typical R packages. The instructions on <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">Stan’s website</a> will help you get started.</p>
@@ -180,7 +180,7 @@ dat &lt;- sim_dat %&gt;%
   geom_point(color = &quot;cadetblue4&quot;, alpha = 0.80) +
   geom_smooth(method = &#39;lm&#39;, se = FALSE, color = &quot;black&quot;) +
   facet_wrap(~pid)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We can see a good amount of clustering at the participant level. Ok, so we have our data, now let’s analyze it.</p>
 </div>
 <div id="bayesian-workflow" class="section level1">
@@ -234,7 +234,7 @@ ggplot(b0_prior, aes(x = grid, y = b0)) +
        y = &quot;probability density&quot;,
        title = latex2exp::TeX(&quot;Possible $\\beta_0$ (intercept) priors&quot;)) +
   facet_wrap(~sigma_id, nrow = 3)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>We can see that the three distributions vary in terms of how spread out they are. We might say that the top distribution with mean 0 and sd 0.5 is more “confident” about the probability of values close to zero, or that it is more skeptical about extreme values. Flatter distributions allocate probability more evenly and are therefore more open to extreme values.</p>
 <p>This is all well and good, but looking at the raw probability densities doesn’t tell us much about what the priors assume about the data. We need to look at what kind of data is <em>compatible</em> with the priors. So this time we’ll generate regression lines from the <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> priors. Remember, all you need to create a line is an intercept and a slope!</p>
 <p>The trick this time is to generate intercepts and slopes from the different normal distributions. Again, we’ll stick with three different distributions, but now we use <code class="R">map2_dfr</code> to iterate over a <span class="math inline">\(\beta_0\)</span> prior and a <span class="math inline">\(\beta_1\)</span> prior.</p>
@@ -257,7 +257,7 @@ ggplot(b0b1) +
        y = &quot;y&quot;,
        title = latex2exp::TeX(&quot;Sampling of lines from $\\beta_0$ and $\\beta_1$ priors&quot;)) +
   facet_wrap(~sigma_id, nrow = 3)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The more restrictive set of priors on the top constrains the lines to have intercepts and slopes close to zero, and you can see that the lines vary little from one another. In contrast, the weaker priors allow a much greater variety of intercept/slope combinations.</p>
 <p>Later we’ll see how to generate actual data from the priors, but for now let’s go ahead with the priors I’ve provided in the model formula and begin coding the model in Stan!</p>
 </div>
@@ -396,7 +396,7 @@ color_scheme_set(&quot;teal&quot;)
 
 mcmc_areas(stan_fit1, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;, &quot;sigma&quot;), prob = 0.89) +
   scale_y_discrete(expand = c(0, 0))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>For regression problems, it’s also good to see the regression lines in the posterior distribution. This tells us what kind of lines are compatible with the data and the priors. We use rstan’s <code class="R">extract</code> function to get samples from the posterior.</p>
 <pre class="r"><code>samples &lt;- as.data.frame(rstan::extract(stan_fit1, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;))) %&gt;%
   rename(intercept = beta.1., slope = beta.2.) # friendlier variable names
@@ -410,7 +410,7 @@ ggplot(samples) +
        y = &quot;y&quot;,
        title = &quot;Samples from beta posteriors&quot;,
        subtitle = latex2exp::TeX(&quot;$N_{samples} = 4000$&quot;))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Although the average posterior regression line has positive slope, it’s clear that many lines, even some with negative slope, are compatible.</p>
 <p>It doesn’t matter anyway because we know this model is bad - it ignores the clustering. Dealing with the clustering will be the objective for the remainder of this post.</p>
 </div>
@@ -499,7 +499,7 @@ sim_dat %&gt;%
   gghighlight(pid == 4, use_group_by = FALSE, max_highlight = Inf, use_direct_label = FALSE) +
   labs(title = &quot;Data simulated from priors&quot;,
        subtitle = &quot;Green points are from a random participant.\nGrey points are from all other participants.&quot;)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>Note that I’ve highlighted one participant. We should see some degree of clustering of the highlighted points, but not always. Rerun the simulation and visualization several times to see how the priors can produce different datasets - some of which seem slightly implausible. If we saw anything truly bizarre, it would be cause to change our priors before analyzing the data for real.</p>
 </div>
 <div id="coding-the-model-in-stan" class="section level2">
@@ -694,7 +694,7 @@ stan_fit2</code></pre>
 <p>We get a warning about some NA R-hat values and low Effective Samples Size. In this case, these are false alarms - they are merely artifacts of the correlation matrix <span class="math inline">\(\Omega\)</span> having values that are invariably 1 (like a good correlation matrix should).</p>
 <pre class="r"><code>mcmc_areas(stan_fit2, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;, &quot;sigma_p[1]&quot;, &quot;sigma_p[2]&quot;, &quot;sigma&quot;), prob = 0.89) +
   scale_y_discrete(expand = c(0, 0))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>When we look at the posterior densities of some of the parameters. We can see that the overall error, sigma, is lower than in the simple regression. This is because the variance in <span class="math inline">\(y\)</span> is now shared across population <em>and</em> participant-level error. It’s also worth noting that the model is less certain about the population intercept and slope. The means are roughly the same, but the distribution is more spread out. Because there is participant-level variation in the intercepts and slopes, the model views the population estimates with greater uncertainty.</p>
 <div id="visualizing-correlated-slopes-and-intercepts" class="section level3">
 <h3>Visualizing Correlated Slopes and Intercepts</h3>
@@ -708,7 +708,7 @@ beta_p %&gt;%
   ggplot(aes(x = intercept, y = slope)) +
   geom_point(color = &quot;cadetblue4&quot;, alpha = 0.75, size = 3) +
   labs(title = &quot;Participant intercept and slope are negatively correlated&quot;)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>We want to infer beyond the participants in our sample though, so let’s look at the posterior samples for our <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> parameters. Like with the simple linear regression, we’re going to visualize all the regression lines in the posterior distribution - only now partitioned by intercept. We’ll split the samples into three equal groups based on their intercept. This is of course an arbitrary choice and we’re not implying that there are three distinct groups here. We just want to see how the slope varies by intercept and it’s a lot easier to do this by splitting the samples.</p>
 <pre class="r"><code>beta_sim &lt;- as.data.frame(rstan::extract(stan_fit2, pars = c(&quot;beta[1]&quot;, &quot;beta[2]&quot;))) %&gt;%
   rename(intercept = beta.1., slope = beta.2.)
@@ -730,7 +730,7 @@ beta_sim %&gt;%
        subtitle = &quot;Intercept percentile&quot;) +
   facet_wrap(~int_grp) +
   theme(plot.subtitle = element_text(hjust = 0.5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>Yes, the slope seems to be getting shallower as the intercept increases.</p>
 <p>Although I find the ‘many lines’ approach to be appealing, it is more common to present figures displaying means and <strong>compatibility intervals</strong> (Bayesian equivalent of a confidence interval). We start by creating a sequence of <code class="R">x</code> values over a specified range. Since we’re dealing in standardized units, we’ll make it from -1 to 1. Then for each value of <code class="R">x</code> in this sequence we calculate the expected value of y using the <code class="R">beta</code> samples.</p>
 <p>I again make use of dplyr’s <code class="R">map_dfr</code> function to iterate over each value of <code class="R">x</code> and I also bin the intercept into the three groups from before. After this step, we have a large dataframe of 100 <code class="R">x</code> values for each of 4000 samples. Then again for each value of <code class="R">x</code> we calculate the mean (mu) of the samples and its lower and upper bound for the compatiblity interval. Here I adopt McElreath’s convention of 89% compatability interval, but there’s nothing more special about this value than, say, 95%.</p>
@@ -752,7 +752,7 @@ beta_sim %&gt;%
        caption = &quot;Shaded area = 89% compatibility interval&quot;) +
   facet_wrap(~int) +
   theme(plot.subtitle = element_text(hjust = 0.5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>Now that’s a publishable figure!</p>
 </div>
 </div>
@@ -876,7 +876,7 @@ stan_fit3 &lt;- stan(file = &quot;mod2-nc.stan&quot;,
                   chains = 4, cores = 4)
 
 stan_fit3</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/stan-random-slopes/stan-random-slopes_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <p>Looking at the posterior densities for the population betas, sigma, and participant sigmas, they are same as the previous model with only minor differences in sampling error.</p>
 <p>In summary, use the non-centered parameterization (the one with the Cholesky factorization) when you find your varying effects models misbehaving.</p>
 </div>
@@ -939,7 +939,7 @@ stan_fit3</code></pre>
     
     
         
-<script src="https://bloglikelihood.netlify.app/js/math-code.js"></script>
+<script src="https://willhipson.netlify.app/js/math-code.js"></script>
 <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 

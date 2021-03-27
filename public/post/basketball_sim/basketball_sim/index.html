@@ -12,22 +12,22 @@
     <meta property="og:site_name" content="Will Hipson" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://bloglikelihood.netlify.app/post/basketball_sim/basketball_sim/" />
+    <meta property="og:url" content="https://willhipson.netlify.app/post/basketball_sim/basketball_sim/" />
     <meta property="og:title" content="Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd" />
-    <meta property="og:image" content="https://bloglikelihood.netlify.app/" />
+    <meta property="og:image" content="https://willhipson.netlify.app/" />
     <meta property="og:description" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
     
     <meta name="twitter:title" content="Simulating Emotions during a Basketball Game - Just a Feeling in the Crowd" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://bloglikelihood.netlify.app/" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app/" />
 
-    <link rel="canonical" href="https://bloglikelihood.netlify.app/post/basketball_sim/basketball_sim/">
+    <link rel="canonical" href="https://willhipson.netlify.app/post/basketball_sim/basketball_sim/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://bloglikelihood.netlify.app/css/custom.css" />
+    <link rel="stylesheet" href="https://willhipson.netlify.app/css/custom.css" />
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
@@ -36,10 +36,10 @@
     
 
     <link rel="shortcut icon"
-        href="https://bloglikelihood.netlify.app/img/favicon.ico">
+        href="https://willhipson.netlify.app/img/favicon.ico">
 
     
-    <link href="https://bloglikelihood.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
 </head>
 
@@ -49,7 +49,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <a href="https://bloglikelihood.netlify.app/">
+                <a href="https://willhipson.netlify.app/">
                     <h1 class="name">βLog likelihood</h1>
                 </a>
             </div>
@@ -71,16 +71,23 @@
             <ul class="nav nav-primary">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
                         
                         Home
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/about/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
                         
                         About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/publications/">
+                        
+                        Publications
                     </a>
                 </li>
                 
@@ -95,13 +102,6 @@
                     <a class="nav-link" href="https://twitter.com/whipson3">
                         
                         Twitter
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/index.xml">
-                        
-                        Subscribe
                     </a>
                 </li>
                 
@@ -120,17 +120,17 @@
                     <div class="markdown">
                         
     
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>Sporting events host witness to a wide range of human emotion. The emotional ups and downs are especially clear among invested fans. Fans experience the joy and excitement of a triumphant comeback, or the anxiety and disappointment of a loss. It is particularly interesting to see how emotions differ from two opposing fan groups watching the same match.</p>
 <p>I decided to perform some simulations on how a crowd of fans would react during a basketball game. Why basketball? Two reasons: First is the frequency of scoring (more baskets = more <em>reactive</em> simulation), and second is that the NBA finals are in swing at time of writing.</p>
 <p>Below I’ve described the parameters of the simulation in detail and provided reproducible code for all examples, but here’s the quick and dirty. I’m simulating fans’ happiness and nerves (valence and arousal). Happiness reflects baskets scored (up for team basket and down for enemy basket) and overall team performance. Nerves reflects baskets scored, time remaining in game, and the difference between score (higher for closer game). There are other parameters involved that are described in more detail below.</p>
 <p>Let’s run the simulation! I’m simulating a short game that’s about 16 minutes long, but the simulation is sped up. There are 25 fans per team with each dot representing a fan. Blue dots root for the blue team and red dots for red. In this game, blue starts ahead, but red makes a rallying comeback.</p>
-<p><img src="https://bloglikelihood.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-1-1.gif" /><!-- --></p>
+<p><img src="https://willhipson.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-1-1.gif" /><!-- --></p>
 <p>What are we seeing here? As the game progresses, fans move into different emotional states. I’ve used the terms <em>content</em>, <em>disappointed</em>, <em>nervous</em>, and <em>excited</em> as helpful placeholders, but we should think of these in terms of varying along dimensions of <em>valence</em> (e.g., happiness) and <em>arousal</em> (e.g., nerves, excitedness). For example, when their team is doing well, fans are happier, but they’re only excited when the score is close. For each basket, there’s a brief spike in arousal and happiness. As the game draws closer to an end, fans get more excited/anxious, especially if the score is close.</p>
 <p>So how would this play out if one team decimated the other? Let’s give the red team a slight edge over blue:</p>
-<p><img src="https://bloglikelihood.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-2-1.gif" /><!-- --></p>
+<p><img src="https://willhipson.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-2-1.gif" /><!-- --></p>
 <p>Notice how ‘excited’ becomes ‘content’ and ‘nervous’ turns to ‘disappointment’ because the difference becomes insurmountable for the blue team. We can plug in any numbers for this function to produce different results. However, the algorithm is highly sensitive to small changes in scoring chance because this is calculated for every <em>second</em> of the game.</p>
 <div id="going-behind-the-simulation" class="section level2">
 <h2>Going Behind the Simulation</h2>
@@ -159,7 +159,7 @@ game_long %&gt;%
         axis.title.x = element_text(size = 18),
         axis.title.y = element_text(size = 18),
         plot.title = element_text(size = 18, hjust = .5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We can see this across all fans as well:</p>
 <pre class="r"><code>game_long %&gt;%
   ggplot(aes(x = instance, color = team)) +
@@ -172,7 +172,7 @@ game_long %&gt;%
         axis.title.x = element_text(size = 18),
         axis.title.y = element_text(size = 18),
         plot.title = element_text(size = 18, hjust = .5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>And for arousal…</p>
 <pre class="r"><code>game_long %&gt;%
   ggplot(aes(x = instance, color = team)) +
@@ -185,7 +185,7 @@ game_long %&gt;%
         axis.title.x = element_text(size = 18),
         axis.title.y = element_text(size = 18),
         plot.title = element_text(size = 18, hjust = .5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/basketball_sim/Basketball_Simulation_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>For those interested, here’s the full code for the simulation and first animation. Have fun with it! I’m also looking for ways to improve it. Ironically, I don’t watch a ton of sports, so if you think I’m open to input on how to make it more realistic!</p>
 <pre class="r"><code>library(tidyverse)
 library(forecast)
@@ -394,7 +394,7 @@ game1</code></pre>
     
     
         
-<script src="https://bloglikelihood.netlify.app/js/math-code.js"></script>
+<script src="https://willhipson.netlify.app/js/math-code.js"></script>
 <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 

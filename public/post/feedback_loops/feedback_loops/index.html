@@ -12,22 +12,22 @@
     <meta property="og:site_name" content="Will Hipson" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://bloglikelihood.netlify.app/post/feedback_loops/feedback_loops/" />
+    <meta property="og:url" content="https://willhipson.netlify.app/post/feedback_loops/feedback_loops/" />
     <meta property="og:title" content="Modeling Motivation and Emotion using Feedback Loops" />
-    <meta property="og:image" content="https://bloglikelihood.netlify.app/" />
+    <meta property="og:image" content="https://willhipson.netlify.app/" />
     <meta property="og:description" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
     
     <meta name="twitter:title" content="Modeling Motivation and Emotion using Feedback Loops" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://bloglikelihood.netlify.app/" />
+    <meta name="twitter:image" content="https://willhipson.netlify.app/" />
 
-    <link rel="canonical" href="https://bloglikelihood.netlify.app/post/feedback_loops/feedback_loops/">
+    <link rel="canonical" href="https://willhipson.netlify.app/post/feedback_loops/feedback_loops/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://bloglikelihood.netlify.app/css/custom.css" />
+    <link rel="stylesheet" href="https://willhipson.netlify.app/css/custom.css" />
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github-gist.min.css" integrity="sha512-od7JLoOTxM8w/HSKGzP9Kexc20K9p/M2zxSWsd7H1e4Ctf+8SQFtCWEZnW5u6ul5ehSECa5QmOk9ju2nQMmlVA==" crossorigin="anonymous" />
@@ -36,10 +36,10 @@
     
 
     <link rel="shortcut icon"
-        href="https://bloglikelihood.netlify.app/img/favicon.ico">
+        href="https://willhipson.netlify.app/img/favicon.ico">
 
     
-    <link href="https://bloglikelihood.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
+    <link href="https://willhipson.netlify.app/index.xml" rel="alternate" type="application/rss+xml" title="Will Hipson" />
     
 </head>
 
@@ -49,7 +49,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <a href="https://bloglikelihood.netlify.app/">
+                <a href="https://willhipson.netlify.app/">
                     <h1 class="name">βLog likelihood</h1>
                 </a>
             </div>
@@ -71,16 +71,23 @@
             <ul class="nav nav-primary">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/">
                         
                         Home
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/about/">
+                    <a class="nav-link" href="https://willhipson.netlify.app/about/">
                         
                         About
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="https://willhipson.netlify.app/publications/">
+                        
+                        Publications
                     </a>
                 </li>
                 
@@ -95,13 +102,6 @@
                     <a class="nav-link" href="https://twitter.com/whipson3">
                         
                         Twitter
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="https://bloglikelihood.netlify.app/index.xml">
-                        
-                        Subscribe
                     </a>
                 </li>
                 
@@ -120,11 +120,11 @@
                     <div class="markdown">
                         
     
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/viz/viz.js"></script>
-<link href="https://bloglikelihood.netlify.app/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
-<script src="https://bloglikelihood.netlify.app/rmarkdown-libs/grViz-binding/grViz.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="https://willhipson.netlify.app/rmarkdown-libs/viz/viz.js"></script>
+<link href="https://willhipson.netlify.app/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="https://willhipson.netlify.app/rmarkdown-libs/grViz-binding/grViz.js"></script>
 
 
 <p>If you’re anything like me, you probably set a lot of goals. Whether it’s to finish a paper by the end of the summer or to spend more time with friends and family, goals are what help motivate us to <em>do something</em>. Goals are also intimately tied to our feelings. You may have had the experience of falling behind in your goals, which made you upset, but ultimately motivated you to step up your efforts. Conversely, you could be comfortably ahead of your goals and be tempted to coast for a while (much like the Hare in the Tortoise and the Hare who takes a nap when he is far ahead of the Tortoise).</p>
@@ -168,7 +168,7 @@ progress_gathered %&gt;%
        title = &quot;Simple Feedback Loop&quot;) +
   theme_minimal(base_size = 24) +
   theme(plot.title = element_text(hjust = .5))</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Each line represents a person in the simulation. We see a sharp spike in progress during the first 25 days, then it levels off as the runners approach their goal. Admittedly, the example might not perfectly apply to marathon runners, who may actually see less progress early on when they are in poorer physical shape. A more appropriate example might be weight loss, where people are initially highly motivated to lose weight, but then the person reaches an asymptote and less progress is made.</p>
 </div>
 <div id="simple-feedback-with-an-outer-monitoring-loop" class="section level2">
@@ -225,7 +225,7 @@ progress_gathered %&gt;%
   theme_minimal(base_size = 24) +
   theme(plot.title = element_text(hjust = .5),
         legend.position = &quot;none&quot;)</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Compared to before, the rate of progress is slower on average. There is also more variation between people, as some achieve 50% progress and others are not much farther from where they started. What’s happening is <em>approach</em> behavior increases when the rate of progress is less than desirable. However, when the rate of progress is greater than desirable, approach behavior decreases. This leads to a fluctuating pattern of ups and downs, similar to what occurs in people who diet.</p>
 </div>
 <div id="feedback-loops-and-mood" class="section level2">
@@ -307,7 +307,7 @@ affect_plot &lt;- affect_gathered %&gt;%
 
 plots1 &lt;- ggarrange(progress_plot, affect_plot, nrow = 2)
 plots1</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>Affect is largely in-step with progress. Again, this is reflecting that people feel happier when they are making progress toward their goals. But we know that our mood is more complicated than this. Say we’re competing against others in a diet challenge to see who can lose the most weight over 100 days. If we see that we’re way behind in our progress, with no hope of catching up, we may throw in the towel and quit trying altogether. Indeed, humans are highly attuned to <em>social comparisons</em>, especially in competitive environments.</p>
 </div>
 <div id="feedback-loops-mood-and-social-comparison" class="section level2">
@@ -398,7 +398,7 @@ affect_plot2 &lt;- affect_gathered %&gt;%
 
 plots2 &lt;- ggarrange(progress_plot2, affect_plot2, nrow = 2)
 plots2</code></pre>
-<p><img src="https://bloglikelihood.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="https://willhipson.netlify.app/feedback_loops/Feedback_Loops_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>We can clearly see where a few competitors bailed out and their progress dropped to zero. This is because their relative standing was weak and they relinquished. Importantly though, they didn’t suffer too heavy a blow in affect, and this is because they no longer valued progress toward this goal.</p>
 </div>
 <div id="conclusion" class="section level2">
@@ -461,7 +461,7 @@ plots2</code></pre>
     
     
         
-<script src="https://bloglikelihood.netlify.app/js/math-code.js"></script>
+<script src="https://willhipson.netlify.app/js/math-code.js"></script>
 <script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 

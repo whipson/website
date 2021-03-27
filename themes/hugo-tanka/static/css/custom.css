@@ -23,7 +23,6 @@ html {
 
 a {
     color: #333333;
-    text-decoration: underline;
     background-color: transparent;
 }
 
@@ -33,7 +32,6 @@ a:active, a:hover {
 
 a:hover, a:focus {
     color: #18A576;
-    text-decoration: underline;
 }
 
 /* horizontal rule */
