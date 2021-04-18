@@ -1,0 +1,35 @@
+---
+title: "A first look at torch for R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Motivation
+
+I've been a bit reluctant to join in on the deep learning hype for some time. Much of this I attribute to my lack of enthusiasm toward Python frameworks for deep learning. Don't get me wrong. Tensorflow + Keras offers an intuitive API for neural nets, but can I just be frank and say I like R better for everything else?
+
+A few years back, I was briefly tantalized by the `tensorflow` package for R, but I couldn't establish a solid workflow with its Python backend constantly getting in the way. (Many an enfuriating hour was spent fruitlessly trying to configure my GPU).
+
+Jump ahead to autumn of 2020 and the `torch` package for R is [announced](https://blog.rstudio.com/2020/09/29/torch/). My enthusiasm is rekindled when I hear that `torch` is a native R package that uses a C++ backend instead of Python. The clouds began to part.
+
+However, `torch` is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn't offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the `torch` package. This post will be focused more on the programming aspects of `torch` rather than the mathematical and theoretical aspects of deep learning.[^1]
+
+[^1]: For the math and theory behind machine learning and deep learning, I recommend [fast.ai](https://www.fast.ai/).
+
+### Road Map
+
+This post will be broken into 4 steps:
+
+1.  Create a `Dataset` object
+2.  Build a network
+3.  Choose and define a loss function
+4.  Run and evaluate the model
+
+## 1. Datasets
+
+When you think 'dataset' you probably think of a spreadsheet or a `data.frame` object. In `torch`, a `Dataset` is kind of like a traditional `data.frame`, but it has a few special features that make it easier for deep learning. Instead of thinking of it as a static spreadsheet, think of it as a function that will feed data into our network in bite-sized chunks or *batches*.
+
+In this tutorial, we'll use the [Star Type Classification Data from NASA](https://www.kaggle.com/brsdincer/star-type-classification) shared on Kaggle.com.
