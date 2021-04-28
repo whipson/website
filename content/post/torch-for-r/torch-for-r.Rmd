@@ -33,3 +33,269 @@ This post will be broken into 4 steps:
 When you think 'dataset' you probably think of a spreadsheet or a `data.frame` object. In `torch`, a `Dataset` is kind of like a traditional `data.frame`, but it has a few special features that make it easier for deep learning. Instead of thinking of it as a static spreadsheet, think of it as a function that will feed data into our network in bite-sized chunks or *batches*.
 
 In this tutorial, we'll use the [Star Type Classification Data from NASA](https://www.kaggle.com/brsdincer/star-type-classification) shared on Kaggle.com.
+
+```{r get_dataset_with_pins}
+library(tidyverse)
+library(pins)
+
+pin_name <- pin_find("star-type-classification", board = "kaggle")[[1]]
+
+pin_dir <- pin_get(pin_name, board = "kaggle")
+
+stars_raw <- read_csv(pin_dir)
+
+head(stars_raw)
+```
+
+The data includes the following features to use as predictors:
+
+-   `L` = Relative Luminosity (L/Lo)
+-   **`R`** = Relative Radius (R/Ro)
+-   `A_M` = Absolute Magnitude
+-   `Temperature` = Temperature in Kelvin
+-   `Color` = Star color
+-   `Spectral_Class`
+
+We want to use these to predict star type, which is encoded in the `Type` variable. There are six different types of stars: 0 = Red Dwarf, 1 = Brown Dwarf, 2 = White Dwarf, 3 = Main Sequence, 4 = Super Giants, and 5 = Hyper Giants.
+
+We can get a glimpse of the data using the `skimr` package.
+
+```{r}
+library(skimr)
+
+stars_raw %>%
+  mutate(Type = as.factor(Type)) %>%
+  skim()
+```
+
+It's worth noting a few things:
+
+1.  No missing data, so we won't need to impute missing values.
+2.  The four numeric predictors are not normally distributed. Temperature, L/Lo, and R/Ro are positively skewed and Absolute Magnitude is largely uniform with a dip in the middle.
+3.  There are 17 unique Colors. As this is a small data set, it would be wise to lump some of these together.
+
+We will need to keep this in mind when we prepare the data for analysis.
+
+Let's check out the `Color` variable to see if we can make sense of it.
+
+```{r}
+stars_raw %>%
+  count(Color, sort = TRUE)
+```
+
+Lots of red and blue - that's ok. But what's the deal with different categories for `Blue-white` and `Blue White`? We see a similar pattern elsewhere. We'd do well to implement some string handling as well as factor lumping. For this, we'll leverage the `stringr` and `forcats` packages, respectively, which are loaded as part of the `tidyverse`.
+
+Instead of directly changing the data, I'm going to create a function that we can include in a preprocessing pipeline.
+
+```{r}
+fix_color <- function(x, n = 5) {
+  x_lower <- str_to_lower(x)
+  x_fix <- str_replace(x_lower, " |-", "_") # replaces either blank space or '-' with '_'
+  x_lump <- fct_lump(x_fix, n, other_level = "other")
+  x_lump
+}
+
+# Test
+stars_raw %>%
+  mutate(Color = fix_color(Color)) %>%
+  count(Color, sort = TRUE)
+```
+
+```{r}
+library(torch)
+
+stars_dataset <- dataset(
+  
+  name = "stars_dataset",
+  
+  initialize = function(df) {
+    
+    # Data preprocessing
+    stars_pp <- df %>%
+      select(-Type) %>%
+      mutate(across(c("Temperature", "L", "R"), log10),
+             Color = fix_color(Color))
+    
+    # Numeric predictors
+    self$x_num <- stars_pp %>%
+      select(where(is.numeric)) %>%
+      as.matrix() %>%
+      torch_tensor()
+    
+    # Categorical predictors
+    self$x_cat <- stars_pp %>%
+      select(!where(is.numeric)) %>%
+      mutate(across(everything(), ~as.integer(as.factor(.x)))) %>%
+      as.matrix() %>%
+      torch_tensor()
+    
+    # Target data
+    type <- as.integer(df$Type) + 1
+    self$y <- torch_tensor(type)
+  },
+  
+  .getitem = function(i) {
+    x_num <- self$x_num[i, ]
+    x_cat <- self$x_cat[i, ]
+    y <- self$y[i]
+    
+    list(x = list(x_num, x_cat),
+         y = y)
+  },
+  
+  .length = function() {
+    self$y$size()[[1]]
+  }
+)
+```
+
+```{r}
+ds_length <- length(stars_dataset(stars_raw))
+
+set.seed(915245)
+
+train_id <- sample(1:ds_length, size = as.integer(ds_length * 0.80))
+valid_id <- setdiff(1:ds_length, train_id)
+
+# Datasets
+train_ds <- stars_dataset(stars_raw[train_id, ])
+valid_ds <- stars_dataset(stars_raw[valid_id, ])
+
+# Dataloaders
+train_dl <- train_ds %>%
+  dataloader(batch_size = 25, shuffle = TRUE)
+
+valid_dl <- valid_ds %>%
+  dataloader(batch_size = 25, shuffle = FALSE)
+```
+
+### Embedding Categorical Features
+
+Our data has two categorical features, Color and Spectral Class. Because these features don't have an inherent ordering to them, we can't use the raw numeric values. The solution is to use *embeddings*. This means we represent each unique value of the categorical feature in some *n*-dimensional space.
+
+The space is represented by a trainable vector. In other words, the embeddings are parameters in the model. Embeddings are used heavily in natural language processing to represent words as numeric vectors.
+
+```{r}
+# Borrows quite a lot from https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/
+embedding_mod <- nn_module(
+  
+  initialize = function(unique_values) {
+    
+    self$embedding_modules = nn_module_list(
+      map(unique_values, ~nn_embedding(.x, embedding_dim = ceiling(.x/2)))
+    )
+  },
+  
+  forward = function(x) {
+    
+    embedded <- vector("list", length(self$embedding_modules))
+    for(i in 1:length(self$embedding_modules)) {
+      # gets the i-th embedding module and calls the function on the i-th column
+      # of the tensor x
+      embedded[[i]] <- self$embedding_modules[[i]](x[, i])
+    }
+    
+    torch_cat(embedded, dim = 2)
+  }
+)
+```
+
+```{r}
+net <- nn_module(
+  
+  "stars_net",
+  
+  initialize = function(unique_values, n_num_col) {
+    
+    self$embedder <- embedding_mod(unique_values)
+    
+    # calculate dimensionality of first fully-connected layer
+    embedding_dims <- sum(ceiling(unique_values / 2))
+    
+    self$fc1 <- nn_linear(in_features = embedding_dims + n_num_col,
+                          out_features = 32)
+    self$fc2 <- nn_linear(in_features = 32,
+                          out_features = 32)
+    self$output <- nn_linear(in_features = 32,
+                             out_features = 6) # number of Types
+  },
+  
+  forward = function(x_num, x_cat) {
+    
+    embedded <- self$embedder(x_cat)
+    
+    predictors <- torch_cat(list(x_num$to(dtype = torch_float()), embedded), dim = 2)
+    
+    predictors %>%
+      self$fc1() %>%
+      nnf_relu() %>%
+      self$fc2() %>%
+      self$output() %>%
+      nnf_softmax(2) # along 2nd dimension (i.e., rowwise)
+  }
+)
+```
+
+```{r}
+unique_values <- stars_raw %>%
+  select(!where(is.numeric)) %>%
+  map_dbl(n_distinct) %>%
+  unname()
+
+n_num_col <- ncol(train_ds$x_num)
+
+device <- if(cuda_is_available()) {
+  torch_device("cuda:0")
+} else {
+  "cpu"
+}
+
+model <- net(unique_values, n_num_col)
+
+model <- model$to(device = device)
+```
+
+```{r}
+optimizer <- optim_adam(model$parameters, lr = 0.01)
+n_epochs <- 20
+
+for(epoch in 1:n_epochs) {
+  
+  # set the model to train
+  model$train()
+  
+  train_losses <- c()
+  
+  # Make prediction, get loss, backpropagate, update weights
+  coro::loop(for (b in train_dl) {
+    optimizer$zero_grad()
+    output <- model(b$x[[1]]$to(device = device), b$x[[2]]$to(device = device))
+    loss <- nnf_cross_entropy(output, b$y$to(dtype = torch_long(), device = device))
+    loss$backward()
+    optimizer$step()
+    train_losses <- c(train_losses, loss$item())
+  })
+  
+  # Evaluate
+  model$eval()
+  
+  valid_losses <- c()
+  valid_accuracies <- c()
+  
+  coro::loop(for (b in valid_dl) {
+    output <- model(b$x[[1]]$to(device = device), b$x[[2]]$to(device = device))
+    loss <- nnf_cross_entropy(output, b$y$to(dtype = torch_long(), device = device))
+    valid_losses <- c(valid_losses, loss$item())
+    pred <- torch_max(output, dim = 2)[[2]]
+    correct <- (pred == b$y)$sum()$item()
+    valid_accuracies <- correct/length(b$y)
+  })
+  
+  cat(sprintf("Epoch %d: train loss: %3f, valid loss: %3f, valid accuracy: %3f\n",
+              epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
+}
+```
+
+```{r}
+
+```
