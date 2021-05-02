@@ -1,7 +1,7 @@
 ---
 title: "A first look at torch for R"
 author: "null"
-date: '2021-05-01'
+date: '2021-05-02'
 slug: torch_stars
 math: true
 categories:
@@ -141,8 +141,8 @@ stars_raw %&gt;%
 # Create 2 X 3 tensor of random numbers
 torch_rand(2, 3)</code></pre>
 <pre><code>## torch_tensor
-##  0.8003  0.5636  0.5807
-##  0.2142  0.3098  0.3803
+##  0.0271  0.1027  0.3221
+##  0.5293  0.3186  0.5914
 ## [ CPUFloatType{2,3} ]</code></pre>
 <pre class="r"><code># Create tensor from R matrix
 mat &lt;- matrix(c(1, 4, 7,
@@ -384,16 +384,16 @@ for(epoch in 1:n_epochs) {
                   epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
   }
 }</code></pre>
-<pre><code>## Epoch 5: train loss: 1.285300, valid loss: 1.225455, valid accuracy: 0.853043
-## Epoch 10: train loss: 1.147739, valid loss: 1.186785, valid accuracy: 0.831304
-## Epoch 15: train loss: 1.103326, valid loss: 1.214836, valid accuracy: 0.831304
-## Epoch 20: train loss: 1.110845, valid loss: 1.221285, valid accuracy: 0.833043
-## Epoch 25: train loss: 1.098911, valid loss: 1.215548, valid accuracy: 0.831304
-## Epoch 30: train loss: 1.104287, valid loss: 1.198933, valid accuracy: 0.833043
-## Epoch 35: train loss: 1.079614, valid loss: 1.216724, valid accuracy: 0.833043
-## Epoch 40: train loss: 1.073320, valid loss: 1.195445, valid accuracy: 0.853043
-## Epoch 45: train loss: 1.071689, valid loss: 1.194153, valid accuracy: 0.853043
-## Epoch 50: train loss: 1.079974, valid loss: 1.207400, valid accuracy: 0.853043</code></pre>
+<pre><code>## Epoch 5: train loss: 1.273559, valid loss: 1.484745, valid accuracy: 0.544348
+## Epoch 10: train loss: 1.214797, valid loss: 1.313593, valid accuracy: 0.749565
+## Epoch 15: train loss: 1.188730, valid loss: 1.313710, valid accuracy: 0.729565
+## Epoch 20: train loss: 1.196392, valid loss: 1.268381, valid accuracy: 0.771304
+## Epoch 25: train loss: 1.196151, valid loss: 1.266681, valid accuracy: 0.771304
+## Epoch 30: train loss: 1.191350, valid loss: 1.265150, valid accuracy: 0.771304
+## Epoch 35: train loss: 1.203034, valid loss: 1.264484, valid accuracy: 0.771304
+## Epoch 40: train loss: 1.198243, valid loss: 1.263758, valid accuracy: 0.771304
+## Epoch 45: train loss: 1.198246, valid loss: 1.263422, valid accuracy: 0.771304
+## Epoch 50: train loss: 1.195800, valid loss: 1.263292, valid accuracy: 0.771304</code></pre>
 <p>With such a small data set, we only get about 75%-85% accuracy on average. We can understand better how the model performs with a <em>confusion matrix</em>.</p>
 <pre class="r"><code>library(yardstick)
 

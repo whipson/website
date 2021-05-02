@@ -1,7 +1,7 @@
 ---
 title: "A first look at torch for R"
 author: "null"
-date: '2021-05-01'
+date: '2021-05-02'
 slug: torch_stars
 math: true
 categories:
