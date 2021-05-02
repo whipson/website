@@ -1,0 +1,437 @@
+---
+title: "A first look at torch for R"
+author: "null"
+date: '2021-05-02'
+slug: torch_stars
+math: true
+categories:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+- Machine Learning
+tags:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+- Machine Learning
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>In this post, I explore <code>torch</code> - a package for R that mirrors the PyTorch framework for deep learning.</p>
+<div id="motivation" class="section level3">
+<h3>Motivation</h3>
+<p>I’ve been a bit reluctant to join in on the deep learning hype for some time. Much of this I attribute to my lack of enthusiasm toward Python frameworks for deep learning. Don’t get me wrong. Tensorflow + Keras offers an intuitive API for neural nets, but can I just be frank and say I like R better for everything else?</p>
+<p>A few years back, I was briefly tantalized by the <code>tensorflow</code> package for R, but I couldn’t establish a solid workflow with its Python backend constantly getting in the way. (Many an enfuriating hour was spent fruitlessly trying to configure my GPU).</p>
+<p>Jump ahead to autumn of 2020 and the <code>torch</code> package for R is <a href="https://blog.rstudio.com/2020/09/29/torch/">announced</a>. My enthusiasm is rekindled when I hear that <code>torch</code> is a native R package that uses a C++ backend instead of Python. The clouds began to part.</p>
+<p>However, <code>torch</code> is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn’t offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the <code>torch</code> package. This post will be focused more on the programming aspects of <code>torch</code> rather than the mathematical and theoretical aspects of deep learning.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+</div>
+<div id="road-map" class="section level3">
+<h3>Road Map</h3>
+<p>This post will be broken into 4 steps:</p>
+<ol style="list-style-type: decimal">
+<li>Get and explore the data</li>
+<li>Create a <code>Dataset</code> object</li>
+<li>Build a network</li>
+<li>Run the model</li>
+</ol>
+</div>
+<div id="get-and-explore-the-data" class="section level2">
+<h2>1. Get and explore the data</h2>
+<p>In this tutorial, we’ll use the <a href="https://www.kaggle.com/brsdincer/star-type-classification">Star Type Classification Data from NASA</a> shared on Kaggle.com. The data contains details about stars and their type, which we will attempt to predict.</p>
+<p>I like to use <code>pins</code> to import data directly from Kaggle into R. The code below will show how to get the data using <code>pins</code>, assuming you have an account with Kaggle. You can also just go to the link and download the data as a .csv if you prefer.</p>
+<pre class="r"><code>library(tidyverse)
+library(pins)
+
+# --- RUN FIRST IF YOU HAVEN&#39;T USED KAGGLE AND PINS BEFORE
+# If you have an account you can get your token at https://www.kaggle.com/me/account
+# and download your .json token.
+
+# board_register_kaggle(token = &quot;path/to/kaggle.json&quot;)
+# ---
+
+pin_name &lt;- pin_find(&quot;star-type-classification&quot;, board = &quot;kaggle&quot;)[[1]]
+
+pin_dir &lt;- pin_get(pin_name, board = &quot;kaggle&quot;)
+
+stars_raw &lt;- read_csv(pin_dir)
+
+head(stars_raw)</code></pre>
+<pre><code>## # A tibble: 6 x 7
+##   Temperature        L     R   A_M Color Spectral_Class  Type
+##         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;
+## 1        3068 0.00240  0.17   16.1 Red   M                  0
+## 2        3042 0.0005   0.154  16.6 Red   M                  0
+## 3        2600 0.000300 0.102  18.7 Red   M                  0
+## 4        2800 0.0002   0.16   16.6 Red   M                  0
+## 5        1939 0.000138 0.103  20.1 Red   M                  0
+## 6        2840 0.00065  0.11   17.0 Red   M                  0</code></pre>
+<p>The data includes the following features to use as predictors:</p>
+<ul>
+<li><code>L</code> = Relative Luminosity (L/Lo)</li>
+<li><code>R</code> = Relative Radius (R/Ro)</li>
+<li><code>A_M</code> = Absolute Magnitude</li>
+<li><code>Temperature</code> = Temperature in Kelvin</li>
+<li><code>Color</code> = Star color</li>
+<li><code>Spectral_Class</code></li>
+</ul>
+<p>We want to use these to predict star type, which is encoded in the <code>Type</code> variable. There are six different types of stars: 0 = Red Dwarf, 1 = Brown Dwarf, 2 = White Dwarf, 3 = Main Sequence, 4 = Super Giants, and 5 = Hyper Giants.</p>
+<p>There are some categorical features here. Color is one we’ll take a closer look at.</p>
+<pre class="r"><code>stars_raw %&gt;%
+  count(Color, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 17 x 2
+##    Color                  n
+##    &lt;chr&gt;              &lt;int&gt;
+##  1 Red                  112
+##  2 Blue                  56
+##  3 Blue-white            26
+##  4 Blue White            10
+##  5 yellow-white           8
+##  6 White                  7
+##  7 Blue white             4
+##  8 white                  3
+##  9 Yellowish White        3
+## 10 Orange                 2
+## 11 Whitish                2
+## 12 yellowish              2
+## 13 Blue-White             1
+## 14 Orange-Red             1
+## 15 Pale yellow orange     1
+## 16 White-Yellow           1
+## 17 Yellowish              1</code></pre>
+<p>Lots of red and blue - that’s ok. But what’s the deal with different categories for <code>Blue-white</code> and <code>Blue White</code>? We see a similar pattern elsewhere. We’d do well to implement some string handling as well as factor lumping. For this, we’ll leverage the <code>stringr</code> and <code>forcats</code> packages, respectively, which are loaded as part of the <code>tidyverse</code>.</p>
+<p>Instead of directly changing the data, I’m going to create a function that we can include in a preprocessing pipeline.</p>
+<pre class="r"><code>fix_color &lt;- function(x, n = 5) {
+  x_lower &lt;- str_to_lower(x)
+  x_fix &lt;- str_replace(x_lower, &quot; |-&quot;, &quot;_&quot;) # replaces either blank space or &#39;-&#39; with &#39;_&#39;
+  x_lump &lt;- fct_lump(x_fix, n, other_level = &quot;other&quot;)
+  x_lump
+}
+
+# Test
+stars_raw %&gt;%
+  mutate(Color = fix_color(Color)) %&gt;%
+  count(Color, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   Color            n
+##   &lt;fct&gt;        &lt;int&gt;
+## 1 red            112
+## 2 blue            56
+## 3 blue_white      41
+## 4 other           13
+## 5 white           10
+## 6 yellow_white     8</code></pre>
+</div>
+<div id="torch-datasets" class="section level2">
+<h2>2. torch Datasets</h2>
+<p>Before we dig into the code we should familiarize ourselves with some <code>torch</code> semantics.</p>
+<div id="tensors" class="section level3">
+<h3>Tensors</h3>
+<p>If you know a little about deep learning, you know that it works with <em>tensors.</em> A tensor is like a matrix but it can have more dimensions. As well, tensors can be on a GPU which makes for much faster learning.</p>
+<p>In <code>torch</code>, our data must be represented as a <code>torch_tensor</code> object. <code>torch</code> provides a number of functions for creating tensors from scratch or transforming native R objects to tensors and back:</p>
+<pre class="r"><code>library(torch)
+
+# --- First time using torch? Run this once:
+# install_torch()
+# ---
+
+# Create 2 X 3 tensor of random numbers
+torch_rand(2, 3)</code></pre>
+<pre><code>## torch_tensor
+##  0.7938  0.9507  0.1196
+##  0.0261  0.4233  0.2725
+## [ CPUFloatType{2,3} ]</code></pre>
+<pre class="r"><code># Create tensor from R matrix
+mat &lt;- matrix(c(1, 4, 7,
+                2, 5, 2), nrow = 2, byrow = TRUE)
+
+my_tensor &lt;- torch_tensor(mat)
+my_tensor</code></pre>
+<pre><code>## torch_tensor
+##  1  4  7
+##  2  5  2
+## [ CPUFloatType{2,3} ]</code></pre>
+<pre class="r"><code># Convert back to R object
+as_array(my_tensor)</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    2</code></pre>
+</div>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
+<p>In <code>torch</code>, a Dataset is kind of like a traditional <code>data.frame</code>, but it has a few special features that make it easier for deep learning. Instead of thinking of it as a static spreadsheet, think of it as a function that will feed data into our network in bite-sized chunks or <em>batches</em>.</p>
+<p>We create a Dataset object using the <code>dataset</code> function. It’s essentially a <code>list</code> of attributes and methods that we can access from the Dataset. A Dataset should have the following attributes:</p>
+<ol style="list-style-type: decimal">
+<li><p>Name (e.g., <code>"stars_dataset"</code>)</p></li>
+<li><p><code>initialize</code> method that takes in a <code>data.frame</code></p></li>
+<li><p><code>.getitem</code> method that allows us to index the Dataset (e.g., <code>stars_dataset[1]</code> to get first row of data)</p></li>
+<li><p><code>.length</code> method to get the number of rows in the Dataset.</p></li>
+</ol>
+<p>It’s also in here that we run our preprocessing on the data and convert everything to a <code>torch_tensor</code>. Moreover, it’s wise to split our predictors into separate tensors for numeric and categorical types because we’ll treat these differently in our neural net.</p>
+<pre class="r"><code>stars_dataset &lt;- dataset(
+  
+  name = &quot;stars_dataset&quot;,
+  
+  initialize = function(df) {
+    
+    # Data preprocessing
+    stars_pp &lt;- df %&gt;%
+      select(-Type) %&gt;%
+      mutate(across(c(&quot;Temperature&quot;, &quot;L&quot;, &quot;R&quot;), log10),
+             Color = fix_color(Color))
+    
+    # Numeric predictors
+    self$x_num &lt;- stars_pp %&gt;%
+      select(where(is.numeric)) %&gt;%
+      as.matrix() %&gt;%
+      torch_tensor()
+    
+    # Categorical predictors
+    self$x_cat &lt;- stars_pp %&gt;%
+      select(!where(is.numeric)) %&gt;%
+      mutate(across(everything(), ~as.integer(as.factor(.x)))) %&gt;%
+      as.matrix() %&gt;%
+      torch_tensor()
+    
+    # Target data
+    type &lt;- as.integer(df$Type) + 1
+    self$y &lt;- torch_tensor(type)
+  },
+  
+  .getitem = function(i) {
+    x_num &lt;- self$x_num[i, ]
+    x_cat &lt;- self$x_cat[i, ]
+    y &lt;- self$y[i]
+    
+    list(x = list(x_num, x_cat),
+         y = y)
+  },
+  
+  .length = function() {
+    self$y$size()[[1]]
+  }
+)</code></pre>
+</div>
+<div id="aside-torch-and-r6-classes" class="section level3">
+<h3>Aside: torch and R6 Classes</h3>
+<p>A lot of the things we make in <code>torch</code> - Datasets, modules, networks - take the form of an R6 class structure. What is R6? R6 is a framework for object-oriented programming in R. You may be unfamiliar with R6 and that’s fine.</p>
+<p>The biggest stumbling block I encountered with R6 was understanding what <code>self</code> is and where it comes from. I like to think of <code>self</code> as a list where we can store things like data or functions. For example, a Dataset object has tensors and we can make those tensors part of the Dataset by assigning them to <code>self</code>. <code>self</code> is automatically built in to every R6 class, so you don’t have to create it yourself.</p>
+<p>If you want a deeper dive into R6 Classes, check out the chapter on R6 in Hadley Wickham’s <a href="https://adv-r.hadley.nz/r6.html#exercises-44"><em>Advanced R.</em></a></p>
+</div>
+<div id="end-aside" class="section level3">
+<h3>End Aside</h3>
+<p>We need to instantiate our Dataset. As is typical in machine learning, we’ll create a <em>training</em> data set and another data set for evaluation. Because our data is small, we’ll just stick with training and validation sets. If we had more data, we’d create a <em>test</em> data set for final model evaluation.</p>
+<pre class="r"><code>set.seed(941843)
+
+length_ds &lt;- length(stars_dataset(stars_raw))
+
+train_id &lt;- sample(1:length_ds, ceiling(0.80 * length_ds))
+valid_id &lt;- setdiff(1:length_ds, train_id)
+
+# Datasets
+train_ds &lt;- stars_dataset(stars_raw[train_id, ])
+valid_ds &lt;- stars_dataset(stars_raw[valid_id, ])</code></pre>
+</div>
+<div id="dataloaders" class="section level3">
+<h3>Dataloaders</h3>
+<p>We have our training and validation Datasets. Last thing we need to do with the data is create <code>dataloader</code> objects. A <code>dataloader</code> feeds batches of data through the network. We shuffle the training set so that at every <em>epoch</em> (iteration of the learning phase) the data is reshuffled.</p>
+<pre class="r"><code># Dataloaders
+train_dl &lt;- train_ds %&gt;%
+  dataloader(batch_size = 25, shuffle = TRUE)
+
+valid_dl &lt;- valid_ds %&gt;%
+  dataloader(batch_size = 25, shuffle = FALSE)</code></pre>
+</div>
+</div>
+<div id="building-the-neural-net" class="section level2">
+<h2>3. Building the neural net</h2>
+<p>With the data spoken for we can move on to creating the neural net architecture. <code>torch</code> represents network architectures as one or more <em>modules.</em> As we’ll see, modules can be combined together to make more complex models out of separate, reusable chunks. We’ll start this section by creating a small module to handle the categorical features in the data and then a larger module representing our full neural net.</p>
+<div id="embedding-categorical-features" class="section level3">
+<h3>Embedding Categorical Features</h3>
+<p>Our data has two categorical features, Color and Spectral Class. Because these features don’t have an inherent ordering to them, we can’t use the raw numeric values. The solution is to use <em>embeddings</em>. This means we represent each level of the categorical feature in some <em>n</em>-dimensional space. The space is represented by a trainable vector. In other words, the embeddings are parameters in the model.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>We use <code>nn_module</code> to create the embedding layer. In <code>torch</code>, nn_modules have a <code>forward</code> method. The forward method details how the module will feed data through the network when the network is making predictions (i.e., feed-forward). This also means that the nn_module contains parameters that can learn.</p>
+<pre class="r"><code># Borrows quite a lot from https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/
+embedding_mod &lt;- nn_module(
+  
+  initialize = function(levels) {
+    
+    self$embedding_modules = nn_module_list(
+      map(levels, ~nn_embedding(.x, embedding_dim = ceiling(.x/2)))
+    )
+  },
+  
+  forward = function(x) {
+    
+    embedded &lt;- vector(&quot;list&quot;, length(self$embedding_modules))
+    for(i in 1:length(self$embedding_modules)) {
+      # gets the i-th embedding module and calls the function on the i-th column
+      # of the tensor x
+      embedded[[i]] &lt;- self$embedding_modules[[i]](x[, i])
+    }
+    
+    torch_cat(embedded, dim = 2)
+  }
+)</code></pre>
+<p>There’s a lot going on here. Taking it piece by piece, we create a list called <code>embedding_modules</code> using the <code>nn_module_list</code> function. For each set of levels (there are two sets because there are two categorical features) we instantiate an embedding layer - <code>nn_embedding</code> with dimension roughly half the number of levels.</p>
+<p>The <code>forward</code> piece is responsible for taking each of the embedding layers and using it on each of the categorical predictors. <code>torch_cat</code> then combines everything together into one <code>tensor</code> along the second dimension.</p>
+</div>
+<div id="neural-net-architecture" class="section level3">
+<h3>Neural net architecture</h3>
+<p>Our neural net will consist of a series of layers and activation functions. In the initialize method we create the layers. Because we’re dealing with fairly simple tabular data, we’ll stick with <em>fully-connected</em> layers (customarily denoted as <code>fc</code>).</p>
+<p>I follow the advice in the <a href="https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/">torch for tabular</a> blog post and use the number of levels + the number of numeric columns as the first input layer dimension. For a fully-connected network, the number of features we input in each layer should equal the number of features outputted by the preceding layer.</p>
+<p>In the forward method, we pass the predictors through each layer in the network. Note that we output with a <em>softmax</em> activation function because we are predicting a categorical variable with more than two possible values.</p>
+<pre class="r"><code>net &lt;- nn_module(
+  
+  &quot;stars_net&quot;,
+  
+  initialize = function(levels, n_num_col) {
+    
+    self$embedder &lt;- embedding_mod(levels)
+    
+    # calculate dimensionality of first fully-connected layer
+    embedding_dims &lt;- sum(ceiling(levels / 2))
+    
+    self$fc1 &lt;- nn_linear(in_features = embedding_dims + n_num_col,
+                          out_features = 32)
+    self$fc2 &lt;- nn_linear(in_features = 32,
+                          out_features = 16)
+    self$output &lt;- nn_linear(in_features = 16,
+                             out_features = 6) # number of Types
+  },
+  
+  forward = function(x_num, x_cat) {
+    
+    embedded &lt;- self$embedder(x_cat)
+    
+    predictors &lt;- torch_cat(list(x_num$to(dtype = torch_float()), embedded), dim = 2)
+    
+    predictors %&gt;%
+      self$fc1() %&gt;%
+      nnf_relu() %&gt;%
+      self$fc2() %&gt;%
+      nnf_relu() %&gt;%
+      self$output() %&gt;%
+      nnf_softmax(2) # along 2nd dimension (i.e., rowwise)
+  }
+)</code></pre>
+<p>Ok, so we have defined the network, but we still need to instantiate it. Our net needs a vector of levels and the number of numeric features.</p>
+<pre class="r"><code>levels &lt;- stars_raw %&gt;%
+  mutate(Color = fix_color(Color)) %&gt;%
+  select(!where(is.numeric)) %&gt;%
+  map_dbl(n_distinct) %&gt;%
+  unname()
+
+n_num_col &lt;- ncol(train_ds$x_num)</code></pre>
+<p>The network can run on a GPU if you have one, otherwise a CPU is fine. (For this example the model will run fast enough on CPU anyway).</p>
+<pre class="r"><code># Use GPU if available, otherwise CPU
+device &lt;- if(cuda_is_available()) {
+  torch_device(&quot;cuda:0&quot;)
+} else {
+  &quot;cpu&quot;
+}
+
+model &lt;- net(levels, n_num_col)
+
+model &lt;- model$to(device = device)</code></pre>
+</div>
+</div>
+<div id="run-the-model" class="section level2">
+<h2>4. Run the model</h2>
+<p>To run the model we need to choose an <em>optimizer</em>. This is the algorithm that will modify the weights so as to minimize the loss function. I’ll use <code>optim_asgd</code> but you can experiment with others like <code>optim_sgd</code>.</p>
+<p>We also need to set up the training and evaluation loop. This part looks a bit daunting, but a lot of it is repetition (we do almost the same thing for both the training and evaluation). Perhaps the most awkward part is where we assign the output. Ignore the <code>to$device = device)</code> part and just look at the subscripted pieces, <code>b$x[[1]]</code> and <code>b$x[[2]]</code>. We’re just passing in the numeric and categorical features, respectively. The model uses the weights to make a prediction.</p>
+<p>Once we have a prediction, which we assign to <code>output</code>, we need to compute the loss. For multilabel classification, we use <code>nnf_cross_entropy</code>, passing it the output and the true label. The rest is boilerplate to backpropagate and the loss and update the weights.</p>
+<pre class="r"><code>torch_manual_seed(414412)
+optimizer &lt;- optim_asgd(model$parameters, lr = 0.025)
+n_epochs &lt;- 140
+
+for(epoch in 1:n_epochs) {
+  
+  # set the model to train
+  model$train()
+  
+  train_losses &lt;- c()
+  
+  # Make prediction, get loss, backpropagate, update weights
+  coro::loop(for (b in train_dl) {
+    optimizer$zero_grad()
+    output &lt;- model(b$x[[1]]$to(device = device), b$x[[2]]$to(device = device))
+    loss &lt;- nnf_cross_entropy(output, b$y$to(dtype = torch_long(), device = device))
+    loss$backward()
+    optimizer$step()
+    train_losses &lt;- c(train_losses, loss$item())
+  })
+  
+  # Evaluate
+  model$eval()
+  
+  valid_losses &lt;- c()
+  valid_accuracies &lt;- c()
+  
+  coro::loop(for (b in valid_dl) {
+    output &lt;- model(b$x[[1]]$to(device = device), b$x[[2]]$to(device = device))
+    loss &lt;- nnf_cross_entropy(output, b$y$to(dtype = torch_long(), device = device))
+    valid_losses &lt;- c(valid_losses, loss$item())
+    pred &lt;- torch_max(output, dim = 2)[[2]]
+    correct &lt;- (pred == b$y)$sum()$item()
+    valid_accuracies &lt;- c(valid_accuracies, correct/length(b$y))
+  })
+  
+  if(epoch %% 10 == 0) {
+      cat(sprintf(&quot;Epoch %d: train loss: %3f, valid loss: %3f, valid accuracy: %3f\n&quot;,
+                  epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
+  }
+}</code></pre>
+<pre><code>## Epoch 10: train loss: 1.732255, valid loss: 1.710317, valid accuracy: 0.268696
+## Epoch 20: train loss: 1.680787, valid loss: 1.694255, valid accuracy: 0.308696
+## Epoch 30: train loss: 1.639833, valid loss: 1.682175, valid accuracy: 0.308696
+## Epoch 40: train loss: 1.603102, valid loss: 1.627249, valid accuracy: 0.410435
+## Epoch 50: train loss: 1.534183, valid loss: 1.531889, valid accuracy: 0.479130
+## Epoch 60: train loss: 1.503204, valid loss: 1.498283, valid accuracy: 0.667826
+## Epoch 70: train loss: 1.466634, valid loss: 1.450565, valid accuracy: 0.667826
+## Epoch 80: train loss: 1.416205, valid loss: 1.403483, valid accuracy: 0.667826
+## Epoch 90: train loss: 1.387435, valid loss: 1.391986, valid accuracy: 0.814783
+## Epoch 100: train loss: 1.365937, valid loss: 1.350001, valid accuracy: 0.749565
+## Epoch 110: train loss: 1.338675, valid loss: 1.320759, valid accuracy: 0.749565
+## Epoch 120: train loss: 1.311856, valid loss: 1.298892, valid accuracy: 0.833043
+## Epoch 130: train loss: 1.283839, valid loss: 1.273069, valid accuracy: 0.876522
+## Epoch 140: train loss: 1.249535, valid loss: 1.241199, valid accuracy: 0.916522</code></pre>
+<p>We can understand better how the model performs with a <em>confusion matrix</em>.</p>
+<pre class="r"><code>library(yardstick)
+
+pred &lt;- torch_max(model(valid_ds$x_num, valid_ds$x_cat), dim = 2)[[2]] %&gt;%
+  as_array()
+
+truth &lt;- valid_ds$y %&gt;%
+  as_array()
+
+type_levels &lt;- c(&quot;Red Dwarf&quot;, &quot;Brown Dwarf&quot;, &quot;White Dwarf&quot;,
+                 &quot;Main Sequence&quot;, &quot;Super Giant&quot;, &quot;Hyper Giant&quot;)
+
+confusion &lt;- bind_cols(pred = pred, truth = truth) %&gt;%
+  mutate(across(everything(), ~factor(.x, levels = 1:6, labels = type_levels))) %&gt;%
+  conf_mat(truth, pred)
+
+autoplot(confusion, type = &quot;heatmap&quot;) + 
+  scale_fill_distiller(palette = 2, direction = &quot;reverse&quot;)</code></pre>
+<p><img src="/post/torch-for-r/torch-for-r_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+In the end, it’s the small amount of data that keeps us from doing much more with this model. We could probably do just as well with multinomial regression. Still, the goal was to explore <code>torch</code> on a fairly tame data set.</p>
+</div>
+<div id="concluding-remarks" class="section level2">
+<h2>Concluding Remarks</h2>
+<p>So is it worth it for R users to learn <code>torch</code>? Although the <code>torch</code> package has all the necessary functionality for building sophisticated deep learning models, I think it still poses challenges, particularly for new users. The syntax is jarring for those unfamiliar with R6 and it lacks a high-level API geared toward those who want to build models quickly. Online documentation is also somewhat sparse compared to more mature frameworks with PyTorch and Tensorflow.</p>
+<p>All of these issues are likely to be resolved as <code>torch</code> matures and the community grows. For now, I’m just thrilled to have such a powerful, native R deep learning framework, and I’m excited to see what the future has in store for <code>torch</code>!</p>
+</div>
+<div id="resources" class="section level2">
+<h2>Resources</h2>
+<p>I’m extremely grateful for the <code>torch</code> <a href="https://torch.mlverse.org">documentation</a> and tutorials for helping me get started with this post. I’m also indebted to the brilliant blog posts on the <a href="https://blogs.rstudio.com/ai/">RStudio AI Blog</a>. In particular, I leaned heavily on this <a href="https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/">post</a> by Sigrid Keydana for insights as well as for help with the embedding module.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>For the math and theory behind machine learning and deep learning, I recommend <a href="https://www.fast.ai/">fast.ai</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Embeddings are used heavily in natural language processing to represent words as numeric vectors.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
