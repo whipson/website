@@ -357,7 +357,7 @@ model <- model$to(device = device)
 
 ## 4. Run the model
 
-To run the model we need to choose an *optimizer*. This is the algorithm that will modify the weights so as to minimize the loss function. I'll use `optim_adam` but you can experiment with others like `optim_sgd`.
+To run the model we need to choose an *optimizer*. This is the algorithm that will modify the weights so as to minimize the loss function. I'll use `optim_asgd` but you can experiment with others like `optim_sgd`.
 
 We also need to set up the training and evaluation loop. This part looks a bit daunting, but a lot of it is repetition (we do almost the same thing for both the training and evaluation). Perhaps the most awkward part is where we assign the output. Ignore the `to$device = device)` part and just look at the subscripted pieces, `b$x[[1]]` and `b$x[[2]]`. We're just passing in the numeric and categorical features, respectively. The model uses the weights to make a prediction.
 
@@ -365,8 +365,8 @@ Once we have a prediction, which we assign to `output`, we need to compute the l
 
 ```{r}
 torch_manual_seed(414412)
-optimizer <- optim_adam(model$parameters, lr = 0.015)
-n_epochs <- 50
+optimizer <- optim_asgd(model$parameters, lr = 0.025)
+n_epochs <- 140
 
 for(epoch in 1:n_epochs) {
   
@@ -400,14 +400,14 @@ for(epoch in 1:n_epochs) {
     valid_accuracies <- c(valid_accuracies, correct/length(b$y))
   })
   
-  if(epoch %% 5 == 0) {
+  if(epoch %% 10 == 0) {
       cat(sprintf("Epoch %d: train loss: %3f, valid loss: %3f, valid accuracy: %3f\n",
                   epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
   }
 }
 ```
 
-With such a small data set, we only get about 75%-85% accuracy on average. We can understand better how the model performs with a *confusion matrix*.
+We can understand better how the model performs with a *confusion matrix*.
 
 ```{r, message=FALSE, warning=FALSE}
 library(yardstick)
@@ -423,7 +423,7 @@ type_levels <- c("Red Dwarf", "Brown Dwarf", "White Dwarf",
 
 confusion <- bind_cols(pred = pred, truth = truth) %>%
   mutate(across(everything(), ~factor(.x, levels = 1:6, labels = type_levels))) %>%
-  conf_mat(pred, truth)
+  conf_mat(truth, pred)
 
 autoplot(confusion, type = "heatmap") + 
   scale_fill_distiller(palette = 2, direction = "reverse")

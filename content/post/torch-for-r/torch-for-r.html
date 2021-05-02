@@ -141,8 +141,8 @@ stars_raw %&gt;%
 # Create 2 X 3 tensor of random numbers
 torch_rand(2, 3)</code></pre>
 <pre><code>## torch_tensor
-##  0.0271  0.1027  0.3221
-##  0.5293  0.3186  0.5914
+##  0.7938  0.9507  0.1196
+##  0.0261  0.4233  0.2725
 ## [ CPUFloatType{2,3} ]</code></pre>
 <pre class="r"><code># Create tensor from R matrix
 mat &lt;- matrix(c(1, 4, 7,
@@ -340,12 +340,12 @@ model &lt;- model$to(device = device)</code></pre>
 </div>
 <div id="run-the-model" class="section level2">
 <h2>4. Run the model</h2>
-<p>To run the model we need to choose an <em>optimizer</em>. This is the algorithm that will modify the weights so as to minimize the loss function. I’ll use <code>optim_adam</code> but you can experiment with others like <code>optim_sgd</code>.</p>
+<p>To run the model we need to choose an <em>optimizer</em>. This is the algorithm that will modify the weights so as to minimize the loss function. I’ll use <code>optim_asgd</code> but you can experiment with others like <code>optim_sgd</code>.</p>
 <p>We also need to set up the training and evaluation loop. This part looks a bit daunting, but a lot of it is repetition (we do almost the same thing for both the training and evaluation). Perhaps the most awkward part is where we assign the output. Ignore the <code>to$device = device)</code> part and just look at the subscripted pieces, <code>b$x[[1]]</code> and <code>b$x[[2]]</code>. We’re just passing in the numeric and categorical features, respectively. The model uses the weights to make a prediction.</p>
 <p>Once we have a prediction, which we assign to <code>output</code>, we need to compute the loss. For multilabel classification, we use <code>nnf_cross_entropy</code>, passing it the output and the true label. The rest is boilerplate to backpropagate and the loss and update the weights.</p>
 <pre class="r"><code>torch_manual_seed(414412)
-optimizer &lt;- optim_adam(model$parameters, lr = 0.015)
-n_epochs &lt;- 50
+optimizer &lt;- optim_asgd(model$parameters, lr = 0.025)
+n_epochs &lt;- 140
 
 for(epoch in 1:n_epochs) {
   
@@ -379,22 +379,26 @@ for(epoch in 1:n_epochs) {
     valid_accuracies &lt;- c(valid_accuracies, correct/length(b$y))
   })
   
-  if(epoch %% 5 == 0) {
+  if(epoch %% 10 == 0) {
       cat(sprintf(&quot;Epoch %d: train loss: %3f, valid loss: %3f, valid accuracy: %3f\n&quot;,
                   epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
   }
 }</code></pre>
-<pre><code>## Epoch 5: train loss: 1.273559, valid loss: 1.484745, valid accuracy: 0.544348
-## Epoch 10: train loss: 1.214797, valid loss: 1.313593, valid accuracy: 0.749565
-## Epoch 15: train loss: 1.188730, valid loss: 1.313710, valid accuracy: 0.729565
-## Epoch 20: train loss: 1.196392, valid loss: 1.268381, valid accuracy: 0.771304
-## Epoch 25: train loss: 1.196151, valid loss: 1.266681, valid accuracy: 0.771304
-## Epoch 30: train loss: 1.191350, valid loss: 1.265150, valid accuracy: 0.771304
-## Epoch 35: train loss: 1.203034, valid loss: 1.264484, valid accuracy: 0.771304
-## Epoch 40: train loss: 1.198243, valid loss: 1.263758, valid accuracy: 0.771304
-## Epoch 45: train loss: 1.198246, valid loss: 1.263422, valid accuracy: 0.771304
-## Epoch 50: train loss: 1.195800, valid loss: 1.263292, valid accuracy: 0.771304</code></pre>
-<p>With such a small data set, we only get about 75%-85% accuracy on average. We can understand better how the model performs with a <em>confusion matrix</em>.</p>
+<pre><code>## Epoch 10: train loss: 1.732255, valid loss: 1.710317, valid accuracy: 0.268696
+## Epoch 20: train loss: 1.680787, valid loss: 1.694255, valid accuracy: 0.308696
+## Epoch 30: train loss: 1.639833, valid loss: 1.682175, valid accuracy: 0.308696
+## Epoch 40: train loss: 1.603102, valid loss: 1.627249, valid accuracy: 0.410435
+## Epoch 50: train loss: 1.534183, valid loss: 1.531889, valid accuracy: 0.479130
+## Epoch 60: train loss: 1.503204, valid loss: 1.498283, valid accuracy: 0.667826
+## Epoch 70: train loss: 1.466634, valid loss: 1.450565, valid accuracy: 0.667826
+## Epoch 80: train loss: 1.416205, valid loss: 1.403483, valid accuracy: 0.667826
+## Epoch 90: train loss: 1.387435, valid loss: 1.391986, valid accuracy: 0.814783
+## Epoch 100: train loss: 1.365937, valid loss: 1.350001, valid accuracy: 0.749565
+## Epoch 110: train loss: 1.338675, valid loss: 1.320759, valid accuracy: 0.749565
+## Epoch 120: train loss: 1.311856, valid loss: 1.298892, valid accuracy: 0.833043
+## Epoch 130: train loss: 1.283839, valid loss: 1.273069, valid accuracy: 0.876522
+## Epoch 140: train loss: 1.249535, valid loss: 1.241199, valid accuracy: 0.916522</code></pre>
+<p>We can understand better how the model performs with a <em>confusion matrix</em>.</p>
 <pre class="r"><code>library(yardstick)
 
 pred &lt;- torch_max(model(valid_ds$x_num, valid_ds$x_cat), dim = 2)[[2]] %&gt;%
@@ -408,7 +412,7 @@ type_levels &lt;- c(&quot;Red Dwarf&quot;, &quot;Brown Dwarf&quot;, &quot;White 
 
 confusion &lt;- bind_cols(pred = pred, truth = truth) %&gt;%
   mutate(across(everything(), ~factor(.x, levels = 1:6, labels = type_levels))) %&gt;%
-  conf_mat(pred, truth)
+  conf_mat(truth, pred)
 
 autoplot(confusion, type = &quot;heatmap&quot;) + 
   scale_fill_distiller(palette = 2, direction = &quot;reverse&quot;)</code></pre>
