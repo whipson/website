@@ -32,9 +32,7 @@ A few years back, I was briefly tantalized by the `tensorflow` package for R, bu
 
 Jump ahead to autumn of 2020 and the `torch` package for R is [announced](https://blog.rstudio.com/2020/09/29/torch/). My enthusiasm is rekindled when I hear that `torch` is a native R package that uses a C++ backend instead of Python. The clouds began to part.
 
-However, `torch` is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn't offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the `torch` package. This post will be focused more on the programming aspects of `torch` rather than the mathematical and theoretical aspects of deep learning.[^1]
-
-[^1]: For the math and theory behind machine learning and deep learning, I recommend [fast.ai](https://www.fast.ai/).
+However, `torch` is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn't offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the `torch` package. This post will be focused more on the programming aspects of `torch` rather than the mathematical and theoretical aspects of deep learning.
 
 ### Road Map
 
@@ -248,9 +246,7 @@ With the data spoken for we can move on to creating the neural net architecture.
 
 ### Embedding Categorical Features
 
-Our data has two categorical features, Color and Spectral Class. Because these features don't have an inherent ordering to them, we can't use the raw numeric values. The solution is to use *embeddings*. This means we represent each level of the categorical feature in some *n*-dimensional space. The space is represented by a trainable vector. In other words, the embeddings are parameters in the model.[^2]
-
-[^2]: Embeddings are used heavily in natural language processing to represent words as numeric vectors.
+Our data has two categorical features, Color and Spectral Class. Because these features don't have an inherent ordering to them, we can't use the raw numeric values. The solution is to use *embeddings*. This means we represent each level of the categorical feature in some *n*-dimensional space. The space is represented by a trainable vector. In other words, the embeddings are parameters in the model.
 
 We use `nn_module` to create the embedding layer. In `torch`, nn_modules have a `forward` method. The forward method details how the module will feed data through the network when the network is making predictions (i.e., feed-forward). This also means that the nn_module contains parameters that can learn.
 
