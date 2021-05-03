@@ -27,7 +27,7 @@ tags:
 <p>I’ve been a bit reluctant to join in on the deep learning hype for some time. Much of this I attribute to my lack of enthusiasm toward Python frameworks for deep learning. Don’t get me wrong. Tensorflow + Keras offers an intuitive API for neural nets, but can I just be frank and say I like R better for everything else?</p>
 <p>A few years back, I was briefly tantalized by the <code>tensorflow</code> package for R, but I couldn’t establish a solid workflow with its Python backend constantly getting in the way. (Many an enfuriating hour was spent fruitlessly trying to configure my GPU).</p>
 <p>Jump ahead to autumn of 2020 and the <code>torch</code> package for R is <a href="https://blog.rstudio.com/2020/09/29/torch/">announced</a>. My enthusiasm is rekindled when I hear that <code>torch</code> is a native R package that uses a C++ backend instead of Python. The clouds began to part.</p>
-<p>However, <code>torch</code> is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn’t offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the <code>torch</code> package. This post will be focused more on the programming aspects of <code>torch</code> rather than the mathematical and theoretical aspects of deep learning.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>However, <code>torch</code> is still somewhat in its infancy and although it is capable of what most mature deep learning frameworks can do, it doesn’t offer the kind of high-level API that makes it intuitive to grasp for beginners. The purpose of this post is to help the reader get familiar with the <code>torch</code> package. This post will be focused more on the programming aspects of <code>torch</code> rather than the mathematical and theoretical aspects of deep learning.</p>
 </div>
 <div id="road-map" class="section level3">
 <h3>Road Map</h3>
@@ -141,8 +141,8 @@ stars_raw %&gt;%
 # Create 2 X 3 tensor of random numbers
 torch_rand(2, 3)</code></pre>
 <pre><code>## torch_tensor
-##  0.7938  0.9507  0.1196
-##  0.0261  0.4233  0.2725
+##  0.3814  0.0616  0.8063
+##  0.6118  0.6273  0.3036
 ## [ CPUFloatType{2,3} ]</code></pre>
 <pre class="r"><code># Create tensor from R matrix
 mat &lt;- matrix(c(1, 4, 7,
@@ -251,7 +251,7 @@ valid_dl &lt;- valid_ds %&gt;%
 <p>With the data spoken for we can move on to creating the neural net architecture. <code>torch</code> represents network architectures as one or more <em>modules.</em> As we’ll see, modules can be combined together to make more complex models out of separate, reusable chunks. We’ll start this section by creating a small module to handle the categorical features in the data and then a larger module representing our full neural net.</p>
 <div id="embedding-categorical-features" class="section level3">
 <h3>Embedding Categorical Features</h3>
-<p>Our data has two categorical features, Color and Spectral Class. Because these features don’t have an inherent ordering to them, we can’t use the raw numeric values. The solution is to use <em>embeddings</em>. This means we represent each level of the categorical feature in some <em>n</em>-dimensional space. The space is represented by a trainable vector. In other words, the embeddings are parameters in the model.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>Our data has two categorical features, Color and Spectral Class. Because these features don’t have an inherent ordering to them, we can’t use the raw numeric values. The solution is to use <em>embeddings</em>. This means we represent each level of the categorical feature in some <em>n</em>-dimensional space. The space is represented by a trainable vector. In other words, the embeddings are parameters in the model.</p>
 <p>We use <code>nn_module</code> to create the embedding layer. In <code>torch</code>, nn_modules have a <code>forward</code> method. The forward method details how the module will feed data through the network when the network is making predictions (i.e., feed-forward). This also means that the nn_module contains parameters that can learn.</p>
 <pre class="r"><code># Borrows quite a lot from https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/
 embedding_mod &lt;- nn_module(
@@ -384,20 +384,20 @@ for(epoch in 1:n_epochs) {
                   epoch, mean(train_losses), mean(valid_losses), mean(valid_accuracies)))
   }
 }</code></pre>
-<pre><code>## Epoch 10: train loss: 1.732255, valid loss: 1.710317, valid accuracy: 0.268696
-## Epoch 20: train loss: 1.680787, valid loss: 1.694255, valid accuracy: 0.308696
-## Epoch 30: train loss: 1.639833, valid loss: 1.682175, valid accuracy: 0.308696
-## Epoch 40: train loss: 1.603102, valid loss: 1.627249, valid accuracy: 0.410435
-## Epoch 50: train loss: 1.534183, valid loss: 1.531889, valid accuracy: 0.479130
-## Epoch 60: train loss: 1.503204, valid loss: 1.498283, valid accuracy: 0.667826
-## Epoch 70: train loss: 1.466634, valid loss: 1.450565, valid accuracy: 0.667826
-## Epoch 80: train loss: 1.416205, valid loss: 1.403483, valid accuracy: 0.667826
-## Epoch 90: train loss: 1.387435, valid loss: 1.391986, valid accuracy: 0.814783
-## Epoch 100: train loss: 1.365937, valid loss: 1.350001, valid accuracy: 0.749565
-## Epoch 110: train loss: 1.338675, valid loss: 1.320759, valid accuracy: 0.749565
-## Epoch 120: train loss: 1.311856, valid loss: 1.298892, valid accuracy: 0.833043
-## Epoch 130: train loss: 1.283839, valid loss: 1.273069, valid accuracy: 0.876522
-## Epoch 140: train loss: 1.249535, valid loss: 1.241199, valid accuracy: 0.916522</code></pre>
+<pre><code>## Epoch 10: train loss: 1.692698, valid loss: 1.647046, valid accuracy: 0.564348
+## Epoch 20: train loss: 1.623896, valid loss: 1.560694, valid accuracy: 0.544348
+## Epoch 30: train loss: 1.577717, valid loss: 1.530740, valid accuracy: 0.627826
+## Epoch 40: train loss: 1.519202, valid loss: 1.459082, valid accuracy: 0.667826
+## Epoch 50: train loss: 1.461917, valid loss: 1.413592, valid accuracy: 0.687826
+## Epoch 60: train loss: 1.422795, valid loss: 1.376273, valid accuracy: 0.687826
+## Epoch 70: train loss: 1.393934, valid loss: 1.346061, valid accuracy: 0.689565
+## Epoch 80: train loss: 1.350427, valid loss: 1.309352, valid accuracy: 0.791304
+## Epoch 90: train loss: 1.322084, valid loss: 1.277471, valid accuracy: 0.793043
+## Epoch 100: train loss: 1.280443, valid loss: 1.256384, valid accuracy: 0.793043
+## Epoch 110: train loss: 1.254480, valid loss: 1.237143, valid accuracy: 0.813043
+## Epoch 120: train loss: 1.231149, valid loss: 1.216946, valid accuracy: 0.894783
+## Epoch 130: train loss: 1.216650, valid loss: 1.203064, valid accuracy: 0.894783
+## Epoch 140: train loss: 1.201882, valid loss: 1.189315, valid accuracy: 0.936522</code></pre>
 <p>We can understand better how the model performs with a <em>confusion matrix</em>.</p>
 <pre class="r"><code>library(yardstick)
 
@@ -427,11 +427,4 @@ In the end, it’s the small amount of data that keeps us from doing much more w
 <div id="resources" class="section level2">
 <h2>Resources</h2>
 <p>I’m extremely grateful for the <code>torch</code> <a href="https://torch.mlverse.org">documentation</a> and tutorials for helping me get started with this post. I’m also indebted to the brilliant blog posts on the <a href="https://blogs.rstudio.com/ai/">RStudio AI Blog</a>. In particular, I leaned heavily on this <a href="https://blogs.rstudio.com/ai/posts/2020-11-03-torch-tabular/">post</a> by Sigrid Keydana for insights as well as for help with the embedding module.</p>
-</div>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>For the math and theory behind machine learning and deep learning, I recommend <a href="https://www.fast.ai/">fast.ai</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>Embeddings are used heavily in natural language processing to represent words as numeric vectors.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>
