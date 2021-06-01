@@ -1,0 +1,91 @@
+---
+title: "Movie Posters"
+author: "null"
+date: '2021-06-01'
+slug: torch_movies
+math: true
+draft: true
+categories:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+tags:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.1.2     ✓ dplyr   1.0.6
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(pins)
+library(jpeg)
+
+library(torch)
+library(torchvision)
+
+board_register_kaggle(token = &quot;~/Downloads/kaggle.json&quot;)
+
+poster_dirs &lt;- pin_get(&quot;phiitm/movie-posters&quot;)
+
+posters &lt;- poster_dirs |&gt;
+  tail(9) |&gt;
+  map(readJPEG)
+
+par(mfrow = c(3, 3), mar = rep(1, 4))
+
+posters |&gt;
+  map(as.raster) |&gt;
+  walk(plot)</code></pre>
+<p><img src="/post/movie-posters_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>device &lt;- if(cuda_is_available()) torch_device(&quot;cuda:0&quot;) else &quot;cpu&quot;
+
+posters_dataset &lt;- dataset(
+  
+  name = &quot;Movie Posters Dataset&quot;,
+  
+  initialize = function(file) {
+    
+    image &lt;- file |&gt;
+      magick_loader() |&gt;
+      transform_to_tensor()
+    
+    # move to GPU if available 
+    image &lt;- image$to(device = device)
+    
+    # get rating by removing everything after &#39;_&#39;
+    rating &lt;- as.numeric(str_remove(basename(file), &quot;_.*&quot;))
+    
+    self$x &lt;- image
+    self$y &lt;- torch_tensor(rating)$to(device = device)
+  },
+  
+  .getitem = function(i) {
+    list(x = self$x[i,],
+         y = self$y[i])
+  },
+  
+  .length = function() {
+    self$y$size()[[1]]
+  }
+)</code></pre>
+<pre class="r"><code>posters_ds &lt;- posters_dataset(poster_dirs)
+
+set.seed(7131)
+
+train_indices &lt;- sample(1:length(posters_ds), ceiling(length(posters_ds)) * 0.80)
+valid_indices &lt;- setdiff(1:length(posters_ds), train_indices)
+
+train_ds &lt;- dataset_subset(posters_ds, train_indices)
+valid_ds &lt;- dataset_subset(posters_ds, valid_indices)</code></pre>

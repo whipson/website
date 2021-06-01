@@ -1,0 +1,92 @@
+---
+title: "Movie Posters"
+author: "null"
+date: '2021-06-01'
+slug: torch_movies
+math: true
+draft: true
+categories:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+tags:
+- R
+- torch
+- Deep Learning
+- Neural Networks
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(pins)
+library(jpeg)
+
+library(torch)
+library(torchvision)
+
+board_register_kaggle(token = "~/Downloads/kaggle.json")
+
+poster_dirs <- pin_get("phiitm/movie-posters")
+
+posters <- poster_dirs |>
+  tail(9) |>
+  map(readJPEG)
+
+par(mfrow = c(3, 3), mar = rep(1, 4))
+
+posters |>
+  map(as.raster) |>
+  walk(plot)
+```
+
+```{r}
+device <- if(cuda_is_available()) torch_device("cuda:0") else "cpu"
+
+posters_dataset <- dataset(
+  
+  name = "Movie Posters Dataset",
+  
+  initialize = function(file) {
+    
+    image <- file |>
+      magick_loader() |>
+      transform_to_tensor()
+    
+    # move to GPU if available 
+    image <- image$to(device = device)
+    
+    # get rating by removing everything after '_'
+    rating <- as.numeric(str_remove(basename(file), "_.*"))
+    
+    self$x <- image
+    self$y <- torch_tensor(rating)$to(device = device)
+  },
+  
+  .getitem = function(i) {
+    list(x = self$x[i,],
+         y = self$y[i])
+  },
+  
+  .length = function() {
+    self$y$size()[[1]]
+  }
+)
+```
+
+```{r}
+posters_ds <- posters_dataset(poster_dirs)
+
+set.seed(7131)
+
+train_indices <- sample(1:length(posters_ds), ceiling(length(posters_ds)) * 0.80)
+valid_indices <- setdiff(1:length(posters_ds), train_indices)
+
+train_ds <- dataset_subset(posters_ds, train_indices)
+valid_ds <- dataset_subset(posters_ds, valid_indices)
+```
+
